@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "react-redux";
+import { NotificationsProvider } from "@mantine/notifications";
 
 // Components import
 import Home from "./Home";
@@ -28,15 +29,17 @@ function App() {
             withGlobalStyles
             withNormalizeCSS
           >
-            <Provider store={store}>
-              <div className="App">
-                <HeaderMiddle />
-                <Switch>
-                  <Route exact path="/" component={Home} />
-                  <Route path="/about" component={About} />
-                </Switch>
-              </div>
-            </Provider>
+            <NotificationsProvider>
+              <Provider store={store}>
+                <div className="App">
+                  <HeaderMiddle />
+                  <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route path="/about" component={About} />
+                  </Switch>
+                </div>
+              </Provider>
+            </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </Router>

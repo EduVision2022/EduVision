@@ -13,6 +13,7 @@ import {
   Text,
   List,
   ThemeIcon,
+  Transition,
 } from "@mantine/core";
 import { Check } from "tabler-icons-react";
 import image from "./image.svg";
@@ -29,6 +30,9 @@ import {
 } from "tabler-icons-react";
 import Theme from "./Theme";
 import { Avatar } from "@mantine/core";
+import { Notification } from "@mantine/core";
+import { X } from "tabler-icons-react";
+import { showNotification } from "@mantine/notifications";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -102,7 +106,6 @@ const Home = () => {
   const { classes } = useStyles();
 
   const [loggedin, setLoggedin] = useState(false);
-
   return (
     <div>
       <Container>
@@ -118,10 +121,21 @@ const Home = () => {
             </Text>
             <Button
               variant="light"
+              color="teal"
               onClick={() => {
-                dispatch(
-                  setUser({ name: "John Doe", email: "johndoe@gmail.com" })
-                );
+                showNotification({
+                  id: "hello-there",
+                  disallowClose: false,
+                  onClose: () => console.log("unmounted"),
+                  onOpen: () => console.log("mounted"),
+                  autoClose: 5000,
+                  title: "Logged In",
+                  message: "You logged in successfully as " + user,
+                  color: "teal",
+                  icon: <Check size={18} />,
+                  className: "my-notification-class",
+                  loading: false,
+                });
               }}
             >
               Testing
@@ -178,6 +192,19 @@ const Home = () => {
                         picture: decoded.picture,
                       })
                     );
+                    showNotification({
+                      id: "hello-there",
+                      disallowClose: false,
+                      onClose: () => console.log("unmounted"),
+                      onOpen: () => console.log("mounted"),
+                      autoClose: 5000,
+                      title: "Logged In",
+                      message: "You logged in successfully as " + decoded.name,
+                      color: "teal",
+                      icon: <Check size={18} />,
+                      className: "my-notification-class",
+                      loading: false,
+                    });
                   }}
                   onError={() => {
                     console.log("Login Failed");
