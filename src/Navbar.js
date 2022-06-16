@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   createStyles,
   Header,
@@ -154,6 +155,7 @@ links[1] = new HeaderProps("/contact", "Contact");
 links[2] = new HeaderProps("/login", "Login");
 
 export function HeaderMiddle() {
+  const history = useHistory();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
@@ -170,11 +172,11 @@ export function HeaderMiddle() {
   const items = links.map((link) => (
     <a
       key={link.label}
-      href={link.link}
       className={cx(classes.link, {
         [classes.linkActive]: active === link.link,
       })}
       onClick={(event) => {
+        history.push(link.link);
         event.preventDefault();
         setActive(link.link);
       }}
