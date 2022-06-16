@@ -10,6 +10,7 @@ import Home from "./Home";
 import Theme from "./Theme";
 import HeaderMiddle from "./Navbar";
 import store from "./store";
+import About from "./About";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -32,6 +33,7 @@ function App() {
                 <HeaderMiddle />
                 <Switch>
                   <Route exact path="/" component={Home} />
+                  <Route path="/about" component={About} />
                 </Switch>
               </div>
             </Provider>
