@@ -28,6 +28,7 @@ import {
   TiltShift,
 } from "tabler-icons-react";
 import Theme from "./Theme";
+import { Avatar } from "@mantine/core";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -172,7 +173,11 @@ const Home = () => {
                     console.log(decoded.email);
                     setLoggedin(true);
                     dispatch(
-                      setUser({ name: decoded.name, email: decoded.email })
+                      setUser({
+                        name: decoded.name,
+                        email: decoded.email,
+                        picture: decoded.picture,
+                      })
                     );
                   }}
                   onError={() => {

@@ -7,6 +7,13 @@ import {
   Container,
   Burger,
   Center,
+  Box,
+  UnstyledButton,
+  Text,
+  Autocomplete,
+  Select,
+  Menu,
+  Button,
 } from "@mantine/core";
 import { useBooleanToggle } from "@mantine/hooks";
 import {
@@ -18,19 +25,55 @@ import {
 } from "tabler-icons-react";
 import { useMantineColorScheme } from "@mantine/core";
 import Theme from "./Theme";
+import { Avatar, AvatarsGroup } from "@mantine/core";
+import { useMantineTheme } from "@mantine/core";
+import {
+  ChevronRight,
+  ChevronLeft,
+  ChevronDown,
+  ChevronUp,
+} from "tabler-icons-react";
+import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setUser, selectUsername } from "./userSlice";
+import {
+  setUser,
+  selectUsername,
+  selectPicture,
+  selectEmail,
+} from "./userSlice";
+
+// Images
+import logoTransparent from "./images/logomain.png";
 
 const useStyles = createStyles((theme) => ({
+  user2: {
+    backgroundColor: theme.colors.violet[6],
+  },
+  user: {
+    background: "transparent",
+    display: "block",
+    borderRadius: "10px",
+    height: "45px",
+    width: "auto",
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
+    position: "absolute",
+    left: "2rem",
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[8]
+          : theme.colors.gray[0],
+    },
+  },
   inner: {
-    display: "flex",
+    display: "flex ",
     justifyContent: "space-between",
     alignItems: "center",
     height: 56,
-
+    width: "100%",
     [theme.fn.smallerThan("sm")]: {
       justifyContent: "flex-start",
     },
@@ -117,8 +160,11 @@ export function HeaderMiddle() {
   const [opened, toggleOpened] = useBooleanToggle(false);
   const [active, setActive] = useState(links[0].link);
   const { classes, cx } = useStyles();
+  const theme = useMantineTheme();
 
-  const user = useSelector(selectUsername);
+  const username = useSelector(selectUsername);
+  const profilepicture = useSelector(selectPicture);
+  const email = useSelector(selectEmail);
   const dispatch = useDispatch();
 
   const items = links.map((link) => (
@@ -138,7 +184,7 @@ export function HeaderMiddle() {
   ));
 
   return (
-    <Header height={56} mb={120}>
+    <Header height={56} mb={60}>
       <Container className={classes.inner}>
         <Burger
           opened={opened}
@@ -146,10 +192,80 @@ export function HeaderMiddle() {
           size="sm"
           className={classes.burger}
         />
+        <Menu
+          className={classes.user}
+          control={
+            <Button
+              rightIcon={<ChevronDown size={18} />}
+              sx={{ paddingRight: 12 }}
+              className={classes.user}
+            >
+              <Avatar
+                src={profilepicture}
+                radius="xl"
+                style={{ marginRight: "10px" }}
+              />
+
+              <div style={{ flex: 1 }}>
+                <Text size="sm" weight={500}>
+                  {username ? username : "Guest"}
+                </Text>
+                <Text color="dimmed" size="xs">
+                  {email}
+                </Text>
+              </div>
+            </Button>
+          }
+          transition="pop-top-right"
+          placement="end"
+          size="lg"
+        >
+          <Menu.Item
+            icon={<Package size={16} color={theme.colors.blue[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + P
+              </Text>
+            }
+          >
+            Project
+          </Menu.Item>
+          <Menu.Item
+            icon={<SquareCheck size={16} color={theme.colors.pink[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + T
+              </Text>
+            }
+          >
+            Task
+          </Menu.Item>
+          <Menu.Item
+            icon={<Users size={16} color={theme.colors.cyan[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + U
+              </Text>
+            }
+          >
+            Team
+          </Menu.Item>
+          <Menu.Item
+            icon={<Calendar size={16} color={theme.colors.violet[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + E
+              </Text>
+            }
+          >
+            Event
+          </Menu.Item>
+        </Menu>
+
         <Group className={classes.links} spacing={5}>
           {items}
         </Group>
-        {user}
+
         {/* LOGO */}
         <Center style={{ width: 400, height: 200 }}>
           {dark ? (
