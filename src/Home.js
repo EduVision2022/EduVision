@@ -18,6 +18,7 @@ import {
   Paper,
   Progress,
   THEME_ICON_SIZES,
+  MultiSelect,
 } from "@mantine/core";
 import { Check, InfoCircle } from "tabler-icons-react";
 import image from "./image.svg";
@@ -135,7 +136,19 @@ const Home = () => {
 
   const [pas, setPas] = useState(0);
 
+  const [step, setStep] = useState(0);
+
   const [showBack, setShowBack] = useState(false);
+
+  const data = [
+    { value: "luni", label: "Luni" },
+    { value: "marti", label: "Marți" },
+    { value: "miercuri", label: "Miercuri" },
+    { value: "joi", label: "Joi" },
+    { value: "vineri", label: "Vineri" },
+    { value: "sambata", label: "Sâmbătă" },
+    { value: "duminica", label: "Duminică" },
+  ];
 
   const [value, setValue] = useState(
     [Date | null, Date | null] > [new Date(2021, 11, 1), new Date(2021, 11, 5)]
@@ -164,12 +177,19 @@ const Home = () => {
   var contents = [
     <DateRangePicker
       label="Selectează perioada de învățare"
-      placeholder="Pick dates range"
+      placeholder="Alege intervalul de date"
       value={value}
       onChange={setValue}
       mt="1rem"
     />,
-    <h1>testing</h1>,
+    <MultiSelect
+      data={data}
+      label="Alege zilele in care vrei sa inveti"
+      placeholder="Zi"
+      transitionDuration={300}
+      transition="pop-top-left"
+      transitionTimingFunction="ease"
+    />,
   ];
 
   return (
@@ -440,10 +460,19 @@ const Home = () => {
 
             <Center style={{ paddingTop: "2rem" }}>
               <Paper shadow="xl" p="md" withBorder style={{ width: "20rem" }}>
-                <Title order={3}>Timp</Title>
+                <Title order={3}>PASUL {step + 1}</Title>
                 {contents[pas]}
                 {showBack ? (
-                  <Button variant="light" mt="1rem" mr="sm" color="red">
+                  <Button
+                    variant="light"
+                    mt="1rem"
+                    mr="sm"
+                    color="red"
+                    onClick={() => {
+                      setPas(pas - 1);
+                      setProgress(progress - 10);
+                    }}
+                  >
                     Back
                   </Button>
                 ) : null}
