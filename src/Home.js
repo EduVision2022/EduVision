@@ -40,6 +40,7 @@ import { CircleCheck, CircleDashed } from "tabler-icons-react";
 import { SimpleGrid } from "@mantine/core";
 import { Divider } from "@mantine/core";
 import { Timeline } from "@mantine/core";
+import { DateRangePicker } from "@mantine/dates";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -130,6 +131,10 @@ const Home = () => {
   const [loggedin, setLoggedin] = useState(false);
 
   const [progress, setProgress] = useState(0);
+
+  const [value, setValue] = useState(
+    [Date | null, Date | null] > [new Date(2021, 11, 1), new Date(2021, 11, 5)]
+  );
 
   const [windowDimension, detectHW] = useState({
     winWidth: window.innerWidth,
@@ -425,6 +430,12 @@ const Home = () => {
                   Use it to create cards, dropdowns, modals and other components
                   that require background with shadow
                 </Text>{" "}
+                <DateRangePicker
+                  label="Book hotel"
+                  placeholder="Pick dates range"
+                  value={value}
+                  onChange={setValue}
+                />
                 <Button
                   onClick={() => setProgress(progress + 10)}
                   variant="light"
