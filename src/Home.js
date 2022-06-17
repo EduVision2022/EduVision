@@ -104,9 +104,18 @@ const useStyles = createStyles((theme) => ({
         ? theme.fn.rgba(theme.colors[theme.primaryColor][6], 0.2)
         : theme.colors[theme.primaryColor][0],
     borderRadius: theme.radius.sm,
-    padding: "4px 6px",
+    padding: "0px 6px",
   },
 }));
+
+function navigate(href, newTab) {
+  var a = document.createElement("a");
+  a.href = href;
+  if (newTab) {
+    a.setAttribute("target", "_blank");
+  }
+  a.click();
+}
 
 const Home = () => {
   const user = useSelector(selectUsername);
@@ -117,6 +126,7 @@ const Home = () => {
   const { classes } = useStyles();
 
   const [loggedin, setLoggedin] = useState(false);
+
   return (
     <div className="Home">
       <div
@@ -177,6 +187,11 @@ const Home = () => {
                     radius="xl"
                     size="md"
                     className={classes.control}
+                    onClick={() => {
+                      document
+                        .getElementById("second")
+                        .scrollIntoView({ behavior: "smooth" });
+                    }}
                   >
                     Get started
                   </Button>
@@ -222,8 +237,17 @@ const Home = () => {
                   radius="xl"
                   size="md"
                   className={classes.control}
+                  onClick={() => {
+                    if (!loggedin) {
+                      document
+                        .getElementById("second")
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      navigate("https://github.com/", true);
+                    }
+                  }}
                 >
-                  Source code
+                  {loggedin ? "Source code" : "Learn more"}
                 </Button>
               </Group>
             </div>
@@ -321,36 +345,40 @@ const Home = () => {
           </SimpleGrid>
         </Container>
       </div>
-      <div className="second">
+      <div className="second" id="second">
         <Center>
-          <Container>
-            <Title order={3} style={{ paddingTop: "2rem" }}>
-              HOW EDUVISION WORKS
-            </Title>
-            <Title order={2} style={{ paddingTop: "2rem" }}>
-              Generează orare de învățare în 3 pași simpli
-            </Title>
-            <Timeline
-              active={2}
-              style={{ paddingTop: "3rem", transform: "translate(30%)" }}
-            >
-              <Timeline.Item title="Completează un formular">
-                <Text color="dimmed" size="sm">
-                  Obținem câteva informații despre timpul tău
-                </Text>
-              </Timeline.Item>
-              <Timeline.Item title="Rezolvă un test">
-                <Text color="dimmed" size="sm">
-                  Determinăm nivelul tău de pregătire
-                </Text>
-              </Timeline.Item>
-              <Timeline.Item title="Învață">
-                <Text color="dimmed" size="sm">
-                  Ne vom asigura să te evaluăm în timpul învățării
-                </Text>
-              </Timeline.Item>
-            </Timeline>
-          </Container>
+          {!loggedin ? (
+            <Container>
+              <Title order={3} style={{ paddingTop: "2rem" }}>
+                HOW EDUVISION WORKS
+              </Title>
+              <Title order={2} style={{ paddingTop: "2rem" }}>
+                Generează orare de învățare în 3 pași simpli
+              </Title>
+              <Timeline
+                active={2}
+                style={{ paddingTop: "3rem", transform: "translate(30%)" }}
+              >
+                <Timeline.Item title="Completează un formular">
+                  <Text color="dimmed" size="sm">
+                    Obținem câteva informații despre timpul tău
+                  </Text>
+                </Timeline.Item>
+                <Timeline.Item title="Rezolvă un test">
+                  <Text color="dimmed" size="sm">
+                    Determinăm nivelul tău de pregătire
+                  </Text>
+                </Timeline.Item>
+                <Timeline.Item title="Învață">
+                  <Text color="dimmed" size="sm">
+                    Ne vom asigura să te evaluăm în timpul învățării
+                  </Text>
+                </Timeline.Item>
+              </Timeline>
+            </Container>
+          ) : (
+            <h1>testing</h1>
+          )}
         </Center>
       </div>
     </div>
