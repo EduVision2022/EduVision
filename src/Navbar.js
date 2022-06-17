@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   createStyles,
@@ -35,6 +35,7 @@ import {
   ChevronUp,
 } from "tabler-icons-react";
 import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
+import { useMediaQuery } from "react-responsive";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -170,6 +171,26 @@ export function HeaderMiddle() {
   const email = useSelector(selectEmail);
   const dispatch = useDispatch();
 
+  const [windowDimension, detectHW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  });
+
+  const detectSize = () => {
+    detectHW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", detectSize);
+
+    return () => {
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimension]);
+
   const items = links.map((link) => (
     <a
       key={link.label}
@@ -270,18 +291,20 @@ export function HeaderMiddle() {
         </Group>
 
         {/* LOGO */}
-        <Center style={{ width: 400, height: 200 }}>
-          {dark ? (
-            <img src={logoDark} width="48px" height="48px" />
-          ) : (
-            <img src={logoLight} width="48px" height="48px" />
-          )}
-          <Text>
-            <Text size="xl" weight={700}>
-              EduVision
+        {windowDimension.winWidth > 720 ? (
+          <Center style={{ width: 400, height: 200 }}>
+            {dark ? (
+              <img src={logoDark} width="48px" height="48px" />
+            ) : (
+              <img src={logoLight} width="48px" height="48px" />
+            )}
+            <Text>
+              <Text size="xl" weight={700}>
+                EduVision
+              </Text>
             </Text>
-          </Text>
-        </Center>
+          </Center>
+        ) : null}
         <Group spacing={0} className={classes.social} position="right" noWrap>
           <ActionIcon size="lg">
             <BrandTwitter size={18} />

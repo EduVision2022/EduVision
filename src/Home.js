@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setUser, selectUsername } from "./userSlice";
@@ -126,6 +126,26 @@ const Home = () => {
   const { classes } = useStyles();
 
   const [loggedin, setLoggedin] = useState(false);
+
+  const [windowDimension, detectHW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  });
+
+  const detectSize = () => {
+    detectHW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", detectSize);
+
+    return () => {
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimension]);
 
   return (
     <div className="Home">
@@ -346,40 +366,44 @@ const Home = () => {
         </Container>
       </div>
       <div className="second" id="second">
-        <Center>
-          {!loggedin ? (
-            <Container>
-              <Title order={3} style={{ paddingTop: "2rem" }}>
-                HOW EDUVISION WORKS
-              </Title>
-              <Title order={2} style={{ paddingTop: "2rem" }}>
-                Generează orare de învățare în 3 pași simpli
-              </Title>
-              <Timeline
-                active={2}
-                style={{ paddingTop: "3rem", transform: "translate(30%)" }}
-              >
-                <Timeline.Item title="Completează un formular">
-                  <Text color="dimmed" size="sm">
-                    Obținem câteva informații despre timpul tău
-                  </Text>
-                </Timeline.Item>
-                <Timeline.Item title="Rezolvă un test">
-                  <Text color="dimmed" size="sm">
-                    Determinăm nivelul tău de pregătire
-                  </Text>
-                </Timeline.Item>
-                <Timeline.Item title="Învață">
-                  <Text color="dimmed" size="sm">
-                    Ne vom asigura să te evaluăm în timpul învățării
-                  </Text>
-                </Timeline.Item>
-              </Timeline>
-            </Container>
-          ) : (
-            <h1>testing</h1>
-          )}
-        </Center>
+        {!loggedin ? (
+          <Container>
+            <Title order={3} style={{ paddingTop: "2rem" }}>
+              HOW EDUVISION WORKS
+            </Title>
+            <Title order={2} style={{ paddingTop: "2rem" }}>
+              Generează orare de învățare în 3 pași simpli
+            </Title>
+            <Timeline
+              active={2}
+              style={{
+                paddingTop: "3rem",
+                transform:
+                  windowDimension.winWidth < 720
+                    ? "translateX(0%)"
+                    : "translateX(35%)",
+              }}
+            >
+              <Timeline.Item title="Completează un formular">
+                <Text color="dimmed" size="sm">
+                  Obținem câteva informații despre timpul tău
+                </Text>
+              </Timeline.Item>
+              <Timeline.Item title="Rezolvă un test">
+                <Text color="dimmed" size="sm">
+                  Determinăm nivelul tău de pregătire
+                </Text>
+              </Timeline.Item>
+              <Timeline.Item title="Învață">
+                <Text color="dimmed" size="sm">
+                  Ne vom asigura să te evaluăm în timpul învățării
+                </Text>
+              </Timeline.Item>
+            </Timeline>
+          </Container>
+        ) : (
+          <h1>testing</h1>
+        )}
       </div>
     </div>
   );
