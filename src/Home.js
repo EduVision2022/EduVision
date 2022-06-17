@@ -15,6 +15,8 @@ import {
   ThemeIcon,
   Transition,
   Box,
+  Paper,
+  Progress,
 } from "@mantine/core";
 import { Check, InfoCircle } from "tabler-icons-react";
 import image from "./image.svg";
@@ -126,6 +128,8 @@ const Home = () => {
   const { classes } = useStyles();
 
   const [loggedin, setLoggedin] = useState(false);
+
+  const [progress, setProgress] = useState(0);
 
   const [windowDimension, detectHW] = useState({
     winWidth: window.innerWidth,
@@ -402,7 +406,34 @@ const Home = () => {
             </Timeline>
           </Container>
         ) : (
-          <h1>testing</h1>
+          <>
+            <Center style={{ paddingTop: "2rem" }}>
+              <Progress
+                radius="md"
+                size="xl"
+                value={progress}
+                style={{ width: "30rem" }}
+                label={`${progress}%`}
+              />
+            </Center>
+
+            <Center style={{ paddingTop: "2rem" }}>
+              <Paper shadow="xl" p="md" withBorder style={{ width: "20rem" }}>
+                <Title order={3}>Testing</Title>
+                <Text>Paper is the most basic ui component</Text>
+                <Text>
+                  Use it to create cards, dropdowns, modals and other components
+                  that require background with shadow
+                </Text>{" "}
+                <Button
+                  onClick={() => setProgress(progress + 10)}
+                  variant="light"
+                >
+                  Update
+                </Button>
+              </Paper>
+            </Center>
+          </>
         )}
       </div>
     </div>
