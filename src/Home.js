@@ -2,6 +2,9 @@ import { React, useState, useEffect } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setUser, selectUsername } from "./userSlice";
+import { useRef } from "react";
+import dayjs from "dayjs";
+
 // Mantine UI Imports
 import {
   createStyles,
@@ -43,6 +46,10 @@ import { SimpleGrid } from "@mantine/core";
 import { Divider } from "@mantine/core";
 import { Timeline } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
+import { TimeInput } from "@mantine/dates";
+import { TimeRangeInput } from "@mantine/dates";
+import { Clock } from "tabler-icons-react";
+import { Calendar } from "tabler-icons-react";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -140,6 +147,12 @@ const Home = () => {
 
   const [showBack, setShowBack] = useState(false);
 
+  const [days, setDays] = useState([]);
+
+  const now = new Date();
+  const then = dayjs(now).add(30, "minutes").toDate();
+  const [date, setDate] = useState([]);
+
   const data = [
     { value: "luni", label: "Luni" },
     { value: "marti", label: "Marți" },
@@ -181,14 +194,27 @@ const Home = () => {
       value={value}
       onChange={setValue}
       mt="1rem"
+      variant="filled"
+      icon={<Calendar size={16} />}
     />,
     <MultiSelect
+      value={days}
+      onChange={setDays}
       data={data}
+      transitionDuration={500}
+      transition="fade"
+      transitionTimingFunction="ease"
       label="Alege zilele in care vrei sa inveti"
       placeholder="Zi"
-      transitionDuration={300}
-      transition="pop-top-left"
-      transitionTimingFunction="ease"
+      variant="filled"
+    />,
+    <TimeRangeInput
+      icon={<Clock size={16} />}
+      label="Alege orele de învățare"
+      value={date}
+      onChange={setDate}
+      clearable
+      variant="filled"
     />,
   ];
 
@@ -278,9 +304,7 @@ const Home = () => {
                       showNotification({
                         id: "hello-there",
                         disallowClose: false,
-                        onClose: () => console.log("unmounted"),
-                        onOpen: () => console.log("mounted"),
-                        autoClose: 5000,
+                        autoClose: 3000,
                         title: "Logged In",
                         message:
                           "You logged in successfully as " + decoded.name,
@@ -483,6 +507,8 @@ const Home = () => {
                     setPas(pas + 1);
                     console.log(value);
                     setShowBack(true);
+                    console.log(days);
+                    console.log(date);
                   }}
                   variant="light"
                   mt="1rem"
