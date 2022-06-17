@@ -35,7 +35,6 @@ import {
   ChevronUp,
 } from "tabler-icons-react";
 import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
-import { useMediaQuery } from "react-responsive";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";

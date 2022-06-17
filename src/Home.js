@@ -17,6 +17,7 @@ import {
   Box,
   Paper,
   Progress,
+  THEME_ICON_SIZES,
 } from "@mantine/core";
 import { Check, InfoCircle } from "tabler-icons-react";
 import image from "./image.svg";
@@ -132,6 +133,10 @@ const Home = () => {
 
   const [progress, setProgress] = useState(0);
 
+  const [pas, setPas] = useState(0);
+
+  const [showBack, setShowBack] = useState(false);
+
   const [value, setValue] = useState(
     [Date | null, Date | null] > [new Date(2021, 11, 1), new Date(2021, 11, 5)]
   );
@@ -155,6 +160,17 @@ const Home = () => {
       window.removeEventListener("resize", detectSize);
     };
   }, [windowDimension]);
+
+  var contents = [
+    <DateRangePicker
+      label="Selectează perioada de învățare"
+      placeholder="Pick dates range"
+      value={value}
+      onChange={setValue}
+      mt="1rem"
+    />,
+    <h1>testing</h1>,
+  ];
 
   return (
     <div className="Home">
@@ -312,7 +328,7 @@ const Home = () => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 512 512"
                   height="1em"
                   width="1em"
@@ -323,19 +339,7 @@ const Home = () => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 512 512"
-                  className="-ml-1"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
-                </svg>
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-ml-1"
                   height="1em"
@@ -347,7 +351,7 @@ const Home = () => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-ml-1"
                   height="1em"
@@ -359,7 +363,19 @@ const Home = () => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
+                  viewBox="0 0 512 512"
+                  className="-ml-1"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
+                </svg>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-mx-1"
                   height="1em"
@@ -424,23 +440,25 @@ const Home = () => {
 
             <Center style={{ paddingTop: "2rem" }}>
               <Paper shadow="xl" p="md" withBorder style={{ width: "20rem" }}>
-                <Title order={3}>Testing</Title>
-                <Text>Paper is the most basic ui component</Text>
-                <Text>
-                  Use it to create cards, dropdowns, modals and other components
-                  that require background with shadow
-                </Text>{" "}
-                <DateRangePicker
-                  label="Book hotel"
-                  placeholder="Pick dates range"
-                  value={value}
-                  onChange={setValue}
-                />
+                <Title order={3}>Timp</Title>
+                {contents[pas]}
+                {showBack ? (
+                  <Button variant="light" mt="1rem" mr="sm" color="red">
+                    Back
+                  </Button>
+                ) : null}
+
                 <Button
-                  onClick={() => setProgress(progress + 10)}
+                  onClick={() => {
+                    setProgress(progress + 10);
+                    setPas(pas + 1);
+                    console.log(value);
+                    setShowBack(true);
+                  }}
                   variant="light"
+                  mt="1rem"
                 >
-                  Update
+                  Next
                 </Button>
               </Paper>
             </Center>
