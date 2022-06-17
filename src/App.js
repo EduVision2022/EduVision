@@ -12,6 +12,7 @@ import Theme from "./Theme";
 import HeaderMiddle from "./Navbar";
 import store from "./store";
 import About from "./About";
+import Footer from "./Footer";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -25,7 +26,10 @@ function App() {
           toggleColorScheme={toggleColorScheme}
         >
           <MantineProvider
-            theme={{ colorScheme }}
+            theme={{
+              colorScheme,
+              primaryColor: colorScheme == "dark" ? "violet" : "blue",
+            }}
             withGlobalStyles
             withNormalizeCSS
           >
@@ -37,6 +41,7 @@ function App() {
                     <Route exact path="/" component={Home} />
                     <Route path="/about" component={About} />
                   </Switch>
+                  <Footer />
                 </div>
               </Provider>
             </NotificationsProvider>
