@@ -22,13 +22,14 @@ import {
   Progress,
   THEME_ICON_SIZES,
   MultiSelect,
+  Stack,
 } from "@mantine/core";
-import { Check, InfoCircle } from "tabler-icons-react";
+import { Check, InfoCircle, Webhook } from "tabler-icons-react";
 import image from "./image.svg";
 import { ActionIcon, useMantineColorScheme } from "@mantine/core";
 import { Sun, MoonStars } from "tabler-icons-react";
 import { Header, Burger, Center } from "@mantine/core";
-import { useBooleanToggle } from "@mantine/hooks";
+import { useBooleanToggle, useSetState } from "@mantine/hooks";
 import {
   BrandTwitter,
   BrandYoutube,
@@ -50,6 +51,8 @@ import { TimeInput } from "@mantine/dates";
 import { TimeRangeInput } from "@mantine/dates";
 import { Clock } from "tabler-icons-react";
 import { Calendar } from "tabler-icons-react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useListState } from "@mantine/hooks";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -118,6 +121,48 @@ const useStyles = createStyles((theme) => ({
     borderRadius: theme.radius.sm,
     padding: "0px 6px",
   },
+
+  top: {
+    borderBottomRightRadius: "0px",
+    borderBottomLeftRadius: "0px",
+    borderColor: theme.colorScheme === "dark" ? "#25262b" : "#e6e6e6",
+  },
+
+  middle: {
+    borderTop: "none",
+    borderRadius: "0px",
+    borderColor: theme.colorScheme === "dark" ? "#25262b" : "#e6e6e6",
+  },
+
+  bottom: {
+    borderTop: "none",
+    borderTopLeftRadius: "0px",
+    borderTopRightRadius: "0px",
+    borderColor: theme.colorScheme === "dark" ? "#25262b" : "#e6e6e6",
+  },
+  item: {
+    ...theme.fn.focusStyles(),
+    display: "flex",
+    alignItems: "center",
+    borderRadius: theme.radius.md,
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]
+    }`,
+    padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.white,
+    marginBottom: theme.spacing.sm,
+  },
+
+  itemDragging: {
+    boxShadow: theme.shadows.sm,
+  },
+
+  symbol: {
+    fontSize: 30,
+    fontWeight: 700,
+    width: 60,
+  },
 }));
 
 function navigate(href, newTab) {
@@ -135,7 +180,7 @@ const Home = () => {
 
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const [loggedin, setLoggedin] = useState(false);
 
@@ -148,6 +193,468 @@ const Home = () => {
   const [showBack, setShowBack] = useState(false);
 
   const [days, setDays] = useState([]);
+
+  const [Form, setForm] = useState({
+    Buttons: {
+      informatica: {
+        variant: "outline",
+        disabled: false,
+      },
+      chimie: {
+        variant: "outline",
+        disabled: false,
+      },
+      biologie: {
+        variant: "outline",
+        disabled: false,
+      },
+      fizica: {
+        variant: "outline",
+        disabled: false,
+      },
+    },
+  });
+
+  class Ora {
+    constructor(position, mass, symbol, name) {
+      this.position = position;
+      this.mass = mass;
+      this.symbol = symbol;
+      this.name = name;
+    }
+  }
+
+  const [state, handlers] = useListState(data2);
+
+  var data2 = [];
+  data2[0] = new Ora("1", "1.0079", "MT", "Matematică");
+  data2[1] = new Ora("2", "4.0026", "RM", "Română");
+
+  const ToggleFormButton = (name) => {
+    if (name == "informatica") {
+      if (Form.Buttons.informatica.variant == "outline") {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "light",
+              disabled: false,
+            },
+          },
+        }));
+        handlers.pop();
+        handlers.pop();
+        handlers.pop();
+        handlers.append(
+          data2[0],
+          data2[1],
+          new Ora("1", "1.0079", "I", "Informatică")
+        );
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+      } else {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+      }
+    }
+    if (name == "chimie") {
+      if (Form.Buttons.chimie.variant == "outline") {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "light",
+              disabled: false,
+            },
+          },
+        }));
+        handlers.pop();
+        handlers.pop();
+        handlers.pop();
+        handlers.append(
+          data2[0],
+          data2[1],
+          new Ora("1", "1.0079", "C", "Chimie")
+        );
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+      } else {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+      }
+    }
+    if (name == "biologie") {
+      if (Form.Buttons.biologie.variant == "outline") {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "light",
+              disabled: false,
+            },
+          },
+        }));
+        handlers.pop();
+        handlers.pop();
+        handlers.pop();
+        handlers.append(
+          data2[0],
+          data2[1],
+          new Ora("1", "1.0079", "B", "Biologie")
+        );
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+      } else {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+      }
+    }
+    if (name == "fizica") {
+      if (Form.Buttons.fizica.variant == "outline") {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "light",
+              disabled: false,
+            },
+          },
+        }));
+        handlers.pop();
+        handlers.pop();
+        handlers.pop();
+        handlers.append(
+          data2[0],
+          data2[1],
+          new Ora("1", "1.0079", "F", "Fizică")
+        );
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+              disabled: true,
+            },
+          },
+        }));
+      } else {
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            fizica: {
+              ...prevForm.Buttons.fizica,
+              variant: "outline",
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            informatica: {
+              ...prevForm.Buttons.informatica,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            biologie: {
+              ...prevForm.Buttons.biologie,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+        setForm((prevForm) => ({
+          ...prevForm,
+          Buttons: {
+            ...prevForm.Buttons,
+            chimie: {
+              ...prevForm.Buttons.chimie,
+              variant: "outline",
+              disabled: false,
+            },
+          },
+        }));
+      }
+    }
+  };
+
+  const ditems = state.map((item, index) => (
+    <Draggable index={index} draggableId={item.symbol} key={item.symbol}>
+      {(provided, snapshot) => (
+        <div
+          className={cx(classes.item, {
+            [classes.itemDragging]: snapshot.isDragging,
+          })}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          <Text className={classes.symbol}>{item.symbol}</Text>
+          <div>
+            <Text>{item.name}</Text>
+            <Text color="dimmed" size="sm">
+              Dificultate: {item.position} • Capitole: {item.mass}
+            </Text>
+          </div>
+        </div>
+      )}
+    </Draggable>
+  ));
 
   const now = new Date();
   const then = dayjs(now).add(30, "minutes").toDate();
@@ -216,6 +723,83 @@ const Home = () => {
       clearable
       variant="filled"
     />,
+    <>
+      <Text weight="600" size="sm">
+        La ce materii doresti sa te pregatesti?
+      </Text>
+      <Stack align="center" spacing="0px">
+        <Button
+          className={classes.top}
+          style={{ width: "8rem" }}
+          variant="light"
+          disabled
+        >
+          Romana
+        </Button>
+        <Button
+          className={classes.middle}
+          style={{ width: "8rem" }}
+          variant="light"
+          disabled
+        >
+          Matematica
+        </Button>
+        <Button
+          className={classes.middle}
+          variant={Form.Buttons.informatica.variant}
+          style={{ width: "8rem" }}
+          id="informatica"
+          disabled={Form.Buttons.informatica.disabled}
+          onClick={() => ToggleFormButton("informatica")}
+        >
+          Informatica
+        </Button>
+        <Button
+          className={classes.middle}
+          style={{ width: "8rem" }}
+          variant={Form.Buttons.chimie.variant}
+          id="chimie"
+          disabled={Form.Buttons.chimie.disabled}
+          onClick={() => ToggleFormButton("chimie")}
+        >
+          Chimie
+        </Button>
+        <Button
+          className={classes.middle}
+          style={{ width: "8rem" }}
+          variant={Form.Buttons.biologie.variant}
+          id="biologie"
+          disabled={Form.Buttons.biologie.disabled}
+          onClick={() => ToggleFormButton("biologie")}
+        >
+          Biologie
+        </Button>
+        <Button
+          className={classes.bottom}
+          style={{ width: "8rem" }}
+          variant={Form.Buttons.fizica.variant}
+          id="fizica"
+          disabled={Form.Buttons.fizica.disabled}
+          onClick={() => ToggleFormButton("fizica")}
+        >
+          Fizica
+        </Button>
+      </Stack>
+    </>,
+    <DragDropContext
+      onDragEnd={({ destination, source }) =>
+        handlers.reorder({ from: source.index, to: destination.index })
+      }
+    >
+      <Droppable droppableId="dnd-list" direction="vertical">
+        {(provided) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {ditems}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>,
   ];
 
   return (
@@ -483,7 +1067,7 @@ const Home = () => {
             </Center>
 
             <Center style={{ paddingTop: "2rem" }}>
-              <Paper shadow="xl" p="md" withBorder style={{ width: "20rem" }}>
+              <Paper shadow="xl" p="md" withBorder style={{ width: "22rem" }}>
                 <Title order={3}>PASUL {step + 1}</Title>
                 {contents[pas]}
                 {showBack ? (
