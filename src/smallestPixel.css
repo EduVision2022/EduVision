@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Smallest Pixel-7";
+  src: url("//db.onlinewebfonts.com/t/cd2242816d23dad4250f5ea159c7675c.eot");
+  src: url("//db.onlinewebfonts.com/t/cd2242816d23dad4250f5ea159c7675c.eot?#iefix")
+      format("embedded-opentype"),
+    url("//db.onlinewebfonts.com/t/cd2242816d23dad4250f5ea159c7675c.woff2")
+      format("woff2"),
+    url("//db.onlinewebfonts.com/t/cd2242816d23dad4250f5ea159c7675c.woff")
+      format("woff"),
+    url("//db.onlinewebfonts.com/t/cd2242816d23dad4250f5ea159c7675c.ttf")
+      format("truetype"),
+    url("//db.onlinewebfonts.com/t/cd2242816d23dad4250f5ea159c7675c.svg#Smallest Pixel-7")
+      format("svg");
+}

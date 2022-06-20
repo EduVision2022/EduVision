@@ -10,6 +10,7 @@ import {
 import { BrandTwitter, BrandYoutube, BrandInstagram } from "tabler-icons-react";
 import { useMantineTheme } from "@mantine/core";
 import { useMantineColorScheme } from "@mantine/core";
+import "./smallestPixel.css";
 
 // Images
 import logoLight from "./images/logoLight.png";
@@ -103,7 +104,16 @@ export function Footer() {
           </ActionIcon>
           <ActionIcon size="lg">
             <BrandInstagram size={18} />
-          </ActionIcon>
+          </ActionIcon>{" "}
+          <Text
+            font="Smallest Pixel-7"
+            color={dark ? "#8996a3" : "#495057"}
+            style={{ fontFamily: "Smallest Pixel-7" }}
+            className="strokeme"
+            size="xs"
+          >
+            Made with ❤️ by speedy&sbn
+          </Text>
         </Group>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useHistory } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setUser, selectUsername } from "./userSlice";
@@ -24,7 +24,7 @@ import {
   MultiSelect,
   Stack,
 } from "@mantine/core";
-import { Check, InfoCircle, Webhook } from "tabler-icons-react";
+import { Check, InfoCircle, Webhook, WorldLatitude } from "tabler-icons-react";
 import image from "./image.svg";
 import { ActionIcon, useMantineColorScheme } from "@mantine/core";
 import { Sun, MoonStars } from "tabler-icons-react";
@@ -660,6 +660,120 @@ const Home = () => {
   const then = dayjs(now).add(30, "minutes").toDate();
   const [date, setDate] = useState([]);
 
+  const [trans, setTrans] = useState(false);
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  const [currIntrebare, setCurrIntrebare] = useState(0);
+
+  function Intrebare(
+    materie,
+    capitol,
+    intrebare,
+    raspunsuri = [],
+    raspunsCorect
+  ) {
+    this.materie = materie;
+    this.capitol = capitol;
+    this.intrebare = intrebare;
+    this.raspunsuri = raspunsuri;
+    this.raspunsCorect = raspunsCorect;
+  }
+
+  const intrebari = [
+    new Intrebare(
+      "Informatica",
+      "Elemente de baza",
+      "Ce este un limbaj de programare?",
+      ["a", "b", "c", "d"],
+      2
+    ),
+  ];
+
+  const [colorButton1, setColorButton1] = useState("primary");
+  const [colorButton2, setColorButton2] = useState("primary");
+  const [colorButton3, setColorButton3] = useState("primary");
+  const [colorButton4, setColorButton4] = useState("primary");
+
+  const [disabledButton1, setDisabledButton1] = useState(false);
+  const [disabledButton2, setDisabledButton2] = useState(false);
+  const [disabledButton3, setDisabledButton3] = useState(false);
+  const [disabledButton4, setDisabledButton4] = useState(false);
+
+  const ColorSuccess = "green";
+  const ColorError = "red";
+
+  function resetButtons() {
+    setColorButton1("primary");
+    setColorButton2("primary");
+    setColorButton3("primary");
+    setColorButton4("primary");
+    setDisabledButton1(false);
+    setDisabledButton2(false);
+    setDisabledButton3(false);
+    setDisabledButton4(false);
+  }
+
+  function submit(input) {
+    if (input == intrebari[currIntrebare].raspunsCorect) {
+      if (input == 1) {
+        setColorButton1(ColorSuccess);
+        setDisabledButton2(true);
+        setDisabledButton3(true);
+        setDisabledButton4(true);
+      }
+      if (input == 2) {
+        setColorButton2(ColorSuccess);
+        setDisabledButton1(true);
+        setDisabledButton3(true);
+        setDisabledButton4(true);
+      }
+      if (input == 3) {
+        setColorButton3(ColorSuccess);
+        setDisabledButton1(true);
+        setDisabledButton2(true);
+        setDisabledButton4(true);
+      }
+      if (input == 4) {
+        setColorButton4(ColorSuccess);
+        setDisabledButton1(true);
+        setDisabledButton2(true);
+        setDisabledButton3(true);
+      }
+    } else {
+      if (input == 1) {
+        setColorButton1(ColorError);
+      }
+      if (input == 2) {
+        setColorButton2(ColorError);
+      }
+      if (input == 3) {
+        setColorButton3(ColorError);
+      }
+      if (input == 4) {
+        setColorButton4(ColorError);
+      }
+      if (intrebari[currIntrebare].raspunsCorect == 1) {
+        setColorButton1(ColorSuccess);
+      }
+      if (intrebari[currIntrebare].raspunsCorect == 2) {
+        setColorButton2(ColorSuccess);
+      }
+      if (intrebari[currIntrebare].raspunsCorect == 3) {
+        setColorButton3(ColorSuccess);
+      }
+      if (intrebari[currIntrebare].raspunsCorect == 4) {
+        setColorButton4(ColorSuccess);
+      }
+    }
+
+    sleep(2000).then(() => {
+      resetButtons();
+    });
+  }
+
   const data = [
     { value: "luni", label: "Luni" },
     { value: "marti", label: "Marți" },
@@ -786,20 +900,64 @@ const Home = () => {
         </Button>
       </Stack>
     </>,
-    <DragDropContext
-      onDragEnd={({ destination, source }) =>
-        handlers.reorder({ from: source.index, to: destination.index })
-      }
-    >
-      <Droppable droppableId="dnd-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {ditems}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>,
+    <>
+      <Text weight="600" size="sm">
+        Ordonează materiile după prioritate
+      </Text>
+      <DragDropContext
+        onDragEnd={({ destination, source }) =>
+          handlers.reorder({ from: source.index, to: destination.index })
+        }
+      >
+        <Droppable droppableId="dnd-list" direction="vertical">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {ditems}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </>,
+    <>
+      {intrebari[currIntrebare].intrebare}
+      <Center>
+        <Stack spacing="0.3rem" mt="xs">
+          <Button
+            color={colorButton1}
+            disabled={disabledButton1}
+            onClick={() => submit(1)}
+            variant="light"
+          >
+            {intrebari[currIntrebare].raspunsuri[0]}
+          </Button>
+          <Button
+            color={colorButton2}
+            disabled={disabledButton2}
+            onClick={() => submit(2)}
+            variant="light"
+          >
+            {intrebari[currIntrebare].raspunsuri[1]}
+          </Button>
+          <Button
+            color={colorButton3}
+            disabled={disabledButton3}
+            onClick={() => submit(3)}
+            variant="light"
+          >
+            {intrebari[currIntrebare].raspunsuri[2]}
+          </Button>
+          <Button
+            color={colorButton4}
+            disabled={disabledButton4}
+            onClick={() => submit(4)}
+            variant="light"
+          >
+            {intrebari[currIntrebare].raspunsuri[3]}
+          </Button>
+        </Stack>
+      </Center>
+    </>,
   ];
 
   return (
@@ -1093,6 +1251,9 @@ const Home = () => {
                     setShowBack(true);
                     console.log(days);
                     console.log(date);
+                    if (pas == 4) {
+                      setTrans(true);
+                    }
                   }}
                   variant="light"
                   mt="1rem"
