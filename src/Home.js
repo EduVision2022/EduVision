@@ -1267,7 +1267,20 @@ const Home = () => {
 
     sleep(2000).then(() => {
       resetButtons();
-      setCurrIntrebare((prev) => prev + 1);
+      var numarIntrebari = 0;
+      if (materie3 == "informatica") {
+        numarIntrebari += intrebariInformatica.length();
+      } else if (materie3 == "biologie") {
+        numarIntrebari += intrebariBiologie.length();
+      } else if (materie3 == "chimie") {
+        numarIntrebari += intrebariChimie.length();
+      } else if (materie3 == "fizica") {
+        numarIntrebari += intrebariFizica.length();
+      }
+      numarIntrebari += intrebariRomana.length() + intrebariMatematica.length();
+      if (currIntrebare < numarIntrebari) {
+        setCurrIntrebare((prev) => prev + 1);
+      }
     });
   }
 
@@ -1459,6 +1472,13 @@ const Home = () => {
           </Button>
         </Stack>
       </Center>
+    </>,
+    <>
+      <Title>Felicitari!</Title>
+      <Text>
+        Ai terminat primele <b>2</b> etape din generarea orarului, iar de a
+        treia ne vom ocupa noi.
+      </Text>
     </>,
   ];
 
@@ -1729,6 +1749,13 @@ const Home = () => {
             <Center style={{ paddingTop: "2rem" }}>
               <Paper shadow="xl" p="md" withBorder style={{ width: "22rem" }}>
                 {contents[pas]}
+                <Progress
+                  radius="md"
+                  size="xl"
+                  value={progress}
+                  style={{ width: "30rem" }}
+                  label={`${progress}%`}
+                />
                 {showBack ? (
                   <Button
                     variant="light"
