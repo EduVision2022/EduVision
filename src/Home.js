@@ -828,18 +828,6 @@ const Home = () => {
     ),
     new Intrebare(
       "Informatica",
-      "Expresii",
-      "Variabilele x și y sunt întregi. Indicați expresia C/C++ echivalentă cu (x<3)&&(y>=5).",
-      [
-        "!(!(x<3)||!(y>=5))",
-        "!(x>=3)&&(y<5)",
-        "!((x>=3)&&(y<5))",
-        "!((x<3)||(y>=5))",
-      ],
-      1
-    ),
-    new Intrebare(
-      "Informatica",
       "Grafuri",
       "Valorile care pot reprezenta gradele nodurilor unui graf neorientat, cu 6 noduri, sunt:",
       ["2,2,5,5,0,1", "6,5,4,3,2,1", "2,2,3,4,0,3", "1,0,0,2,2,2"],
@@ -1431,7 +1419,9 @@ const Home = () => {
     <>
       <Title order={3}>{intrebariFinal[currIntrebare].materie}</Title>
       <Text color="dimmed">{intrebariFinal[currIntrebare].capitol}</Text>
-      {intrebariFinal[currIntrebare].intrebare}
+      <Paper shadow="xl" p="md" withBorder>
+        {intrebariFinal[currIntrebare].intrebare}
+      </Paper>
       {console.log(state)}
       <Center>
         <Stack spacing="0.3rem" mt="xs">
