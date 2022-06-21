@@ -215,6 +215,10 @@ const Home = () => {
     },
   });
 
+  const [materie1, setMaterie1] = useState("romana");
+  const [materie2, setMaterie2] = useState("matematica");
+  const [materie3, setMaterie3] = useState("");
+
   class Ora {
     constructor(position, mass, symbol, name) {
       this.position = position;
@@ -252,6 +256,7 @@ const Home = () => {
           data2[1],
           new Ora("1", "1.0079", "I", "Informatică")
         );
+        setMaterie3("informatica");
         setForm((prevForm) => ({
           ...prevForm,
           Buttons: {
@@ -352,6 +357,7 @@ const Home = () => {
           data2[1],
           new Ora("1", "1.0079", "C", "Chimie")
         );
+        setMaterie3("chimie");
         setForm((prevForm) => ({
           ...prevForm,
           Buttons: {
@@ -452,6 +458,7 @@ const Home = () => {
           data2[1],
           new Ora("1", "1.0079", "B", "Biologie")
         );
+        setMaterie3("biologie");
         setForm((prevForm) => ({
           ...prevForm,
           Buttons: {
@@ -552,6 +559,7 @@ const Home = () => {
           data2[1],
           new Ora("1", "1.0079", "F", "Fizică")
         );
+        setMaterie3("fizica");
         setForm((prevForm) => ({
           ...prevForm,
           Buttons: {
@@ -668,6 +676,16 @@ const Home = () => {
 
   const [currIntrebare, setCurrIntrebare] = useState(0);
 
+  const [intrebariFinal, setIntrebariFinal] = useState([
+    new Intrebare(
+      "Romana",
+      "Literatura",
+      "Cine a scris Floare albastra?",
+      ["Mihai Eminescu", "Ion Luca Caragiale", "Ion Creanga", "Ion Pillat"],
+      1
+    ),
+  ]);
+
   function Intrebare(
     materie,
     capitol,
@@ -682,15 +700,39 @@ const Home = () => {
     this.raspunsCorect = raspunsCorect;
   }
 
-  const intrebari = [
+  var intrebariRomana = [
+    new Intrebare(
+      "Romana",
+      "Literatura",
+      "Cine a scris Floare albastra?",
+      ["Mihai Eminescu", "Ion Luca Caragiale", "Ion Creanga", "Ion Pillat"],
+      1
+    ),
+  ];
+
+  var intrebariMatematica = [
+    new Intrebare(
+      "Matematica",
+      "Numere",
+      "Ce este un numar?",
+      ["a", "b", "c", "d"],
+      1
+    ),
+  ];
+
+  var intrebariInformatica = [
     new Intrebare(
       "Informatica",
       "Elemente de baza",
-      "Ce este un limbaj de programare?",
+      "Ce este un algoritm?",
       ["a", "b", "c", "d"],
       2
     ),
   ];
+
+  function SetMaterii(input) {
+    setIntrebariFinal([...intrebariFinal, ...intrebariInformatica]);
+  }
 
   const [colorButton1, setColorButton1] = useState("primary");
   const [colorButton2, setColorButton2] = useState("primary");
@@ -717,7 +759,7 @@ const Home = () => {
   }
 
   function submit(input) {
-    if (input == intrebari[currIntrebare].raspunsCorect) {
+    if (input == intrebariFinal[currIntrebare].raspunsCorect) {
       if (input == 1) {
         setColorButton1(ColorSuccess);
         setDisabledButton2(true);
@@ -755,22 +797,23 @@ const Home = () => {
       if (input == 4) {
         setColorButton4(ColorError);
       }
-      if (intrebari[currIntrebare].raspunsCorect == 1) {
+      if (intrebariFinal[currIntrebare].raspunsCorect == 1) {
         setColorButton1(ColorSuccess);
       }
-      if (intrebari[currIntrebare].raspunsCorect == 2) {
+      if (intrebariFinal[currIntrebare].raspunsCorect == 2) {
         setColorButton2(ColorSuccess);
       }
-      if (intrebari[currIntrebare].raspunsCorect == 3) {
+      if (intrebariFinal[currIntrebare].raspunsCorect == 3) {
         setColorButton3(ColorSuccess);
       }
-      if (intrebari[currIntrebare].raspunsCorect == 4) {
+      if (intrebariFinal[currIntrebare].raspunsCorect == 4) {
         setColorButton4(ColorSuccess);
       }
     }
 
     sleep(2000).then(() => {
       resetButtons();
+      setCurrIntrebare((prev) => prev + 1);
     });
   }
 
@@ -920,7 +963,7 @@ const Home = () => {
       </DragDropContext>
     </>,
     <>
-      {intrebari[currIntrebare].intrebare}
+      {intrebariFinal[currIntrebare].intrebare}
       <Center>
         <Stack spacing="0.3rem" mt="xs">
           <Button
@@ -929,7 +972,7 @@ const Home = () => {
             onClick={() => submit(1)}
             variant="light"
           >
-            {intrebari[currIntrebare].raspunsuri[0]}
+            {intrebariFinal[currIntrebare].raspunsuri[0]}
           </Button>
           <Button
             color={colorButton2}
@@ -937,7 +980,7 @@ const Home = () => {
             onClick={() => submit(2)}
             variant="light"
           >
-            {intrebari[currIntrebare].raspunsuri[1]}
+            {intrebariFinal[currIntrebare].raspunsuri[1]}
           </Button>
           <Button
             color={colorButton3}
@@ -945,7 +988,7 @@ const Home = () => {
             onClick={() => submit(3)}
             variant="light"
           >
-            {intrebari[currIntrebare].raspunsuri[2]}
+            {intrebariFinal[currIntrebare].raspunsuri[2]}
           </Button>
           <Button
             color={colorButton4}
@@ -953,7 +996,7 @@ const Home = () => {
             onClick={() => submit(4)}
             variant="light"
           >
-            {intrebari[currIntrebare].raspunsuri[3]}
+            {intrebariFinal[currIntrebare].raspunsuri[3]}
           </Button>
         </Stack>
       </Center>
@@ -1251,9 +1294,15 @@ const Home = () => {
                     setShowBack(true);
                     console.log(days);
                     console.log(date);
-                    if (pas == 4) {
+                    if (pas == 3) {
                       setTrans(true);
+                      SetMaterii(materie3);
                     }
+                    console.log("PAS: ", pas);
+                    console.log("MATERIE 1 : ", materie1);
+                    console.log("MATERIE 2 : ", materie2);
+                    console.log("MATERIE 3 : ", materie3);
+                    console.log("INTREBARI: ", intrebariFinal);
                   }}
                   variant="light"
                   mt="1rem"
