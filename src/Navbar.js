@@ -304,20 +304,35 @@ export function HeaderMiddle() {
             </Text>
           </Center>
         ) : null}
-        <Group spacing={0} className={classes.social} position="right" noWrap>
-          <ActionIcon size="lg">
-            <BrandTwitter size={18} />
-          </ActionIcon>
-          <ActionIcon size="lg">
-            <BrandYoutube size={18} />
-          </ActionIcon>
-          <ActionIcon size="lg">
-            <BrandInstagram size={18} />
-          </ActionIcon>
-        </Group>
-        <Group position="right">
-          <Theme />
-        </Group>
+        {windowDimension.winWidth > 720 ? (
+          <>
+            <Group
+              spacing={0}
+              className={classes.social}
+              position="right"
+              noWrap
+            >
+              <ActionIcon size="lg">
+                <BrandTwitter size={18} />
+              </ActionIcon>
+              <ActionIcon size="lg">
+                <BrandYoutube size={18} />
+              </ActionIcon>
+              <ActionIcon size="lg">
+                <BrandInstagram size={18} />
+              </ActionIcon>
+            </Group>
+          </>
+        ) : null}
+        {windowDimension.winWidth < 720 ? (
+          <Group position="right" style={{ marginLeft: "78vw" }}>
+            <Theme />
+          </Group>
+        ) : (
+          <Group position="right">
+            <Theme />
+          </Group>
+        )}
       </Container>
     </Header>
   );
