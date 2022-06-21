@@ -656,7 +656,7 @@ const Home = () => {
           <div>
             <Text>{item.name}</Text>
             <Text color="dimmed" size="sm">
-              Dificultate: {item.position} • Capitole: {item.mass}
+              Dificultate: {item.position} • Capitole: {item.mass} testing{" "}
             </Text>
           </div>
         </div>
@@ -730,8 +730,224 @@ const Home = () => {
     ),
   ];
 
+  var intrebariChimie = [
+    new Intrebare(
+      "Chimie",
+      "Hidrocarburi",
+      "Ce este o catena?",
+      ["a", "b", "c", "d"],
+      1
+    ),
+  ];
+
+  var intrebariFizica = [
+    new Intrebare(
+      "Fizica",
+      "Mecanica",
+      "Cum este definita o forta?",
+      ["a", "b", "c", "d"],
+      4
+    ),
+  ];
+
+  var intrebariBiologie = [
+    new Intrebare(
+      "Biologie",
+      "Celule",
+      "Ce este euglena verde?",
+      ["a", "b", "c", "d"],
+      3
+    ),
+  ];
+
+  var priority = [];
+
   function SetMaterii(input) {
-    setIntrebariFinal([...intrebariFinal, ...intrebariInformatica]);
+    if (input == "informatica") {
+      if (state[0].name == "Informatică") {
+        if (state[1].name == "Română") {
+          setIntrebariFinal([
+            ...intrebariInformatica,
+            ...intrebariRomana,
+            ...intrebariMatematica,
+          ]);
+        } else {
+          setIntrebariFinal([
+            ...intrebariInformatica,
+            ...intrebariMatematica,
+            ...intrebariRomana,
+          ]);
+        }
+      } else {
+        if (state[0].name == "Română") {
+          if (state[1].name == "Matematică") {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariMatematica,
+              ...intrebariInformatica,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariInformatica,
+              ...intrebariMatematica,
+            ]);
+          }
+        } else if (state[0].name == "Matematică") {
+          if (state[1].name == "Română") {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariRomana,
+              ...intrebariInformatica,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariInformatica,
+              ...intrebariRomana,
+            ]);
+          }
+        }
+      }
+    } else if (input == "chimie") {
+      if (state[0].name == "Chimie") {
+        if (state[1].name == "Română") {
+          setIntrebariFinal([
+            ...intrebariChimie,
+            ...intrebariRomana,
+            ...intrebariMatematica,
+          ]);
+        } else {
+          setIntrebariFinal([
+            ...intrebariChimie,
+            ...intrebariMatematica,
+            ...intrebariRomana,
+          ]);
+        }
+      } else {
+        if (state[0].name == "Română") {
+          if (state[1].name == "Matematică") {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariMatematica,
+              ...intrebariChimie,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariChimie,
+              ...intrebariMatematica,
+            ]);
+          }
+        } else if (state[0].name == "Matematică") {
+          if (state[1].name == "Română") {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariRomana,
+              ...intrebariChimie,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariChimie,
+              ...intrebariRomana,
+            ]);
+          }
+        }
+      }
+    } else if (input == "fizica") {
+      if (state[0].name == "Fizică") {
+        if (state[1].name == "Română") {
+          setIntrebariFinal([
+            ...intrebariFizica,
+            ...intrebariRomana,
+            ...intrebariMatematica,
+          ]);
+        } else {
+          setIntrebariFinal([
+            ...intrebariFizica,
+            ...intrebariMatematica,
+            ...intrebariRomana,
+          ]);
+        }
+      } else {
+        if (state[0].name == "Română") {
+          if (state[1].name == "Matematică") {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariMatematica,
+              ...intrebariFizica,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariFizica,
+              ...intrebariMatematica,
+            ]);
+          }
+        } else if (state[0].name == "Matematică") {
+          if (state[1].name == "Română") {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariRomana,
+              ...intrebariFizica,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariFizica,
+              ...intrebariRomana,
+            ]);
+          }
+        }
+      }
+    } else if (input == "biologie") {
+      if (state[0].name == "Biologie") {
+        if (state[1].name == "Română") {
+          setIntrebariFinal([
+            ...intrebariBiologie,
+            ...intrebariRomana,
+            ...intrebariMatematica,
+          ]);
+        } else {
+          setIntrebariFinal([
+            ...intrebariBiologie,
+            ...intrebariMatematica,
+            ...intrebariRomana,
+          ]);
+        }
+      } else {
+        if (state[0].name == "Română") {
+          if (state[1].name == "Matematică") {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariMatematica,
+              ...intrebariBiologie,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariRomana,
+              ...intrebariBiologie,
+              ...intrebariMatematica,
+            ]);
+          }
+        } else if (state[0].name == "Matematică") {
+          if (state[1].name == "Română") {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariRomana,
+              ...intrebariBiologie,
+            ]);
+          } else {
+            setIntrebariFinal([
+              ...intrebariMatematica,
+              ...intrebariBiologie,
+              ...intrebariRomana,
+            ]);
+          }
+        }
+      }
+    }
   }
 
   const [colorButton1, setColorButton1] = useState("primary");
@@ -963,7 +1179,10 @@ const Home = () => {
       </DragDropContext>
     </>,
     <>
+      <Title order={3}>{intrebariFinal[currIntrebare].materie}</Title>
+      <Text color="dimmed">{intrebariFinal[currIntrebare].capitol}</Text>
       {intrebariFinal[currIntrebare].intrebare}
+      {console.log(state)}
       <Center>
         <Stack spacing="0.3rem" mt="xs">
           <Button
@@ -1269,7 +1488,6 @@ const Home = () => {
 
             <Center style={{ paddingTop: "2rem" }}>
               <Paper shadow="xl" p="md" withBorder style={{ width: "22rem" }}>
-                <Title order={3}>PASUL {step + 1}</Title>
                 {contents[pas]}
                 {showBack ? (
                   <Button
@@ -1294,7 +1512,7 @@ const Home = () => {
                     setShowBack(true);
                     console.log(days);
                     console.log(date);
-                    if (pas == 3) {
+                    if (pas == 4) {
                       setTrans(true);
                       SetMaterii(materie3);
                     }
