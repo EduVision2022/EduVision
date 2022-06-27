@@ -1,9 +1,10 @@
-import { React, useState, useEffect, useHistory } from "react";
+import { React, useState, useEffect } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setUser, selectUsername } from "./userSlice";
+import { setUser, selectUsername, selectObject } from "./userSlice";
 import { useRef } from "react";
 import dayjs from "dayjs";
+import { useHistory } from "react-router-dom";
 
 // Mantine UI Imports
 import {
@@ -64,6 +65,39 @@ import logoLight from "./images/logoLight.png";
 import logoDark from "./images/logoDark.png";
 import backgroundLight from "./images/test.png";
 import backgroundDark from "./images/image.png";
+
+//New login fuck
+import { auth, SignInWithGoogle, logout } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Link } from "react-router-dom";
+
+import { initializeApp } from "firebase/app";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
+import { getFirestore, query, collection, where } from "firebase/firestore";
+import { addDoc, getDocs } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAYv-TF955BPhLNDpyU33_RXYOc_3JfAxo",
+  authDomain: "fir-eduvision.firebaseapp.com",
+  databaseURL:
+    "https://fir-eduvision-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "fir-eduvision",
+  storageBucket: "fir-eduvision.appspot.com",
+  messagingSenderId: "646268921365",
+  appId: "1:646268921365:web:e87b17b5fa58292386101c",
+  measurementId: "G-N4RKEE445C",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -175,6 +209,8 @@ function navigate(href, newTab) {
 }
 
 const Home = () => {
+  const history = useHistory();
+
   const user = useSelector(selectUsername);
   const dispatch = useDispatch();
 
@@ -193,6 +229,22 @@ const Home = () => {
   const [showBack, setShowBack] = useState(false);
 
   const [days, setDays] = useState([]);
+
+  const [User, loading, error] = useAuthState(auth);
+  const [name, setName] = useState("");
+  const fetchUserName = async () => {
+    try {
+      const q = query(collection(db, "users"), where("uid", "==", User?.uid));
+      const doc = await getDocs(q);
+      const data = doc.docs[0].data();
+      setLoggedin(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    fetchUserName();
+  }, [User, loading]);
 
   const [Form, setForm] = useState({
     Buttons: {
@@ -656,7 +708,7 @@ const Home = () => {
           <div>
             <Text>{item.name}</Text>
             <Text color="dimmed" size="sm">
-              Dificultate: {item.position} • Capitole: {item.mass} testing{" "}
+              Dificultate: {item.position} • Capitole: {item.mass}
             </Text>
           </div>
         </div>
@@ -708,39 +760,6 @@ const Home = () => {
       ["Lică Sămădăul", "Soacra lui Ghiță", "Ghiță", "Ana"],
       2
     ),
-    new Intrebare(
-      "Romana",
-      "Literatura",
-      'Ce tip de opera este "Povestea lui Harap-Alb"?',
-      ["Basm", "Nuvelă", "Roman", "Comedie"],
-      1
-    ),
-    new Intrebare(
-      "Romana",
-      "Literatura",
-      "Cine a scris Floare Albastra?",
-      ["Ion Creanga", "Ioan Slavici", "Mihai Eminescu", "Ion Pillat"],
-      3
-    ),
-    new Intrebare(
-      "Romana",
-      "Literatura",
-      'Cine a scris "Povestea lui Harap-Alb"?',
-      ["Ioan Slavici", "Ion Creanga", "Mihai Eminescu", "Ion Luca Caragiale"],
-      2
-    ),
-    new Intrebare(
-      "Romana",
-      "Marii Clasici",
-      'Poemul "Luceafărul" apare pentru prima dată:',
-      [
-        "la București",
-        "la Timisoara, în anul 1883",
-        'la Viena, în Almanahul societății academice social-literare "România jună"',
-        'în revista "Convorbiri literare" din Iași',
-      ],
-      3
-    ),
   ];
 
   var intrebariMatematica = [
@@ -751,34 +770,6 @@ const Home = () => {
       ["2x + y = 2", "x = 0", "y = 3", "3x - y = 1"],
       4
     ),
-    new Intrebare(
-      "Matematica",
-      "Geometrie",
-      "Sa se determine coordonatele mijlocului segmentului AB, unde A(-3,4) si B(7,-2)",
-      ["(2,1)", "(1,2)", "(7,-2)", "(-3,4)"],
-      1
-    ),
-    new Intrebare(
-      "Matematica",
-      "Geometrie",
-      "Aria cercului de diametru 2 este:",
-      ["3π", "π;", "6π;", "4π;"],
-      2
-    ),
-    new Intrebare(
-      "Matematica",
-      "Geometrie",
-      "Daca x ≤ 3 - 2x atunci:",
-      ["x ≤ -5 ", "x = 0 ", "x ≤ -11", "x ≤ 1 "],
-      4
-    ),
-    new Intrebare(
-      "Matematica",
-      "Geometrie",
-      "Solutia ecuatiei 5x-12=3x este:",
-      ["-5", "6", "4", "5"],
-      2
-    ),
   ];
 
   var intrebariInformatica = [
@@ -788,76 +779,6 @@ const Home = () => {
       "Indicați expresia C/C++ cu valoarea 0",
       ["sqrt(16)==4", "45*5==200+5*5", "25/10==15/10", "64/4==8*2"],
       3
-    ),
-    new Intrebare(
-      "Informatica",
-      "Grafuri",
-      "Numim pădure un graf neorientat în care fiecare componentă conexă a sa este un arbore. Orice pădure cu cel putin doi arbori este un graf care:",
-      [
-        "Are cicluri şi este conex",
-        "Are cicluri şi nu este conex",
-        "Nu are cicluri şi este conex",
-        "Nu are cicluri şi nu este conex",
-      ],
-      1
-    ),
-    new Intrebare(
-      "Informatica",
-      "Declararea variabilelor",
-      "Alegeți declararea corectă a unei variabile structurale cu 2 componente, una de tip real și una de tip întreg.",
-
-      [
-        "int float x[10] ;",
-        "struct { float x; int y} a;",
-        "float a[20];",
-        "struct { float x; int y} int a;",
-      ],
-      2
-    ),
-    new Intrebare(
-      "Informatica",
-      "Expresii",
-      "Variabilele x și y sunt întregi. Indicați expresia C/C++ echivalentă cu (x<3)&&(y>=5).",
-      [
-        "!(!(x<3)||!(y>=5))",
-        "!(x>=3)&&(y<5)",
-        "!((x>=3)&&(y<5))",
-        "!((x<3)||(y>=5))",
-      ],
-      1
-    ),
-    new Intrebare(
-      "Informatica",
-      "Grafuri",
-      "Valorile care pot reprezenta gradele nodurilor unui graf neorientat, cu 6 noduri, sunt:",
-      ["2,2,5,5,0,1", "6,5,4,3,2,1", "2,2,3,4,0,3", "1,0,0,2,2,2"],
-      3
-    ),
-    new Intrebare(
-      "Informatica",
-      "Structuri repetitive",
-      "Ce se afisează, în urma executării următoarelor instrucțiuni: int b[5]={88,87,76,36,21},i;for( i=1;i<4;i++){cout<<b[i]<<' ';}",
-      [
-        "87 76 36",
-        "88 87 76 36 21",
-        "87 76 36 21",
-        "Secventa are erori de sintaxa.",
-      ],
-      1
-    ),
-    new Intrebare(
-      "Informatica",
-      "Matrici",
-      "Variabilele i şi j sunt de tip întreg, iar variabila m memorează un tablou bidimensional cu 5 linii şi 5 coloane, numerotate de la 0 la 4, cu elemente numere întregi. O expresie C/C++ a cărei valoare este egală cu produsul dintre primul element de pe linia i și ultimul element de pe coloana j din acest tablou este:",
-      ["m(0,i)*m(j,4)", "m(i)(0)*m(4)(j)", "m[i][0]*m[4][j]", "m[0,i]*m[j,4]"],
-      3
-    ),
-    new Intrebare(
-      "Informatica",
-      "Backtracking",
-      "Utilizând metoda backtracking se generează toate modalităţile de a scrie numărul 6 ca sumă de numere naturale impare. Termenii fiecărei sume sunt în ordine crescătoare. Cele patru soluţii sunt obţinute în această ordine: 1+1+1+1+1+1; 1+1+1+3; 1+5; 3+3. Aplicând acelaşi algoritm, numărul soluţiilor obţinute pentru scrierea lui 8 este:",
-      ["9", "6", "5", "8"],
-      2
     ),
   ];
 
@@ -1265,22 +1186,26 @@ const Home = () => {
       }
     }
 
-    sleep(2000).then(() => {
+    sleep(500).then(() => {
       resetButtons();
       var numarIntrebari = 0;
       if (materie3 == "informatica") {
-        numarIntrebari += intrebariInformatica.length();
+        numarIntrebari += intrebariInformatica.length;
       } else if (materie3 == "biologie") {
-        numarIntrebari += intrebariBiologie.length();
+        numarIntrebari += intrebariBiologie.length;
       } else if (materie3 == "chimie") {
-        numarIntrebari += intrebariChimie.length();
+        numarIntrebari += intrebariChimie.length;
       } else if (materie3 == "fizica") {
-        numarIntrebari += intrebariFizica.length();
+        numarIntrebari += intrebariFizica.length;
       }
-      numarIntrebari += intrebariRomana.length() + intrebariMatematica.length();
-      if (currIntrebare < numarIntrebari) {
+      numarIntrebari += intrebariRomana.length + intrebariMatematica.length;
+      if (currIntrebare < numarIntrebari - 1) {
         setCurrIntrebare((prev) => prev + 1);
+      } else {
+        setPas((prev) => prev + 1);
       }
+      console.log("CURRINTREBARE: ", currIntrebare);
+      console.log("NUMARINTREBARI: ", numarIntrebari);
     });
   }
 
@@ -1430,6 +1355,14 @@ const Home = () => {
       </DragDropContext>
     </>,
     <>
+      <Title order={3}>Atenție</Title>
+      <Text>
+        Următorul pas este testul. După ce vei apăsa butonul de mai jos, nu te
+        vei mai putea intoarce fără a pierde progresul. Apasă când ești
+        pregătit.
+      </Text>
+    </>,
+    <>
       <Title order={3}>{intrebariFinal[currIntrebare].materie}</Title>
       <Text color="dimmed">{intrebariFinal[currIntrebare].capitol}</Text>
       <Paper shadow="xl" p="md" withBorder>
@@ -1551,38 +1484,43 @@ const Home = () => {
                     Get started
                   </Button>
                 ) : (
-                  <GoogleLogin
-                    theme={dark ? "filled_black" : "filled_light"}
-                    shape="pill"
-                    onSuccess={(credentialResponse) => {
-                      var decoded = jwt_decode(credentialResponse.credential);
-                      console.log(decoded.email);
-                      setLoggedin(true);
-                      dispatch(
-                        setUser({
-                          name: decoded.name,
-                          email: decoded.email,
-                          picture: decoded.picture,
-                        })
-                      );
-                      showNotification({
-                        id: "hello-there",
-                        disallowClose: false,
-                        autoClose: 3000,
-                        title: "Logged In",
-                        message:
-                          "You logged in successfully as " + decoded.name,
-                        color: "teal",
-                        icon: <Check size={18} />,
-                        className: "my-notification-class",
-                        loading: false,
-                      });
-                    }}
-                    onError={() => {
-                      console.log("Login Failed");
-                    }}
-                    useOneTap
-                  />
+                  <>
+                    <Button
+                      leftIcon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          x="0px"
+                          y="0px"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 48 48"
+                        >
+                          <path
+                            fill="#FFC107"
+                            d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+                          ></path>
+                          <path
+                            fill="#FF3D00"
+                            d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+                          ></path>
+                          <path
+                            fill="#4CAF50"
+                            d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+                          ></path>
+                          <path
+                            fill="#1976D2"
+                            d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+                          ></path>
+                        </svg>
+                      }
+                      onClick={SignInWithGoogle}
+                      variant="default"
+                      radius="xl"
+                      size="sm"
+                    >
+                      Sign in with Google
+                    </Button>
+                  </>
                 )}
 
                 <Button
@@ -1749,14 +1687,7 @@ const Home = () => {
             <Center style={{ paddingTop: "2rem" }}>
               <Paper shadow="xl" p="md" withBorder style={{ width: "22rem" }}>
                 {contents[pas]}
-                <Progress
-                  radius="md"
-                  size="xl"
-                  value={progress}
-                  style={{ width: "30rem" }}
-                  label={`${progress}%`}
-                />
-                {showBack ? (
+                {showBack && pas != 6 && pas != 7 ? (
                   <Button
                     variant="light"
                     mt="1rem"
@@ -1770,33 +1701,49 @@ const Home = () => {
                     Back
                   </Button>
                 ) : null}
-
-                <Button
-                  onClick={() => {
-                    setProgress(progress + 10);
-                    setPas(pas + 1);
-                    console.log(value);
-                    setShowBack(true);
-                    console.log(days);
-                    console.log(date);
-                    if (pas == 4) {
-                      setTrans(true);
-                      SetMaterii(materie3);
-                    }
-                    if (pas == 5) {
-                      console.log("GRESITE : ", Gresite);
-                    }
-                    console.log("PAS: ", pas);
-                    console.log("MATERIE 1 : ", materie1);
-                    console.log("MATERIE 2 : ", materie2);
-                    console.log("MATERIE 3 : ", materie3);
-                    console.log("INTREBARI: ", intrebariFinal);
-                  }}
-                  variant="light"
-                  mt="1rem"
-                >
-                  Next
-                </Button>
+                {pas != 6 ? (
+                  <Button
+                    onClick={() => {
+                      if (pas == 7) {
+                        history.push({
+                          pathname: "/generator",
+                          state: {
+                            ore: state,
+                            gresite: Gresite,
+                            date: date,
+                            days: days,
+                          },
+                        });
+                      }
+                      setProgress(progress + 10);
+                      setPas(pas + 1);
+                      console.log(value);
+                      setShowBack(true);
+                      console.log(days);
+                      console.log(date);
+                      if (pas == 4) {
+                        setTrans(true);
+                        SetMaterii(materie3);
+                      }
+                      if (pas == 5) {
+                        console.log("GRESITE : ", Gresite);
+                      }
+                      console.log("PAS: ", pas);
+                      console.log("MATERIE 1 : ", materie1);
+                      console.log("MATERIE 2 : ", materie2);
+                      console.log("MATERIE 3 : ", materie3);
+                      console.log("INTREBARI: ", intrebariFinal);
+                    }}
+                    variant="light"
+                    mt="1rem"
+                  >
+                    {pas == 5
+                      ? "Start test"
+                      : pas == 7
+                      ? "Generează orarul"
+                      : "Next"}
+                  </Button>
+                ) : null}
               </Paper>
             </Center>
           </>

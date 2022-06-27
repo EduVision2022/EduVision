@@ -35,6 +35,7 @@ import {
   ChevronUp,
 } from "tabler-icons-react";
 import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
+import { Logout } from "tabler-icons-react";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -49,6 +50,12 @@ import {
 // Images
 import logoLight from "./images/logoLight.png";
 import logoDark from "./images/logoDark.png";
+
+import { auth, SignInWithGoogle, logout } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { addDoc, getDocs } from "firebase/firestore";
+import { getFirestore, query, collection, where } from "firebase/firestore";
+import { db } from "./firebase";
 
 const useStyles = createStyles((theme) => ({
   user2: {
@@ -156,6 +163,10 @@ links[1] = new HeaderProps("/contact", "Contact");
 links[2] = new HeaderProps("/login", "Login");
 
 export function HeaderMiddle() {
+  function refreshPage() {
+    window.location.reload(false);
+  }
+
   const history = useHistory();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -169,6 +180,30 @@ export function HeaderMiddle() {
   const profilepicture = useSelector(selectPicture);
   const email = useSelector(selectEmail);
   const dispatch = useDispatch();
+
+  const [user, loading, error] = useAuthState(auth);
+  const [name, setName] = useState("Guest");
+  const [profilepic, setProfilepic] = useState("");
+  const [mail, setMail] = useState("");
+
+  const fetchUserName = async () => {
+    try {
+      console.log("AUTH:", user);
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const doc = await getDocs(q);
+      const data = doc.docs[0].data();
+      setName(data.name);
+      setProfilepic(data.picture);
+      setMail(data.email);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    if (!user) {
+    }
+    fetchUserName();
+  }, [user, loading]);
 
   const [windowDimension, detectHW] = useState({
     winWidth: window.innerWidth,
@@ -224,17 +259,16 @@ export function HeaderMiddle() {
               className={classes.user}
             >
               <Avatar
-                src={profilepicture}
+                src={profilepic}
                 radius="xl"
                 style={{ marginRight: "10px" }}
               />
-
               <div style={{ flex: 1 }}>
                 <Text size="sm" weight={500}>
-                  {username ? username : "Guest"}
+                  {name ? name : "Guest"}
                 </Text>
                 <Text color="dimmed" size="xs">
-                  {email}
+                  {mail}
                 </Text>
               </div>
             </Button>
@@ -244,44 +278,15 @@ export function HeaderMiddle() {
           size="lg"
         >
           <Menu.Item
-            icon={<Package size={16} color={theme.colors.blue[6]} />}
+            icon={<Logout size={16} color={theme.colors.violet[6]} />}
             rightSection={
               <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + P
+                Ctrl + L
               </Text>
             }
+            onClick={logout}
           >
-            Project
-          </Menu.Item>
-          <Menu.Item
-            icon={<SquareCheck size={16} color={theme.colors.pink[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + T
-              </Text>
-            }
-          >
-            Task
-          </Menu.Item>
-          <Menu.Item
-            icon={<Users size={16} color={theme.colors.cyan[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + U
-              </Text>
-            }
-          >
-            Team
-          </Menu.Item>
-          <Menu.Item
-            icon={<Calendar size={16} color={theme.colors.violet[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + E
-              </Text>
-            }
-          >
-            Event
+            Log Out
           </Menu.Item>
         </Menu>
 

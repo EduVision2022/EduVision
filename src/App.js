@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
 import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -13,6 +13,8 @@ import HeaderMiddle from "./Navbar";
 import store from "./store";
 import About from "./About";
 import Footer from "./Footer";
+import Generator from "./Generator";
+import NotFoundTitle from "./404Page";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -41,6 +43,8 @@ function App() {
                   <Switch>
                     <Route exact path="/" component={Home} />
                     <Route path="/about" component={About} />
+                    <Route path="/generator" component={Generator} />
+                    <Route path="*" component={NotFoundTitle} />
                   </Switch>
                   <Footer />
                 </div>
