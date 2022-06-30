@@ -31,9 +31,22 @@ import {
 } from "firebase/auth";
 import { getFirestore, query, collection, where } from "firebase/firestore";
 
-import { BrandGoogle } from "tabler-icons-react";
+import { BrandGoogle, Currency } from "tabler-icons-react";
+
+import dayjs from "dayjs";
+
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { Calendar } from "@mantine/dates";
+import { Indicator } from "@mantine/core";
+import { Modal, useMantineTheme } from "@mantine/core";
+import { Title } from "@mantine/core";
+import { Center } from "@mantine/core";
 
 const Generator = (props) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const theme = useMantineTheme();
+
   const dispatch = useDispatch();
 
   const object = useSelector(selectObject);
@@ -42,76 +55,183 @@ const Generator = (props) => {
   const id = useId();
   const history = useHistory();
 
-  //if (location.state == undefined) {
-  //    return <NotFoundTitle />;
-  //  }
-
   const [user, loading, error] = useAuthState(auth);
-  const [name, setName] = useState("");
-  const [testing, setTesting] = useState("testing");
 
-  console.log(location);
-  const fetchUserName = async () => {
-    try {
-      console.log("AUTH:", user);
-      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-      const doc = await getDocs(q);
-      const data = doc.docs[0].data();
-      setName(data.name);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    if (!user) {
-      return <NotFoundTitle />;
-    }
-    fetchUserName();
-  }, [user, loading]);
+  const [value, setValue] = useState(new Date());
+
+  const [currDay, setCurrDay] = useState("");
+  const [currDate, setCurrDate] = useState(0);
+
+  //if (location.state == undefined) {
+  //      return <NotFoundTitle />;
+  //  }
+  console.log(location.state);
+
   const messageRef = useRef();
+
+  console.log("GENERATORUSER: ", user.displayName);
+
+  var orar = {
+    settings: {
+      ore: [],
+      zile: [],
+      materii: [],
+    },
+    ore: {
+      zile: [],
+      ore: [],
+      materii: [],
+      capitole: [],
+    },
+  };
+
+  var days = location.state.days;
+  var dates = location.state.date;
+  var materii = [
+    location.state.ore[0].name,
+    location.state.ore[1].name,
+    location.state.ore[2].name,
+  ];
+
+  var zi1 = dayjs(location.state.zile[0]);
+  var zi2 = dayjs(location.state.zile[1]);
+  const zile = zi2.diff(zi1, "day");
+
+  const [orare, setOrare] = useState([]);
+
+  const fetchOrare = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    setOrare(document.data().orare);
+  };
+
+  useEffect(() => {
+    fetchOrare();
+  }, []);
+
+  console.log("ZILE:", zile);
+
+  function populateObject() {
+    orar.settings.ore = dates;
+    orar.settings.days = days;
+    orar.settings.materii = materii;
+
+    orar.ore.zile = days;
+    orar.ore.ore = dates;
+    orar.ore.materii = materii;
+    orar.ore.capitole = materii;
+  }
+
+  const addToDataBase = async (item) => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    console.log(q);
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    console.log(document.id);
+
+    await setDoc(
+      doc(db, "users", document.id),
+      { orare: [...document.data().orare, orar] },
+      { merge: true }
+    );
+  };
+
+  var datestesting = [16, 17, 18];
+  var continut = [
+    "16:30 -> 17:15 | Informatica",
+    "14:30 -> 15:15 | Romana",
+    "15:15 -> 16:00 | Matematica",
+  ];
+
+  var weekdayname = new Array(7);
+  weekdayname[0] = "Sunday";
+  weekdayname[1] = "Monday";
+  weekdayname[2] = "Tuesday";
+  weekdayname[3] = "Wednesday";
+  weekdayname[4] = "Thursday";
+  weekdayname[5] = "Friday";
+  weekdayname[6] = "Saturday";
+
   return (
     <div className="generator">
-      <h1>{testing}</h1>
-      <h1>{name}</h1>
-      <h1>{user?.email}</h1>
-      <Button
-        leftIcon={
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            width="24"
-            height="24"
-            viewBox="0 0 48 48"
-          >
-            <path
-              fill="#FFC107"
-              d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
-            ></path>
-            <path
-              fill="#FF3D00"
-              d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
-            ></path>
-            <path
-              fill="#4CAF50"
-              d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
-            ></path>
-            <path
-              fill="#1976D2"
-              d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
-            ></path>
-          </svg>
+      <Center>
+        <Calendar
+          value={value}
+          onChange={setValue}
+          month={value}
+          size="xl"
+          styles={(theme) => ({
+            cell: {
+              border: `1px solid ${
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[4]
+                  : theme.colors.gray[2]
+              }`,
+            },
+            day: { borderRadius: 0, height: 70, fontSize: theme.fontSizes.lg },
+            weekday: { fontSize: theme.fontSizes.lg },
+            weekdayCell: {
+              fontSize: theme.fontSizes.xl,
+              backgroundColor:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[5]
+                  : theme.colors.gray[0],
+              border: `1px solid ${
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[4]
+                  : theme.colors.gray[2]
+              }`,
+              height: 70,
+            },
+          })}
+          renderDay={(date) => {
+            const day = date.getDate();
+            return (
+              <Indicator
+                size={24}
+                color="blue"
+                withBorder
+                offset={8}
+                disabled={datestesting.includes(day) == false}
+                onClick={() => {
+                  {
+                    setCurrDay(
+                      date.toLocaleDateString("ro-RO", { weekday: "long" })
+                    );
+                    setCurrDate(day);
+
+                    datestesting.includes(day)
+                      ? setOpenModal(true)
+                      : console.log(
+                          date.toLocaleDateString("ro-RO", { weekday: "long" })
+                        );
+                  }
+                }}
+              >
+                <div>{day}</div>
+              </Indicator>
+            );
+          }}
+        />
+      </Center>
+      <Modal
+        centered
+        opened={openModal}
+        onClose={() => setOpenModal(false)}
+        title={<Title order={3}>{currDay.toUpperCase()}</Title>}
+        overlayColor={
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[9]
+            : theme.colors.gray[2]
         }
-        onClick={SignInWithGoogle}
-        variant="default"
-        radius="xl"
-        size="sm"
+        overlayOpacity={0.55}
+        overlayBlur={3}
       >
-        Sign in with Google
-      </Button>
-      <button className="register__btn register__google" onClick={logout}>
-        SignOut
-      </button>
+        {<div>{continut[datestesting.indexOf(currDate)]}</div>}
+        {console.log(datestesting.indexOf(currDate))}
+        {console.log(currDate)}
+      </Modal>
     </div>
   );
 };

@@ -111,9 +111,7 @@ export function Footer() {
             style={{ fontFamily: "Smallest Pixel-7" }}
             className="strokeme"
             size="xs"
-          >
-            Made with ❤️ by speedy&sbn
-          </Text>
+          ></Text>
         </Group>
       </div>
     </div>

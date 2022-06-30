@@ -1712,6 +1712,7 @@ const Home = () => {
                             gresite: Gresite,
                             date: date,
                             days: days,
+                            zile: value,
                           },
                         });
                       }

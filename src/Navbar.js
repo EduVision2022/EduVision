@@ -259,6 +259,7 @@ export function HeaderMiddle() {
               className={classes.user}
             >
               <Avatar
+                referrerpolicy="no-referrer"
                 src={profilepic}
                 radius="xl"
                 style={{ marginRight: "10px" }}
