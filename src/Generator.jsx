@@ -6,7 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mantine/core";
 // Components import
 import NotFoundTitle from "./404Page";
-import { setUser, selectUsername, selectObject } from "./userSlice";
+import {
+  setUser,
+  selectUsername,
+  selectObject,
+  selectEmail,
+} from "./userSlice";
 
 import { auth, SignInWithGoogle } from "./firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -18,7 +23,7 @@ import jwt_decode from "jwt-decode";
 import { addDoc, getDocs } from "firebase/firestore";
 
 import { logout, db } from "./firebase";
-
+import { TextInput } from "@mantine/core";
 import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
@@ -31,7 +36,7 @@ import {
 } from "firebase/auth";
 import { getFirestore, query, collection, where } from "firebase/firestore";
 
-import { BrandGoogle, Currency } from "tabler-icons-react";
+import { BrandGoogle, Currency, LayersDifference } from "tabler-icons-react";
 
 import dayjs from "dayjs";
 
@@ -41,8 +46,46 @@ import { Indicator } from "@mantine/core";
 import { Modal, useMantineTheme } from "@mantine/core";
 import { Title } from "@mantine/core";
 import { Center } from "@mantine/core";
+import { NumberInput } from "@mantine/core";
+import { Text } from "@mantine/core";
+import { Code } from "@mantine/core";
+import { Paper } from "@mantine/core";
+import { Checkbox } from "@mantine/core";
+import { Slider, RangeSlider, Container } from "@mantine/core";
+import { Select } from "@mantine/core";
+import { TimeInput } from "@mantine/dates";
+import { Clock } from "tabler-icons-react";
+import { SegmentedControl, Tooltip } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
+import { Help } from "tabler-icons-react";
+import { useMantineColorScheme } from "@mantine/core";
+import { Transition } from "@mantine/core";
+import { useid } from "react-router-dom";
+import "dayjs/locale/ro";
+
+var pushedAlt = false;
 
 const Generator = (props) => {
+  const [windowDimension, detectHW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  });
+
+  const detectSize = () => {
+    detectHW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", detectSize);
+
+    return () => {
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimension]);
+
   const [openModal, setOpenModal] = useState(false);
 
   const theme = useMantineTheme();
@@ -59,17 +102,54 @@ const Generator = (props) => {
 
   const [value, setValue] = useState(new Date());
 
+  const ids = useId();
+
   const [currDay, setCurrDay] = useState("");
   const [currDate, setCurrDate] = useState(0);
 
+  const [checked, setChecked] = useState(false);
+
+  const [updatedAlt, setUpdatedAlt] = useState(false);
+
+  const [valueSlider, setValueSlider] = useState(50);
+  const [endValue, setEndValue] = useState(50);
+
+  const [currMaterie, setCurrMaterie] = useState("");
+
+  const [selectValue, setSelectValue] = useState("");
+
+  const [capitolValue, setCapitolValue] = useState("");
+
+  const [orarName, setOrarName] = useState("Default");
+
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
+
+  var nrIntrebariRomana = 10;
+  var nrIntrebariMatematica = 10;
+  var nrIntrebariAlt = 15;
+
+  var diffLevel1 = 4;
+  var diffLevel2 = 3;
+  var diffLevel3 = 2;
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   //if (location.state == undefined) {
   //      return <NotFoundTitle />;
-  //  }
+  // }
+
   console.log(location.state);
 
   const messageRef = useRef();
 
   console.log("GENERATORUSER: ", user.displayName);
+
+  function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
   var orar = {
     settings: {
@@ -108,20 +188,14 @@ const Generator = (props) => {
 
   useEffect(() => {
     fetchOrare();
+    sleep(1000);
+    console.log("use effect is runnning");
+    GenerateOrar();
+    logger();
+    setOrarGenerat(orarFinal);
   }, []);
 
   console.log("ZILE:", zile);
-
-  function populateObject() {
-    orar.settings.ore = dates;
-    orar.settings.days = days;
-    orar.settings.materii = materii;
-
-    orar.ore.zile = days;
-    orar.ore.ore = dates;
-    orar.ore.materii = materii;
-    orar.ore.capitole = materii;
-  }
 
   const addToDataBase = async (item) => {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
@@ -132,107 +206,857 @@ const Generator = (props) => {
 
     await setDoc(
       doc(db, "users", document.id),
-      { orare: [...document.data().orare, orar] },
+      { orare: [...document.data().orare, item] },
       { merge: true }
     );
   };
 
-  var datestesting = [16, 17, 18];
-  var continut = [
-    "16:30 -> 17:15 | Informatica",
-    "14:30 -> 15:15 | Romana",
-    "15:15 -> 16:00 | Matematica",
-  ];
+  var Location = {
+    ore: location.state.date,
+    zile: location.state.days,
+    gresite: location.state.gresite,
+    materii: [
+      location.state.ore[0].name,
+      location.state.ore[1].name,
+      location.state.ore[2].name,
+    ],
+    date: location.state.zile,
+  };
 
-  var weekdayname = new Array(7);
-  weekdayname[0] = "Sunday";
-  weekdayname[1] = "Monday";
-  weekdayname[2] = "Tuesday";
-  weekdayname[3] = "Wednesday";
-  weekdayname[4] = "Thursday";
-  weekdayname[5] = "Friday";
-  weekdayname[6] = "Saturday";
+  var orarFinal = {
+    date: [],
+    ore: [],
+    durata: [],
+    materii: [],
+    capitole: [],
+    importante: [],
+  };
 
+  var capitoleRomanaTemp = Location.gresite.Romana.Capitole;
+  var capitoleRomana = [];
+  var capitoleMatematicaTemp = Location.gresite.Matematica.Capitole;
+  var capitoleMatematica = [];
+  var capitoleAltTemp = Location.gresite.Alt.Capitole;
+  var capitoleAlt = [];
+
+  for (var i = 0; i < capitoleRomanaTemp.length; i++) {
+    if (!capitoleRomana.includes(capitoleRomanaTemp[i])) {
+      capitoleRomana.push(capitoleRomanaTemp[i]);
+    }
+  }
+  for (var i = 0; i < capitoleMatematicaTemp.length; i++) {
+    if (!capitoleMatematica.includes(capitoleMatematicaTemp[i])) {
+      capitoleMatematica.push(capitoleMatematicaTemp[i]);
+    }
+  }
+  for (var i = 0; i < capitoleAltTemp.length; i++) {
+    if (!capitoleAlt.includes(capitoleAltTemp[i])) {
+      capitoleAlt.push(capitoleAltTemp[i]);
+    }
+  }
+
+  var dificultateInformatica = 3;
+  var dificultateFizica = 3;
+  var dificultateChimie = 3;
+  var dificultateBiologie = 1;
+
+  var dificultateRomana = 2;
+  var dificultateMatematica = 2;
+  var dificultateAlt =
+    Location.materii[0] == "Informatică"
+      ? dificultateInformatica
+      : Location.materii[0] == "Fizică"
+      ? dificultateFizica
+      : Location.materii[0] == "Chimie"
+      ? dificultateChimie
+      : Location.materii[0] == "Biologie"
+      ? dificultateBiologie
+      : Location.materii[1] == "Informatică"
+      ? dificultateInformatica
+      : Location.materii[1] == "Fizică"
+      ? dificultateFizica
+      : Location.materii[1] == "Chimie"
+      ? dificultateChimie
+      : Location.materii[1] == "Biologie"
+      ? dificultateBiologie
+      : Location.materii[2] == "Informatică"
+      ? dificultateInformatica
+      : Location.materii[2] == "Fizică"
+      ? dificultateFizica
+      : Location.materii[2] == "Chimie"
+      ? dificultateChimie
+      : dificultateBiologie;
+
+  const returnPas = (input) => {
+    if (input == "romana") {
+      if (Location.gresite.Romana.Numar < nrIntrebariRomana / 3) {
+        return diffLevel1;
+      } else if (Location.gresite.Romana.Numar < nrIntrebariRomana / 2) {
+        return diffLevel2;
+      } else {
+        return diffLevel3;
+      }
+    }
+    if (input == "matematica") {
+      if (Location.gresite.Matematica.Numar < nrIntrebariMatematica / 3) {
+        return diffLevel1;
+      } else if (
+        Location.gresite.Matematica.Numar <
+        nrIntrebariMatematica / 2
+      ) {
+        return diffLevel2;
+      } else {
+        return diffLevel3;
+      }
+    }
+    if (input == "alt") {
+      if (Location.gresite.Alt.Numar < nrIntrebariAlt / 3) {
+        return diffLevel1;
+      } else if (Location.gresite.Alt.Numar < nrIntrebariAlt / 2) {
+        return diffLevel2;
+      } else {
+        return diffLevel3;
+      }
+    }
+  };
+
+  var globals = {
+    pas: {
+      romana: 10 / Location.gresite.Romana.Numar - dificultateRomana + 3,
+      matematica:
+        10 / Location.gresite.Matematica.Numar - dificultateMatematica + 3,
+      alt: 10 / Location.gresite.Alt.Numar - dificultateAlt + 3,
+    },
+    left: {},
+    materii: {
+      alt:
+        materii[0] == "Informatică" ||
+        materii[0] == "Fizică" ||
+        materii[0] == "Chimie" ||
+        materii[0] == "Biologie"
+          ? materii[0]
+          : materii[1] == "Informatică" ||
+            materii[1] == "Fizică" ||
+            materii[1] == "Chimie" ||
+            materii[1] == "Biologie"
+          ? materii[1]
+          : materii[2],
+      romana:
+        materii[0] == "Română"
+          ? materii[0]
+          : materii[1] == "Română"
+          ? materii[1]
+          : materii[2],
+      matematica:
+        materii[0] == "Matematică"
+          ? materii[0]
+          : materii[1] == "Matematică"
+          ? materii[1]
+          : materii[2],
+    },
+  };
+
+  const [orarGenerat, setOrarGenerat] = useState(orarFinal);
+
+  var aux = Location.date[0];
+  var zi = dayjs(aux);
+
+  var aux2 = Location.date[0];
+  var zi2 = dayjs(aux);
+  zi2 = zi2.add(
+    2 *
+      Math.round(
+        (Math.round(globals.pas.romana) +
+          Math.round(globals.pas.matematica) +
+          Math.round(globals.pas.alt)) /
+          3
+      ),
+    "day"
+  );
+
+  // Populates orarFinal with the 3 objects, (romana, matematica, alt)
+  const Layer2 = () => {
+    console.log("CAPITOLE ROMANA:", capitoleRomana);
+    var contorCapitoleGresiteAlt = 0;
+    var contorCapitoleGresiteRomana = 0;
+    var contorCapitoleGresiteMatematica = 0;
+
+    var durataAlt = Math.round((dificultateAlt * 100) / 3 + 20);
+    var durataMatematica = Math.round((dificultateMatematica * 100) / 3 + 20);
+    var durataRomana = Math.round((dificultateRomana * 100) / 3 + 20);
+
+    var ora1 = dayjs(Location.ore[0]).hour();
+    var ora2 = dayjs(Location.ore[1]).hour();
+
+    var hourEndings = [10, 15, 25, 30, 45, 50];
+    var minuteRemoval = [15, 20, 25, 30, 35];
+
+    for (var i = 0; i < orarFinal.date.length; i += globals.pas.alt) {
+      orarFinal.materii.push(globals.materii.alt);
+      if (contorCapitoleGresiteAlt < Location.gresite.Alt.Numar) {
+        orarFinal.capitole.push(
+          Location.gresite.Alt.Capitole[contorCapitoleGresiteAlt++]
+        );
+      } else {
+        contorCapitoleGresiteAlt = 0;
+        orarFinal.capitole.push(
+          Location.gresite.Alt.Capitole[contorCapitoleGresiteAlt++]
+        );
+      }
+      orarFinal.durata.push(
+        durataAlt -
+          minuteRemoval[Math.floor(Math.random() * minuteRemoval.length)] +
+          " minute"
+      );
+      var randomEnding =
+        hourEndings[Math.floor(Math.random() * hourEndings.length)];
+      var hour = getRndInteger(ora1, ora2) * 100 + randomEnding;
+      while (hour + durataAlt > ora2 * 100) {
+        hour -= 100;
+      }
+      var finalHour = parseInt(hour / 100) + ":" + (hour % 100);
+      orarFinal.ore.push(finalHour.toString());
+    }
+
+    for (var i = 0; i < orarFinal.date.length; i += globals.pas.matematica) {
+      orarFinal.materii.push(globals.materii.matematica);
+      if (contorCapitoleGresiteMatematica < Location.gresite.Matematica.Numar) {
+        orarFinal.capitole.push(
+          Location.gresite.Matematica.Capitole[
+            contorCapitoleGresiteMatematica++
+          ]
+        );
+      } else {
+        contorCapitoleGresiteMatematica = 0;
+        orarFinal.capitole.push(
+          Location.gresite.Matematica.Capitole[
+            contorCapitoleGresiteMatematica++
+          ]
+        );
+      }
+      orarFinal.durata.push(
+        durataMatematica -
+          minuteRemoval[Math.floor(Math.random() * minuteRemoval.length)] +
+          " minute"
+      );
+      var randomEnding =
+        hourEndings[Math.floor(Math.random() * hourEndings.length)];
+      var hour = getRndInteger(ora1, ora2) * 100 + randomEnding;
+      while (hour + durataMatematica > ora2 * 100) {
+        hour -= 100;
+      }
+      var finalHour = parseInt(hour / 100) + ":" + (hour % 100);
+      orarFinal.ore.push(finalHour.toString());
+    }
+
+    for (var i = 0; i < orarFinal.date.length; i += globals.pas.romana) {
+      orarFinal.materii.push(globals.materii.romana);
+      if (contorCapitoleGresiteRomana < Location.gresite.Romana.Numar) {
+        orarFinal.capitole.push(
+          Location.gresite.Romana.Capitole[contorCapitoleGresiteRomana++]
+        );
+      } else {
+        contorCapitoleGresiteRomana = 0;
+        orarFinal.capitole.push(
+          Location.gresite.Romana.Capitole[contorCapitoleGresiteRomana++]
+        );
+      }
+      orarFinal.durata.push(
+        durataRomana -
+          minuteRemoval[Math.floor(Math.random() * minuteRemoval.length)] +
+          " minute"
+      );
+      var randomEnding =
+        hourEndings[Math.floor(Math.random() * hourEndings.length)];
+      var hour = getRndInteger(ora1, ora2) * 100 + randomEnding;
+      while (hour + durataMatematica > ora2 * 100) {
+        hour -= 100;
+      }
+      var finalHour = parseInt(hour / 100) + ":" + (hour % 100);
+      orarFinal.ore.push(finalHour.toString());
+    }
+  };
+
+  const Layer1 = () => {
+    for (
+      var i = Location.date[0].getDate();
+      i <= Location.date[0].getDate() + zile;
+      i += Math.round(
+        (Math.round(globals.pas.romana) +
+          Math.round(globals.pas.matematica) +
+          Math.round(globals.pas.alt)) /
+          3
+      )
+    ) {
+      zi = zi.add(
+        Math.round(
+          (Math.round(globals.pas.romana) +
+            Math.round(globals.pas.matematica) +
+            Math.round(globals.pas.alt)) /
+            3
+        ),
+        "day"
+      );
+      if (Location.zile.includes(zi.day())) {
+        orarFinal.date.push(zi.format("DD/MM/YYYY"));
+      }
+    }
+    for (
+      var i =
+        Location.date[0].getDate() +
+        Math.round(
+          (Math.round(globals.pas.romana) +
+            Math.round(globals.pas.matematica) +
+            Math.round(globals.pas.alt)) /
+            3
+        );
+      i < Location.date[0].getDate() + zile;
+      i += Math.round(
+        (Math.round(globals.pas.romana) +
+          Math.round(globals.pas.matematica) +
+          Math.round(globals.pas.alt)) /
+          3
+      )
+    ) {
+      zi2 = zi2.add(
+        Math.round(
+          (Math.round(globals.pas.romana) +
+            Math.round(globals.pas.matematica) +
+            Math.round(globals.pas.alt)) /
+            3
+        ) +
+          Date(zi2.format("DD/MM/YYY")) <
+          Date(Location.date[1])
+          ? getRndInteger(2, 5)
+          : 0,
+        "day"
+      );
+      if (Location.zile.includes(zi2.day())) {
+        orarFinal.date.push(zi2.format("DD/MM/YYYY"));
+      }
+    }
+    orarFinal.date.sort(function (a, b) {
+      return new Date(a) - new Date(b);
+    });
+  };
+
+  const fillImportante = (input) => {
+    for (var i = 0; i < 100; i++) {
+      orarFinal.importante.push(input);
+    }
+  };
+
+  const GenerateOrar = () => {
+    daysToNumbers(Location.zile);
+    fillImportante(false);
+    Layer1();
+    Layer2();
+    setOrarGenerat(orarFinal);
+    console.log("DATE : ", orarFinal.date);
+  };
+
+  function generateOrar() {
+    for (var i = 0; i < zile; i++) {}
+    orarFinal.date = [4, 5, 6];
+    orarFinal.ore = ["8:00", "12:00", "10:30"];
+    orarFinal.durata = ["1:30", "1:00", "0:50"];
+    orarFinal.materii = ["Informatica", "Romana", "Matematica"];
+    orarFinal.capitole = ["Tablouri", "Literatura", "Numere complexe"];
+    orarFinal.completate = [false, false, false];
+  }
+
+  console.log("LOCATION STATE: ", Location);
+
+  function daysToNumbers(input) {
+    for (var i = 0; i < input.length; i++) {
+      if (input[i] == "luni") {
+        input[i] = 1;
+      }
+      if (input[i] == "marti") {
+        input[i] = 2;
+      }
+      if (input[i] == "miercuri") {
+        input[i] = 3;
+      }
+      if (input[i] == "joi") {
+        input[i] = 4;
+      }
+      if (input[i] == "vineri") {
+        input[i] = 5;
+      }
+      if (input[i] == "sambata") {
+        input[i] = 6;
+      }
+      if (input[i] == "duminica") {
+        input[i] = 0;
+      }
+    }
+  }
+
+  function logger() {
+    console.log("THIS IS FROM LOGGER -> USEEFFECT");
+    console.log("ORARFINAL DATE: ", orarFinal.date);
+    console.log("PAS: ", globals.pas);
+    console.log(
+      Math.round(
+        (Math.round(globals.pas.romana) +
+          Math.round(globals.pas.matematica) +
+          Math.round(globals.pas.alt)) /
+          3
+      )
+    );
+    console.log(Location.zile);
+    console.log(Location.gresite);
+    console.log("ORAR: ", orarFinal);
+  }
+
+  const testing = () => {
+    console.log("THIS IS FROM TESTING");
+  };
+
+  sleep(2000);
   return (
-    <div className="generator">
-      <Center>
-        <Calendar
-          value={value}
-          onChange={setValue}
-          month={value}
-          size="xl"
-          styles={(theme) => ({
-            cell: {
-              border: `1px solid ${
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[4]
-                  : theme.colors.gray[2]
-              }`,
-            },
-            day: { borderRadius: 0, height: 70, fontSize: theme.fontSizes.lg },
-            weekday: { fontSize: theme.fontSizes.lg },
-            weekdayCell: {
-              fontSize: theme.fontSizes.xl,
-              backgroundColor:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[5]
-                  : theme.colors.gray[0],
-              border: `1px solid ${
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[4]
-                  : theme.colors.gray[2]
-              }`,
-              height: 70,
-            },
-          })}
-          renderDay={(date) => {
-            const day = date.getDate();
-            return (
-              <Indicator
-                size={24}
-                color="blue"
-                withBorder
-                offset={8}
-                disabled={datestesting.includes(day) == false}
-                onClick={() => {
-                  {
-                    setCurrDay(
-                      date.toLocaleDateString("ro-RO", { weekday: "long" })
-                    );
-                    setCurrDate(day);
+    console.log("FROM RETURN"),
+    console.log(orarFinal),
+    console.log(orarGenerat),
+    (
+      <div className="generator">
+        <Center>
+          <Paper
+            shadow="xl"
+            radius="md"
+            p="xl"
+            withBorder
+            style={{ marginTop: "5rem" }}
+          >
+            <Center>
+              <Paper shadow="xl" radius="md" p="xl" withBorder>
+                <Calendar
+                  locale="ro"
+                  value={value}
+                  onChange={setValue}
+                  size="xl"
+                  renderDay={(date) => {
+                    const dayj = dayjs(date);
+                    const day = dayj.format("DD/MM/YYYY");
+                    return (
+                      <>
+                        <Indicator
+                          color={dark ? "violet" : "blue"}
+                          withBorder
+                          offset={8}
+                          disabled={orarGenerat.date.includes(day) == false}
+                          onClick={() => {
+                            {
+                              setCurrDay(
+                                date.toLocaleDateString("ro-RO", {
+                                  weekday: "long",
+                                })
+                              );
+                              setCurrDate(day);
 
-                    datestesting.includes(day)
-                      ? setOpenModal(true)
-                      : console.log(
-                          date.toLocaleDateString("ro-RO", { weekday: "long" })
-                        );
-                  }
+                              setCurrMaterie(
+                                orarGenerat.materii[
+                                  orarGenerat.date.indexOf(currDate)
+                                ]
+                              );
+                              orarGenerat.date.includes(day)
+                                ? setOpenModal(true)
+                                : setOpenModal(false);
+                              setCurrMaterie(
+                                orarGenerat.materii[
+                                  orarGenerat.date.indexOf(currDate)
+                                ]
+                              );
+                              console.log("materie: ", selectValue);
+                            }
+                          }}
+                        >
+                          <div>{dayj.format("D")}</div>
+                        </Indicator>
+                      </>
+                    );
+                  }}
+                />
+              </Paper>
+              <Transition
+                mounted={openModal}
+                transition="slide-right"
+                duration={300}
+                exitDuration={300}
+                timingFunction="ease"
+              >
+                {(styles) =>
+                  windowDimension.winWidth > 720 && openModal ? (
+                    <Center style={{ ...styles }}>
+                      <Paper
+                        shadow="xl"
+                        radius="md"
+                        p="xl"
+                        withBorder
+                        style={{
+                          ...styles,
+                          //marginTop: "0rem",
+                          //marginBottom: "3.5rem",
+                          marginLeft: "3rem",
+                        }}
+                      >
+                        <Tooltip
+                          wrapLines
+                          width={220}
+                          transition="slide-up"
+                          transitionDuration={200}
+                          label="Pentru a face editari apasa de doua ori pe optiunea dorita pentru a confirma iar apoi reincarca ziua"
+                        >
+                          {" "}
+                          <ActionIcon size="xs">
+                            <Help />
+                          </ActionIcon>
+                        </Tooltip>
+                        <>
+                          {console.log("CURRMATERIE: ", currMaterie)}
+                          <Paper p="xs" withBorder>
+                            <div
+                              style={{
+                                textAlign: "left",
+                              }}
+                            >
+                              <Code>MATERIE:</Code>{" "}
+                              <SegmentedControl
+                                data={materii}
+                                value={
+                                  orarGenerat.materii[
+                                    orarGenerat.date.indexOf(currDate)
+                                  ]
+                                }
+                                onChange={setSelectValue}
+                                onClick={() => {
+                                  orarGenerat.materii[
+                                    orarGenerat.date.indexOf(currDate)
+                                  ] = selectValue;
+                                  orarGenerat.capitole[
+                                    orarGenerat.date.indexOf(currDate)
+                                  ] =
+                                    orarGenerat.materii[
+                                      orarGenerat.date.indexOf(currDate)
+                                    ] == "Informatică" ||
+                                    orarGenerat.materii[
+                                      orarGenerat.date.indexOf(currDate)
+                                    ] == "Fizica" ||
+                                    orarGenerat.materii[
+                                      orarGenerat.date.indexOf(currDate)
+                                    ] == "Biologie" ||
+                                    orarGenerat.materii[
+                                      orarGenerat.date.indexOf(currDate)
+                                    ] == "Chimie"
+                                      ? capitoleAlt[
+                                          getRndInteger(
+                                            0,
+                                            capitoleAlt.length - 1
+                                          )
+                                        ]
+                                      : orarGenerat.materii[
+                                          orarGenerat.date.indexOf(currDate)
+                                        ] == "Matematică"
+                                      ? capitoleMatematica[
+                                          getRndInteger(
+                                            0,
+                                            capitoleMatematica.length - 1
+                                          )
+                                        ]
+                                      : capitoleRomana[
+                                          getRndInteger(
+                                            0,
+                                            capitoleRomana.length - 1
+                                          )
+                                        ];
+                                }}
+                              />
+                            </div>
+                          </Paper>
+                          <Paper p="xs" withBorder mt={"xs"}>
+                            <div
+                              style={{
+                                textAlign: "left",
+                              }}
+                            >
+                              <Code>CAPITOL:</Code>{" "}
+                              <Paper
+                                p="0.4rem"
+                                style={{
+                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
+                                  display: "inline-block",
+                                  paddingLeft: "0.7rem",
+                                  paddingRight: "0.7rem",
+                                }}
+                              >
+                                <Center>
+                                  <Text
+                                    color={dark ? "#98a7ab" : "#495057"}
+                                    size="sm"
+                                    weight={500}
+                                  >
+                                    {
+                                      orarGenerat.capitole[
+                                        orarGenerat.date.indexOf(currDate)
+                                      ]
+                                    }
+                                  </Text>
+                                </Center>
+                              </Paper>
+                              {}
+                            </div>
+                          </Paper>
+                          <Paper
+                            p="xs"
+                            withBorder
+                            mt={"xs"}
+                            style={{ alignItems: "left", alignContent: "left" }}
+                          >
+                            <div
+                              style={{
+                                textAlign: "left",
+                              }}
+                            >
+                              <Code>ORA:</Code>{" "}
+                              <Paper
+                                p="0.4rem"
+                                style={{
+                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
+                                  display: "inline-block",
+                                  paddingLeft: "0.7rem",
+                                  paddingRight: "0.7rem",
+                                }}
+                              >
+                                <Center>
+                                  <Text
+                                    color={dark ? "#98a7ab" : "#495057"}
+                                    size="sm"
+                                    weight={500}
+                                  >
+                                    {
+                                      orarGenerat.ore[
+                                        orarGenerat.date.indexOf(currDate)
+                                      ]
+                                    }
+                                  </Text>
+                                </Center>
+                              </Paper>
+                            </div>
+                          </Paper>
+                          <Paper p="xs" withBorder mt={"xs"}>
+                            <div
+                              style={{
+                                textAlign: "left",
+                              }}
+                            >
+                              <Code>DURATA:</Code>{" "}
+                              <Paper
+                                p="0.4rem"
+                                style={{
+                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
+                                  display: "inline-block",
+                                  paddingLeft: "0.7rem",
+                                  paddingRight: "0.7rem",
+                                }}
+                              >
+                                <Center>
+                                  <Text
+                                    color={dark ? "#98a7ab" : "#495057"}
+                                    size="sm"
+                                    weight={500}
+                                  >
+                                    {
+                                      orarGenerat.durata[
+                                        orarGenerat.date.indexOf(currDate)
+                                      ]
+                                    }
+                                  </Text>
+                                </Center>
+                              </Paper>
+                            </div>
+                          </Paper>
+                          {orarGenerat.importante[
+                            orarGenerat.date.indexOf(currDate)
+                          ] ? (
+                            <>
+                              <Paper p="xs" withBorder mt={"xs"}>
+                                <div
+                                  style={{
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  <Code>DETALII:</Code>{" "}
+                                  <Paper
+                                    p="0.4rem"
+                                    style={{
+                                      backgroundColor: dark
+                                        ? "#141517"
+                                        : "#f1f3f5",
+                                      display: "inline-block",
+                                      paddingLeft: "0.7rem",
+                                      paddingRight: "0.7rem",
+                                    }}
+                                  >
+                                    <Text
+                                      color={dark ? "#98a7ab" : "#495057"}
+                                      size="sm"
+                                      weight={500}
+                                    >
+                                      Important
+                                    </Text>
+                                  </Paper>
+                                </div>
+                              </Paper>
+                            </>
+                          ) : (
+                            ""
+                          )}
+                          <Paper p="xs" withBorder mt={"xs"}>
+                            <div
+                              style={{
+                                textAlign: "left",
+                              }}
+                            >
+                              <Checkbox
+                                label="Important"
+                                onChange={() => {
+                                  setOrarGenerat({
+                                    ...orarGenerat,
+                                    importante: {
+                                      ...orarGenerat.importante,
+                                      [orarGenerat.date.indexOf(currDate)]:
+                                        !orarGenerat.importante[
+                                          orarGenerat.date.indexOf(currDate)
+                                        ],
+                                    },
+                                  });
+                                  console.log("FROM ONCHANGE");
+                                }}
+                                checked={
+                                  orarGenerat.importante[
+                                    orarGenerat.date.indexOf(currDate)
+                                  ]
+                                }
+                              />
+                            </div>
+                          </Paper>
+                          {
+                            orarGenerat.importante[
+                              orarGenerat.date.indexOf(currDate)
+                            ]
+                          }
+                        </>
+                      </Paper>
+                    </Center>
+                  ) : null
+                }
+              </Transition>
+            </Center>
+            <div
+              style={{
+                marginTop: "3rem",
+                marginLeft: "1rem",
+                alignContent: "left",
+                alignItems: "left",
+                textAlign: "left",
+              }}
+            >
+              <Title order={3}>Ultimele detalii...</Title>
+              <TextInput
+                placeholder="Orar Nou"
+                label="Numele orarului"
+                required
+                variant="filled"
+                radius={"md"}
+                style={{ width: "20rem" }}
+                value={orarName}
+                onChange={(event) => {
+                  setOrarName(event.currentTarget.value);
+                }}
+              />
+            </div>
+            <div style={{ marginTop: "1rem" }}>
+              <Button
+                variant="filled"
+                onClick={() => {
+                  addToDataBase(orarGenerat);
                 }}
               >
-                <div>{day}</div>
-              </Indicator>
-            );
-          }}
-        />
-      </Center>
-      <Modal
-        centered
-        opened={openModal}
-        onClose={() => setOpenModal(false)}
-        title={<Title order={3}>{currDay.toUpperCase()}</Title>}
-        overlayColor={
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[9]
-            : theme.colors.gray[2]
-        }
-        overlayOpacity={0.55}
-        overlayBlur={3}
-      >
-        {<div>{continut[datestesting.indexOf(currDate)]}</div>}
-        {console.log(datestesting.indexOf(currDate))}
-        {console.log(currDate)}
-      </Modal>
-    </div>
+                Salveaza
+              </Button>
+            </div>
+          </Paper>
+        </Center>
+        <Modal
+          centered
+          opened={openModal && windowDimension.winWidth < 720}
+          onClose={() => setOpenModal(false)}
+          title={<Title order={3}>{currDay.toUpperCase()}</Title>}
+          overlayColor={
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[9]
+              : theme.colors.gray[2]
+          }
+          overlayOpacity={0.55}
+          overlayBlur={3}
+        >
+          {
+            <>
+              <Paper shadow="xl" p="xs" withBorder>
+                <div>
+                  <Code>MATERIE:</Code>
+                  {orarGenerat.materii[orarGenerat.date.indexOf(currDate)]}
+                </div>
+              </Paper>
+              <Paper shadow="xl" p="xs" withBorder mt={"xs"}>
+                <div>
+                  <Code>CAPITOL:</Code>
+                  {orarGenerat.capitole[orarGenerat.date.indexOf(currDate)]}
+                </div>
+              </Paper>
+              <Paper shadow="xl" p="xs" withBorder mt={"xs"}>
+                <div>
+                  <Code>ORA:</Code>
+                  {orarGenerat.ore[orarGenerat.date.indexOf(currDate)]}
+                </div>
+              </Paper>
+              <Paper shadow="xl" p="xs" withBorder mt={"xs"}>
+                <div>
+                  <Code>DURATA:</Code>
+                  {orarGenerat.durata[orarGenerat.date.indexOf(currDate)]}
+                </div>
+              </Paper>
+              <Paper shadow="xl" p="xs" withBorder mt={"xs"}>
+                <div>
+                  <Checkbox
+                    label="Important"
+                    onChange={() => {
+                      setOrarGenerat({
+                        ...orarGenerat,
+                        importante: {
+                          ...orarGenerat.importante,
+                          [orarGenerat.date.indexOf(currDate)]:
+                            !orarGenerat.importante[
+                              orarGenerat.date.indexOf(currDate)
+                            ],
+                        },
+                      });
+                      console.log("FROM ONCHANGE");
+                    }}
+                    checked={
+                      orarGenerat.importante[orarGenerat.date.indexOf(currDate)]
+                    }
+                  />
+                </div>
+              </Paper>
+            </>
+          }
+          {}
+          {}
+        </Modal>
+      </div>
+    )
   );
 };
 

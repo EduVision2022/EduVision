@@ -54,6 +54,7 @@ import { Clock } from "tabler-icons-react";
 import { Calendar } from "tabler-icons-react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useListState } from "@mantine/hooks";
+import FeaturesImages from "./FeatureImage";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -63,8 +64,10 @@ import jwt_decode from "jwt-decode";
 // Image imports
 import logoLight from "./images/logoLight.png";
 import logoDark from "./images/logoDark.png";
-import backgroundLight from "./images/test.png";
-import backgroundDark from "./images/image.png";
+import backgroundLight from "./images/defaultLight.png";
+import backgroundDark from "./images/defaultDark.png";
+import backgroundLightInverted from "./images/invertedLight.png";
+import backgroundDarkInverted from "./images/invertedDark.png";
 
 //New login fuck
 import { auth, SignInWithGoogle, logout } from "./firebase";
@@ -760,6 +763,39 @@ const Home = () => {
       ["Lică Sămădăul", "Soacra lui Ghiță", "Ghiță", "Ana"],
       2
     ),
+    new Intrebare(
+      "Romana",
+      "Literatura",
+      'Ce tip de opera este "Povestea lui Harap-Alb"?',
+      ["Basm", "Nuvelă", "Roman", "Comedie"],
+      1
+    ),
+    new Intrebare(
+      "Romana",
+      "Literatura",
+      "Cine a scris Floare Albastra?",
+      ["Ion Creanga", "Ioan Slavici", "Mihai Eminescu", "Ion Pillat"],
+      3
+    ),
+    new Intrebare(
+      "Romana",
+      "Literatura",
+      'Cine a scris "Povestea lui Harap-Alb"?',
+      ["Ioan Slavici", "Ion Creanga", "Mihai Eminescu", "Ion Luca Caragiale"],
+      2
+    ),
+    new Intrebare(
+      "Romana",
+      "Marii Clasici",
+      'Poemul "Luceafărul" apare pentru prima dată:',
+      [
+        "la București",
+        "la Timisoara, în anul 1883",
+        'la Viena, în Almanahul societății academice social-literare "România jună"',
+        'în revista "Convorbiri literare" din Iași',
+      ],
+      3
+    ),
   ];
 
   var intrebariMatematica = [
@@ -770,6 +806,34 @@ const Home = () => {
       ["2x + y = 2", "x = 0", "y = 3", "3x - y = 1"],
       4
     ),
+    new Intrebare(
+      "Matematica",
+      "Geometrie",
+      "Sa se determine coordonatele mijlocului segmentului AB, unde A(-3,4) si B(7,-2)",
+      ["(2,1)", "(1,2)", "(7,-2)", "(-3,4)"],
+      1
+    ),
+    new Intrebare(
+      "Matematica",
+      "Geometrie",
+      "Aria cercului de diametru 2 este:",
+      ["3π", "π;", "6π;", "4π;"],
+      2
+    ),
+    new Intrebare(
+      "Matematica",
+      "Geometrie",
+      "Daca x ≤ 3 - 2x atunci:",
+      ["x ≤ -5 ", "x = 0 ", "x ≤ -11", "x ≤ 1 "],
+      4
+    ),
+    new Intrebare(
+      "Matematica",
+      "Geometrie",
+      "Solutia ecuatiei 5x-12=3x este:",
+      ["-5", "6", "4", "5"],
+      2
+    ),
   ];
 
   var intrebariInformatica = [
@@ -779,6 +843,76 @@ const Home = () => {
       "Indicați expresia C/C++ cu valoarea 0",
       ["sqrt(16)==4", "45*5==200+5*5", "25/10==15/10", "64/4==8*2"],
       3
+    ),
+    new Intrebare(
+      "Informatica",
+      "Grafuri",
+      "Numim pădure un graf neorientat în care fiecare componentă conexă a sa este un arbore. Orice pădure cu cel putin doi arbori este un graf care:",
+      [
+        "Are cicluri şi este conex",
+        "Are cicluri şi nu este conex",
+        "Nu are cicluri şi este conex",
+        "Nu are cicluri şi nu este conex",
+      ],
+      1
+    ),
+    new Intrebare(
+      "Informatica",
+      "Declararea variabilelor",
+      "Alegeți declararea corectă a unei variabile structurale cu 2 componente, una de tip real și una de tip întreg.",
+
+      [
+        "int float x[10] ;",
+        "struct { float x; int y} a;",
+        "float a[20];",
+        "struct { float x; int y} int a;",
+      ],
+      2
+    ),
+    new Intrebare(
+      "Informatica",
+      "Expresii",
+      "Variabilele x și y sunt întregi. Indicați expresia C/C++ echivalentă cu (x<3)&&(y>=5).",
+      [
+        "!(!(x<3)||!(y>=5))",
+        "!(x>=3)&&(y<5)",
+        "!((x>=3)&&(y<5))",
+        "!((x<3)||(y>=5))",
+      ],
+      1
+    ),
+    new Intrebare(
+      "Informatica",
+      "Grafuri",
+      "Valorile care pot reprezenta gradele nodurilor unui graf neorientat, cu 6 noduri, sunt:",
+      ["2,2,5,5,0,1", "6,5,4,3,2,1", "2,2,3,4,0,3", "1,0,0,2,2,2"],
+      3
+    ),
+    new Intrebare(
+      "Informatica",
+      "Structuri repetitive",
+      "Ce se afisează, în urma executării următoarelor instrucțiuni: int b[5]={88,87,76,36,21},i;for( i=1;i<4;i++){cout<<b[i]<<' ';}",
+      [
+        "87 76 36",
+        "88 87 76 36 21",
+        "87 76 36 21",
+        "Secventa are erori de sintaxa.",
+      ],
+      1
+    ),
+    new Intrebare(
+      "Informatica",
+      "Matrici",
+      "Variabilele i şi j sunt de tip întreg, iar variabila m memorează un tablou bidimensional cu 5 linii şi 5 coloane, numerotate de la 0 la 4, cu elemente numere întregi. O expresie C/C++ a cărei valoare este egală cu produsul dintre primul element de pe linia i și ultimul element de pe coloana j din acest tablou este:",
+      ["m(0,i)*m(j,4)", "m(i)(0)*m(4)(j)", "m[i][0]*m[4][j]", "m[0,i]*m[j,4]"],
+      3
+    ),
+    new Intrebare(
+      "Informatica",
+      "Backtracking",
+      "Utilizând metoda backtracking se generează toate modalităţile de a scrie numărul 6 ca sumă de numere naturale impare. Termenii fiecărei sume sunt în ordine crescătoare. Cele patru soluţii sunt obţinute în această ordine: 1+1+1+1+1+1; 1+1+1+3; 1+5; 3+3. Aplicând acelaşi algoritm, numărul soluţiilor obţinute pentru scrierea lui 8 este:",
+      ["9", "6", "5", "8"],
+      2
     ),
   ];
 
@@ -1576,8 +1710,8 @@ const Home = () => {
                   fill="currentColor"
                   strokeWidth="0"
                   viewBox="0 0 512 512"
-                  height="1em"
-                  width="1em"
+                  height="2em"
+                  width="2em"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
@@ -1588,8 +1722,8 @@ const Home = () => {
                   strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-ml-1"
-                  height="1em"
-                  width="1em"
+                  height="2em"
+                  width="2em"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
@@ -1600,8 +1734,8 @@ const Home = () => {
                   strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-ml-1"
-                  height="1em"
-                  width="1em"
+                  height="2em"
+                  width="2em"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
@@ -1612,8 +1746,8 @@ const Home = () => {
                   strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-ml-1"
-                  height="1em"
-                  width="1em"
+                  height="2em"
+                  width="2em"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
@@ -1624,8 +1758,8 @@ const Home = () => {
                   strokeWidth="0"
                   viewBox="0 0 512 512"
                   className="-mx-1"
-                  height="1em"
-                  width="1em"
+                  height="2em"
+                  width="2em"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M463 192H315.9L271.2 58.6C269 52.1 262.9 48 256 48s-13 4.1-15.2 10.6L196.1 192H48c-8.8 0-16 7.2-16 16 0 .9.1 1.9.3 2.7.2 3.5 1.8 7.4 6.7 11.3l120.9 85.2-46.4 134.9c-2.3 6.5 0 13.8 5.5 18 2.9 2.1 5.6 3.9 9 3.9 3.3 0 7.2-1.7 10-3.6l118-84.1 118 84.1c2.8 2 6.7 3.6 10 3.6 3.4 0 6.1-1.7 8.9-3.9 5.6-4.2 7.8-11.4 5.5-18L352 307.2l119.9-86 2.9-2.5c2.6-2.8 5.2-6.6 5.2-10.7 0-8.8-8.2-16-17-16z"></path>
@@ -1749,6 +1883,21 @@ const Home = () => {
             </Center>
           </>
         )}
+      </div>
+      <div
+        className="third"
+        id="third"
+        style={{
+          background: dark
+            ? "url(" + backgroundDarkInverted + ")"
+            : "url(" + backgroundLightInverted + ")",
+          height: "120vh",
+          paddingTop: "10vh",
+          marginTop: "3rem",
+        }}
+      >
+        <Text color="dimmed">Testing</Text>
+        <FeaturesImages />
       </div>
     </div>
   );
