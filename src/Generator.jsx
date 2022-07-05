@@ -120,7 +120,11 @@ const Generator = (props) => {
 
   const [capitolValue, setCapitolValue] = useState("");
 
-  const [orarName, setOrarName] = useState("Default");
+  const [orarName, setOrarName] = useState("");
+
+  const [orarImportant, setOrarImportant] = useState(false);
+
+  const [orarDescriere, setOrarDescriere] = useState("Descriere");
 
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -198,6 +202,14 @@ const Generator = (props) => {
   console.log("ZILE:", zile);
 
   const addToDataBase = async (item) => {
+    console.log("ORARNAME FROM ADD TO DB: ", orarName);
+    setOrarGenerat({
+      ...orarGenerat,
+      nume: orarName,
+      important: orarImportant,
+      descriere: orarDescriere,
+    });
+    console.log("ORARGENERAT FROM GB: ", orarGenerat);
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
     console.log(q);
     const aux = await getDocs(q);
@@ -206,7 +218,7 @@ const Generator = (props) => {
 
     await setDoc(
       doc(db, "users", document.id),
-      { orare: [...document.data().orare, item] },
+      { orare: [...document.data().orare, orarGenerat] },
       { merge: true }
     );
   };
@@ -224,6 +236,9 @@ const Generator = (props) => {
   };
 
   var orarFinal = {
+    nume: "",
+    important: false,
+    descriere: "",
     date: [],
     ore: [],
     durata: [],
@@ -610,8 +625,16 @@ const Generator = (props) => {
     console.log("ORAR: ", orarFinal);
   }
 
-  const testing = () => {
-    console.log("THIS IS FROM TESTING");
+  const saveDetails = () => {
+    orarGenerat.nume = orarName;
+    orarGenerat.important = orarImportant;
+    orarGenerat.descriere = orarDescriere;
+    setOrarGenerat({
+      ...orarGenerat,
+      nume: orarName,
+      important: orarImportant,
+      descriere: orarDescriere,
+    });
   };
 
   sleep(2000);
@@ -619,6 +642,7 @@ const Generator = (props) => {
     console.log("FROM RETURN"),
     console.log(orarFinal),
     console.log(orarGenerat),
+    console.log("ORAR NAME: ", orarName),
     (
       <div className="generator">
         <Center>
@@ -964,17 +988,24 @@ const Generator = (props) => {
             >
               <Title order={3}>Ultimele detalii...</Title>
               <TextInput
-                placeholder="Orar Nou"
-                label="Numele orarului"
-                required
-                variant="filled"
-                radius={"md"}
-                style={{ width: "20rem" }}
                 value={orarName}
-                onChange={(event) => {
-                  setOrarName(event.currentTarget.value);
-                }}
+                onChange={(event) => setOrarName(event.currentTarget.value)}
               />
+              <TextInput
+                value={orarDescriere}
+                onChange={(event) =>
+                  setOrarDescriere(event.currentTarget.value)
+                }
+              />
+              <Button
+                variant="light"
+                style={{ marginTop: "1rem" }}
+                onClick={() => {
+                  saveDetails();
+                }}
+              >
+                Salveaza detaliile
+              </Button>
             </div>
             <div style={{ marginTop: "1rem" }}>
               <Button

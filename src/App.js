@@ -15,6 +15,8 @@ import About from "./About";
 import Footer from "./Footer";
 import Generator from "./Generator";
 import NotFoundTitle from "./404Page";
+import Orare from "./Orare.tsx";
+import View from "./View.tsx";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -44,6 +46,8 @@ function App() {
                     <Route exact path="/" component={Home} />
                     <Route path="/about" component={About} />
                     <Route path="/generator" component={Generator} />
+                    <Route exact path="/orare" component={Orare} />
+                    <Route exact path="/orare/view" component={View} />
                     <Route path="*" component={NotFoundTitle} />
                   </Switch>
                   <Footer />

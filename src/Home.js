@@ -54,8 +54,6 @@ import { Clock } from "tabler-icons-react";
 import { Calendar } from "tabler-icons-react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useListState } from "@mantine/hooks";
-import FeaturesImages from "./FeatureImage";
-
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
@@ -86,6 +84,7 @@ import {
 } from "firebase/auth";
 import { getFirestore, query, collection, where } from "firebase/firestore";
 import { addDoc, getDocs } from "firebase/firestore";
+import FeaturesImages from "./Features.tsx";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAYv-TF955BPhLNDpyU33_RXYOc_3JfAxo",
@@ -1884,21 +1883,22 @@ const Home = () => {
           </>
         )}
       </div>
-      <div
-        className="third"
-        id="third"
-        style={{
-          background: dark
-            ? "url(" + backgroundDarkInverted + ")"
-            : "url(" + backgroundLightInverted + ")",
-          height: "120vh",
-          paddingTop: "10vh",
-          marginTop: "3rem",
-        }}
-      >
-        <Text color="dimmed">Testing</Text>
-        <FeaturesImages />
-      </div>
+      {!loggedin ? (
+        <div
+          className="third"
+          id="third"
+          style={{
+            background: dark
+              ? "url(" + backgroundDarkInverted + ")"
+              : "url(" + backgroundLightInverted + ")",
+            height: "120vh",
+            paddingTop: "0vh",
+            marginTop: "3rem",
+          }}
+        >
+          <FeaturesImages />
+        </div>
+      ) : null}
     </div>
   );
 };

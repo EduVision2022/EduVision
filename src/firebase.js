@@ -50,6 +50,7 @@ const SignInWithGoogle = async () => {
         authProvider: "google",
         email: user.email,
         picture: user.photoURL,
+        orare: [],
       });
     }
 

@@ -36,6 +36,7 @@ import {
 } from "tabler-icons-react";
 import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
 import { Logout } from "tabler-icons-react";
+import { CalendarEvent } from "tabler-icons-react";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -186,6 +187,10 @@ export function HeaderMiddle() {
   const [profilepic, setProfilepic] = useState("");
   const [mail, setMail] = useState("");
 
+  const redirectTo = (input) => {
+    history.push(input);
+  };
+
   const fetchUserName = async () => {
     try {
       console.log("AUTH:", user);
@@ -278,6 +283,19 @@ export function HeaderMiddle() {
           placement="end"
           size="lg"
         >
+          <Menu.Item
+            icon={<CalendarEvent size={16} color={theme.colors.blue[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + O
+              </Text>
+            }
+            onClick={() => {
+              redirectTo("/orare");
+            }}
+          >
+            Orare
+          </Menu.Item>
           <Menu.Item
             icon={<Logout size={16} color={theme.colors.violet[6]} />}
             rightSection={
