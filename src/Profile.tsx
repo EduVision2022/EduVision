@@ -76,10 +76,10 @@ const Profile = () => {
             <Stats title="Puncte" value="1300" diff={32} id={id} />
           </Grid.Col>
           <Grid.Col span={1}>
-            <Stats title="Testing" value="" diff={32} id={id} />
+            <Stats title="som ting wong" value="" diff={32} id={id} />
           </Grid.Col>
           <Grid.Col span={1}>
-            <Stats title="Testing" value="" diff={32} id={id} />
+            <Stats title="wat wong?" value="" diff={32} id={id} />
           </Grid.Col>
         </Grid>
       </Paper>
