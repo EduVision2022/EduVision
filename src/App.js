@@ -18,6 +18,7 @@ import NotFoundTitle from "./404Page";
 import Orare from "./Orare.tsx";
 import View from "./View.tsx";
 import Intrebari from "./Intrebari.tsx";
+import Profile from "./Profile.tsx";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -50,6 +51,7 @@ function App() {
                     <Route exact path="/orare" component={Orare} />
                     <Route exact path="/orare/view" component={View} />
                     <Route path="/intrebari" component={Intrebari} />
+                    <Route path="/profile" component={Profile} />
                     <Route path="*" component={NotFoundTitle} />
                   </Switch>
                   <Footer />

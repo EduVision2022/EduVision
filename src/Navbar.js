@@ -38,6 +38,7 @@ import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
 import { Logout } from "tabler-icons-react";
 import { CalendarEvent } from "tabler-icons-react";
 import { QuestionMark } from "tabler-icons-react";
+import { User } from "tabler-icons-react";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -284,6 +285,19 @@ export function HeaderMiddle() {
           placement="end"
           size="lg"
         >
+          <Menu.Item
+            icon={<User size={16} color={theme.colors.orange[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + U
+              </Text>
+            }
+            onClick={() => {
+              redirectTo("/profile");
+            }}
+          >
+            Profil
+          </Menu.Item>
           <Menu.Item
             icon={<QuestionMark size={16} color={theme.colors.orange[6]} />}
             rightSection={
