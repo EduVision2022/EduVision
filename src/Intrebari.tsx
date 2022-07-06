@@ -32,6 +32,7 @@ import { Text } from "@mantine/core";
 import { Code } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
+import { Center } from "@mantine/core";
 
 // Icons Imports
 import { Plus } from "tabler-icons-react";
@@ -240,98 +241,109 @@ const Intrebari = () => {
 
   return (
     <div className="intrebari">
-      <StyledAccordion style={{ margin: "1rem" }}>
-        {intrebariFinal.map((intrebare: IntrebareProps, index) => (
-          <Accordion.Item
-            label={
-              <AccordionLabel
-                materie={intrebare.materie}
-                capitol={intrebare.capitol}
-                raspunsuri={intrebare.raspuns}
-              />
-            }
-            onClick={() => {
-              fetchAnswers(idIntrebariFinal[index]);
-            }}
-            key={index}
-          >
-            <div className="accordion-content" style={{ textAlign: "left" }}>
-              <div className="intrebare">
-                <Code style={{ fontSize: "16px" }}>ENUNȚ:</Code>
-                <Paper
-                  p="0.4rem"
-                  style={{
-                    backgroundColor: dark ? "#141517" : "#f1f3f5",
-                    display: "inline-block",
-                    paddingLeft: "0.7rem",
-                    paddingRight: "0.7rem",
-                    margin: "0.5rem",
-                  }}
+      <Center>
+        <Paper shadow="xs" radius="md" withBorder style={{ margin: "2rem" }}>
+          <StyledAccordion style={{ margin: "1rem" }}>
+            {intrebariFinal.map((intrebare: IntrebareProps, index) => (
+              <Accordion.Item
+                label={
+                  <AccordionLabel
+                    materie={intrebare.materie}
+                    capitol={intrebare.capitol}
+                    raspunsuri={intrebare.raspuns}
+                  />
+                }
+                onClick={() => {
+                  fetchAnswers(idIntrebariFinal[index]);
+                }}
+                key={index}
+              >
+                <div
+                  className="accordion-content"
+                  style={{ textAlign: "left" }}
                 >
-                  {intrebare.intrebare}
-                </Paper>
-              </div>
-              <div className="autor">
-                <Code style={{ fontSize: "16px" }}>AUTOR:</Code>
-                <Paper
-                  p="0.4rem"
-                  style={{
-                    backgroundColor: dark ? "#141517" : "#f1f3f5",
-                    display: "inline-block",
-                    paddingLeft: "0.7rem",
-                    paddingRight: "0.7rem",
-                    margin: "0.5rem",
-                  }}
-                >
-                  {intrebare.autor}
-                </Paper>
-              </div>
-              <div className="raspunsuri">
-                <Code style={{ fontSize: "16px" }}>RASPUNSURI:</Code>
-                {raspunsuriFinal.map((raspuns, index) => (
-                  <div className="raspuns" key={raspuns + index}>
+                  <div className="intrebare">
+                    <Code style={{ fontSize: "16px" }}>ENUNȚ:</Code>
                     <Paper
-                      shadow="xl"
-                      radius="md"
-                      p="md"
-                      withBorder
-                      style={{ margin: "1rem" }}
+                      p="0.4rem"
+                      style={{
+                        backgroundColor: dark ? "#141517" : "#f1f3f5",
+                        display: "inline-block",
+                        paddingLeft: "0.7rem",
+                        paddingRight: "0.7rem",
+                        margin: "0.5rem",
+                      }}
                     >
-                      <Text weight="600">{autoriRaspunsuriFinal[index]}</Text>
-                      <Text weight="600" size="sm" color="dimmed">
-                        {dayjs(
-                          new Date(dateRaspunsuriFinal[index].toDate())
-                        ).format("D MMMM, HH:mm")}
-                      </Text>
-                      <Paper shadow="sm" radius="md" p="sm" withBorder>
-                        {raspuns}
-                      </Paper>
+                      {intrebare.intrebare}
                     </Paper>
                   </div>
-                ))}
-              </div>
-              <div className="input" style={{ display: "inline-block" }}>
-                <TextInput
-                  style={{ display: "inline-block", width: "270px" }}
-                  label="Adaugă răspunsul tău"
-                  placeholder="Răspuns"
-                  value={raspuns}
-                  onChange={(event) => setRaspuns(event.currentTarget.value)}
-                />
-                <Button
-                  variant="default"
-                  style={{ display: "inline-block", marginLeft: "0.4rem" }}
-                  onClick={() => {
-                    addAnswer(idIntrebariFinal[index], raspuns);
-                  }}
-                >
-                  Adaugă răspuns
-                </Button>
-              </div>
-            </div>
-          </Accordion.Item>
-        ))}
-      </StyledAccordion>
+                  <div className="autor">
+                    <Code style={{ fontSize: "16px" }}>AUTOR:</Code>
+                    <Paper
+                      p="0.4rem"
+                      style={{
+                        backgroundColor: dark ? "#141517" : "#f1f3f5",
+                        display: "inline-block",
+                        paddingLeft: "0.7rem",
+                        paddingRight: "0.7rem",
+                        margin: "0.5rem",
+                      }}
+                    >
+                      {intrebare.autor}
+                    </Paper>
+                  </div>
+                  <div className="raspunsuri">
+                    <Code style={{ fontSize: "16px" }}>RASPUNSURI:</Code>
+                    {raspunsuriFinal.map((raspuns, index) => (
+                      <div className="raspuns" key={raspuns + index}>
+                        <Paper
+                          shadow="xl"
+                          radius="md"
+                          p="md"
+                          withBorder
+                          style={{ margin: "1rem" }}
+                        >
+                          <Text weight="600">
+                            {autoriRaspunsuriFinal[index]}
+                          </Text>
+                          <Text weight="600" size="sm" color="dimmed">
+                            {dayjs(
+                              new Date(dateRaspunsuriFinal[index].toDate())
+                            ).format("D MMMM, HH:mm")}
+                          </Text>
+                          <Paper shadow="sm" radius="md" p="sm" withBorder>
+                            {raspuns}
+                          </Paper>
+                        </Paper>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="input" style={{ display: "inline-block" }}>
+                    <TextInput
+                      style={{ display: "inline-block", width: "270px" }}
+                      label="Adaugă răspunsul tău"
+                      placeholder="Răspuns"
+                      value={raspuns}
+                      onChange={(event) =>
+                        setRaspuns(event.currentTarget.value)
+                      }
+                    />
+                    <Button
+                      variant="default"
+                      style={{ display: "inline-block", marginLeft: "0.4rem" }}
+                      onClick={() => {
+                        addAnswer(idIntrebariFinal[index], raspuns);
+                      }}
+                    >
+                      Adaugă răspuns
+                    </Button>
+                  </div>
+                </div>
+              </Accordion.Item>
+            ))}
+          </StyledAccordion>
+        </Paper>
+      </Center>
     </div>
   );
 };
