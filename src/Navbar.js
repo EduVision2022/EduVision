@@ -37,6 +37,7 @@ import {
 import { SquareCheck, Package, Users, Calendar } from "tabler-icons-react";
 import { Logout } from "tabler-icons-react";
 import { CalendarEvent } from "tabler-icons-react";
+import { QuestionMark } from "tabler-icons-react";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -284,6 +285,19 @@ export function HeaderMiddle() {
           size="lg"
         >
           <Menu.Item
+            icon={<QuestionMark size={16} color={theme.colors.orange[6]} />}
+            rightSection={
+              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                Ctrl + I
+              </Text>
+            }
+            onClick={() => {
+              redirectTo("/intrebari");
+            }}
+          >
+            Întrebări
+          </Menu.Item>
+          <Menu.Item
             icon={<CalendarEvent size={16} color={theme.colors.blue[6]} />}
             rightSection={
               <Text size="xs" transform="uppercase" weight={700} color="dimmed">
@@ -315,7 +329,12 @@ export function HeaderMiddle() {
 
         {/* LOGO */}
         {windowDimension.winWidth > 720 ? (
-          <Center style={{ width: 400, height: 200 }}>
+          <Center
+            style={{ width: 400, height: 200 }}
+            onClick={() => {
+              history.push("/");
+            }}
+          >
             {dark ? (
               <img src={logoDark} width="48px" height="48px" />
             ) : (

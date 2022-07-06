@@ -33,6 +33,8 @@ import { Trash } from "tabler-icons-react";
 import { Edit } from "tabler-icons-react";
 import { Modal } from "@mantine/core";
 
+import Error401 from "./401Error.tsx";
+
 const Orare = () => {
   const theme = useMantineTheme();
   const secondaryColor =
@@ -77,8 +79,16 @@ const Orare = () => {
 
   return (
     <>
-      {console.log("ORAE FROM RETUNR: ", orare)}
       <div className="orare">
+        {user == null ||
+        user == undefined ||
+        auth == null ||
+        auth == undefined ? (
+          <Error401 />
+        ) : orare.length == 0 ? (
+          <NotFoundTitle />
+        ) : null}
+
         <SimpleGrid cols={5} style={{ margin: "3rem" }}>
           {orare.map(
             (orar: Orare, index) => (

@@ -23,6 +23,9 @@ import { ActionIcon } from "@mantine/core";
 import { Modal } from "@mantine/core";
 import { Title } from "@mantine/core";
 import { Checkbox } from "@mantine/core";
+import { Button } from "@mantine/core";
+import { TextInput } from "@mantine/core";
+import { Badge } from "@mantine/core";
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
 
 //Font import
@@ -38,6 +41,14 @@ import backgroundLight from "./images/defaultLight.png";
 import backgroundDark from "./images/defaultDark.png";
 import backgroundLightInverted from "./images/invertedLight.png";
 import backgroundDarkInverted from "./images/invertedDark.png";
+
+// Firebase imports
+import { getFirestore, query, collection, where } from "firebase/firestore";
+import { addDoc, getDocs } from "firebase/firestore";
+import { logout, db } from "./firebase";
+import { userInfo } from "os";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, SignInWithGoogle } from "./firebase";
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   icon: { ref: getRef("icon") },
@@ -104,6 +115,8 @@ const View = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
+  const [user, loading, error] = useAuthState(auth);
+
   const Location = useLocation();
   const orar = Location.state.orar;
 
@@ -141,6 +154,9 @@ const View = () => {
   const [openModal, setOpenModal] = useState(false);
   const [currDate, setCurrDate] = useState(0);
 
+  const [intrebare, setIntrebare] = useState("");
+  const [anonim, setAnonim] = useState(false);
+
   function getDayName(dateStr, locale) {
     var date = new Date(dateStr);
     return date.toLocaleDateString(locale, { weekday: "long" });
@@ -152,6 +168,39 @@ const View = () => {
   var localizedFormat = require("dayjs/plugin/localizedFormat");
   dayjs.extend(localizedFormat);
   dayjs.locale("ro");
+
+  class Intrebare {
+    intrebare: string;
+    materie: string;
+    capitol: string;
+    username: string;
+    constructor(intrebare, materie, capitol, username) {
+      this.intrebare = intrebare;
+      this.materie = materie;
+      this.capitol = capitol;
+      this.username = username;
+    }
+  }
+
+  const addQuestion = async (intrebare, materie, capitol, username) => {
+    var question = new Intrebare(intrebare, materie, capitol, username);
+    const q = query(
+      collection(db, "intrebari"),
+      where("intrebare", "==", question.intrebare)
+    );
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    console.log(document);
+    if (aux.docs.length === 0) {
+      await addDoc(collection(db, "intrebari"), {
+        intrebare: intrebare,
+        materie: materie,
+        capitol: capitol,
+        raspuns: [],
+        autor: username,
+      });
+    }
+  };
 
   return (
     <div
@@ -280,6 +329,51 @@ const View = () => {
                                 {orar.durata[index]}
                               </Text>
                             </Center>
+                          </Paper>
+                          <br />
+                          <Paper shadow="xl" radius="md" p="md" withBorder>
+                            <Text weight="600" size="sm">
+                              Pune o întrebare despre ora aceasta
+                            </Text>
+                            <Text weight="600" size="xs" color="dimmed">
+                              Întrebarea va fi publicată la secțiunea
+                              <Badge color="gray">Întrebări</Badge> și orice
+                              utliziator îți va putea răspunde.
+                            </Text>
+                            <Checkbox
+                              label={"Doresc să rămân anonim"}
+                              style={{
+                                marginBottom: "0.5rem",
+                                marginTop: "0.5rem",
+                              }}
+                              checked={anonim}
+                              onChange={(event) =>
+                                setAnonim(event.currentTarget.checked)
+                              }
+                            />
+                            <TextInput
+                              variant="default"
+                              placeholder="Intrebare"
+                              value={intrebare}
+                              onChange={(event) =>
+                                setIntrebare(event.currentTarget.value)
+                              }
+                              style={{ display: "inline-block", width: "75%" }}
+                            />
+                            <Button
+                              variant="default"
+                              style={{ display: "inline-block" }}
+                              onClick={() => {
+                                addQuestion(
+                                  intrebare,
+                                  orar.materii[index],
+                                  orar.capitole[index],
+                                  anonim == true ? "Anonim" : user.displayName
+                                );
+                              }}
+                            >
+                              Intreaba
+                            </Button>
                           </Paper>
                         </div>
                       </div>

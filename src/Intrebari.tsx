@@ -1,0 +1,338 @@
+// Firestore firebase imports
+import {
+  getFirestore,
+  query,
+  collection,
+  where,
+  Firestore,
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
+import { addDoc, getDocs } from "firebase/firestore";
+import { logout, db } from "./firebase";
+import { userInfo } from "os";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, SignInWithGoogle } from "./firebase";
+
+// React imports
+import { useEffect } from "react";
+import { useState } from "react";
+
+// Mantine imports
+import {
+  Accordion,
+  AccordionProps,
+  createStyles,
+  TextInput,
+} from "@mantine/core";
+import { Badge } from "@mantine/core";
+import { Paper } from "@mantine/core";
+import { Text } from "@mantine/core";
+import { Code } from "@mantine/core";
+import { Button } from "@mantine/core";
+import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
+
+// Icons Imports
+import { Plus } from "tabler-icons-react";
+import { stringify } from "@firebase/util";
+import dayjs from "dayjs";
+
+// Components imports
+import Error401 from "./401Error.tsx";
+import NotFoundTitle from "./404Page";
+
+const useStyles = createStyles((theme, _params, getRef) => ({
+  icon: { ref: getRef("icon") },
+
+  control: {
+    ref: getRef("control"),
+    border: 0,
+    opacity: 0.6,
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+
+    "&:hover": {
+      backgroundColor: "transparent",
+      opacity: 1,
+    },
+  },
+
+  item: {
+    borderBottom: 0,
+    overflow: "hidden",
+    transition: `box-shadow 150ms ${theme.transitionTimingFunction}`,
+    border: "1px solid transparent",
+    borderRadius: theme.radius.sm,
+  },
+
+  itemOpened: {
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.white,
+    borderColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[5]
+        : theme.colors.gray[3],
+
+    [`& .${getRef("control")}`]: {
+      opacity: 1,
+    },
+
+    [`& .${getRef("icon")}`]: {
+      transform: "rotate(45deg)",
+    },
+  },
+
+  content: {
+    paddingLeft: 0,
+  },
+}));
+
+function StyledAccordion(props: AccordionProps) {
+  const { classes } = useStyles();
+  return (
+    <Accordion classNames={classes} icon={<Plus size={16} />} {...props} />
+  );
+}
+
+const Intrebari = () => {
+  const theme = useMantineTheme();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
+
+  const [user, loading, error] = useAuthState(auth);
+
+  var intrebari = [];
+  var idIntrebari = [];
+
+  const [intrebariFinal, setIntrebariFinal] = useState([]);
+  const [idIntrebariFinal, setIdIntrebariFinal] = useState([]);
+
+  const [raspuns, setRaspuns] = useState("");
+
+  const fetchQuestions = async () => {
+    const q = await getDocs(collection(db, "intrebari"));
+    q.forEach((doc) => {
+      intrebari.push(doc.data());
+      idIntrebari.push(doc.id);
+      //console.log("INTREBARE: ", doc.data());
+      //console.log("INTREBARI: ", intrebari);
+    });
+  };
+
+  var raspunsuri = [];
+  var autoriRaspunsuri = [];
+  var dateRaspunsuri = [];
+  const [raspunsuriFinal, setRaspunsuriFinal] = useState([]);
+  const [autoriRaspunsuriFinal, setAutoriRaspunsuriFinal] = useState([]);
+  const [dateRaspunsuriFinal, setDateRaspunsuriFinal] = useState([]);
+
+  const [update, setUpdate] = useState(false);
+
+  const fetchAnswers = async (id) => {
+    raspunsuri = [];
+    autoriRaspunsuri = [];
+    dateRaspunsuri = [];
+    await setRaspunsuriFinal([]);
+    setAutoriRaspunsuriFinal([]);
+    await setDateRaspunsuriFinal([]);
+    const docRef = doc(db, "intrebari", id);
+    const docSnap = await getDoc(docRef);
+    const docRaspunsuri = docSnap.data().raspuns;
+
+    autoriRaspunsuri.push(docSnap.data().autoriRaspunsuri);
+    dateRaspunsuri.push(docSnap.data().dateRaspunsuri);
+    setRaspunsuriFinal(docRaspunsuri);
+    setAutoriRaspunsuriFinal(docSnap.data().autoriRaspunsuri);
+    setDateRaspunsuriFinal(docSnap.data().dateRaspunsuri);
+  };
+
+  useEffect(() => {
+    fetchQuestions();
+    setIntrebariFinal(intrebari);
+    setIdIntrebariFinal(idIntrebari);
+  }, []);
+  if (auth == null || auth == undefined || user == null || user == undefined) {
+    return <Error401 />;
+  }
+
+  interface AnswerProps {
+    id: string;
+    raspuns: string;
+  }
+
+  const addAnswer = async (id: string, raspuns: string) => {
+    const docRef = doc(db, "intrebari", id);
+    const docSnap = await getDoc(docRef);
+    await setDoc(
+      docRef,
+      {
+        raspuns: [...docSnap.data().raspuns, raspuns],
+        autoriRaspunsuri: [
+          ...(docSnap.data().autoriRaspunsuri == undefined || null
+            ? []
+            : docSnap.data().autoriRaspunsuri),
+          user.displayName,
+        ],
+        dateRaspunsuri: [
+          ...(docSnap.data().dateRaspunsuri == undefined || null
+            ? []
+            : docSnap.data().dateRaspunsuri),
+          new Date(),
+        ],
+      },
+      { merge: true }
+    );
+    //console.log(docSnap.data());
+  };
+
+  interface AccordionLabelProps {
+    materie: string;
+    capitol: string;
+    raspunsuri: [];
+  }
+
+  function AccordionLabel({
+    materie,
+    capitol,
+    raspunsuri,
+  }: AccordionLabelProps) {
+    return (
+      <>
+        <Text style={{ display: "inline-block" }} weight="600" size="lg">
+          {materie}
+        </Text>
+        {", "}
+        <Text style={{ display: "inline-block" }}>{capitol}</Text>
+        {raspunsuri.length > 0 ? (
+          <Badge color="green" style={{ marginLeft: "1rem" }}>
+            {" "}
+            {raspunsuri.length} răspunsuri{" "}
+          </Badge>
+        ) : (
+          <Badge color="red" style={{ marginLeft: "1rem" }}>
+            {" "}
+            {raspunsuri.length} răspunsuri{" "}
+          </Badge>
+        )}
+      </>
+    );
+  }
+
+  interface IntrebareProps {
+    intrebare: string;
+    autor: string;
+    materie: string;
+    capitol: string;
+    raspuns: [];
+  }
+
+  interface IdIntrebareProps {
+    id: string;
+  }
+
+  const setFormatDDMMYYYYtoMMDDYYYY = (date, separator = "/") => {
+    const [day, month, year] = date.split("/");
+    return month + separator + day + separator + year;
+  };
+  var localizedFormat = require("dayjs/plugin/localizedFormat");
+  dayjs.extend(localizedFormat);
+  dayjs.locale("ro");
+
+  return (
+    <div className="intrebari">
+      <StyledAccordion style={{ margin: "1rem" }}>
+        {intrebariFinal.map((intrebare: IntrebareProps, index) => (
+          <Accordion.Item
+            label={
+              <AccordionLabel
+                materie={intrebare.materie}
+                capitol={intrebare.capitol}
+                raspunsuri={intrebare.raspuns}
+              />
+            }
+            onClick={() => {
+              fetchAnswers(idIntrebariFinal[index]);
+            }}
+            key={index}
+          >
+            <div className="accordion-content" style={{ textAlign: "left" }}>
+              <div className="intrebare">
+                <Code style={{ fontSize: "16px" }}>ENUNȚ:</Code>
+                <Paper
+                  p="0.4rem"
+                  style={{
+                    backgroundColor: dark ? "#141517" : "#f1f3f5",
+                    display: "inline-block",
+                    paddingLeft: "0.7rem",
+                    paddingRight: "0.7rem",
+                    margin: "0.5rem",
+                  }}
+                >
+                  {intrebare.intrebare}
+                </Paper>
+              </div>
+              <div className="autor">
+                <Code style={{ fontSize: "16px" }}>AUTOR:</Code>
+                <Paper
+                  p="0.4rem"
+                  style={{
+                    backgroundColor: dark ? "#141517" : "#f1f3f5",
+                    display: "inline-block",
+                    paddingLeft: "0.7rem",
+                    paddingRight: "0.7rem",
+                    margin: "0.5rem",
+                  }}
+                >
+                  {intrebare.autor}
+                </Paper>
+              </div>
+              <div className="raspunsuri">
+                <Code style={{ fontSize: "16px" }}>RASPUNSURI:</Code>
+                {raspunsuriFinal.map((raspuns, index) => (
+                  <div className="raspuns" key={raspuns + index}>
+                    <Paper
+                      shadow="xl"
+                      radius="md"
+                      p="md"
+                      withBorder
+                      style={{ margin: "1rem" }}
+                    >
+                      <Text weight="600">{autoriRaspunsuriFinal[index]}</Text>
+                      <Text weight="600" size="sm" color="dimmed">
+                        {dayjs(
+                          new Date(dateRaspunsuriFinal[index].toDate())
+                        ).format("D MMMM, HH:mm")}
+                      </Text>
+                      <Paper shadow="sm" radius="md" p="sm" withBorder>
+                        {raspuns}
+                      </Paper>
+                    </Paper>
+                  </div>
+                ))}
+              </div>
+              <div className="input" style={{ display: "inline-block" }}>
+                <TextInput
+                  style={{ display: "inline-block", width: "270px" }}
+                  label="Adaugă răspunsul tău"
+                  placeholder="Răspuns"
+                  value={raspuns}
+                  onChange={(event) => setRaspuns(event.currentTarget.value)}
+                />
+                <Button
+                  variant="default"
+                  style={{ display: "inline-block", marginLeft: "0.4rem" }}
+                  onClick={() => {
+                    addAnswer(idIntrebariFinal[index], raspuns);
+                  }}
+                >
+                  Adaugă răspuns
+                </Button>
+              </div>
+            </div>
+          </Accordion.Item>
+        ))}
+      </StyledAccordion>
+    </div>
+  );
+};
+export default Intrebari;
