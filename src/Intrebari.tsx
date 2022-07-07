@@ -33,11 +33,15 @@ import { Code } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { Center } from "@mantine/core";
+import { Notification } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { LoadingOverlay } from "@mantine/core";
 
 // Icons Imports
 import { Plus } from "tabler-icons-react";
 import { stringify } from "@firebase/util";
 import dayjs from "dayjs";
+import { Check, X } from "tabler-icons-react";
 
 // Components imports
 import Error401 from "./401Error.tsx";
@@ -100,7 +104,11 @@ const Intrebari = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
+  const [value, setValue] = useState(0);
+
   const [user, loading, error] = useAuthState(auth);
+
+  const [visible, setVisible] = useState(true);
 
   var intrebari = [];
   var idIntrebari = [];
@@ -127,6 +135,8 @@ const Intrebari = () => {
   const [autoriRaspunsuriFinal, setAutoriRaspunsuriFinal] = useState([]);
   const [dateRaspunsuriFinal, setDateRaspunsuriFinal] = useState([]);
 
+  const [shouldReload, setShouldReload] = useState(false);
+
   const [update, setUpdate] = useState(false);
 
   const fetchAnswers = async (id) => {
@@ -148,10 +158,18 @@ const Intrebari = () => {
   };
 
   useEffect(() => {
+    Reload();
+    setTimeout(function () {
+      setVisible((value) => !value);
+    }, 1000);
+  }, []);
+
+  const Reload = async () => {
     fetchQuestions();
     setIntrebariFinal(intrebari);
     setIdIntrebariFinal(idIntrebari);
-  }, []);
+  };
+
   if (auth == null || auth == undefined || user == null || user == undefined) {
     return <Error401 />;
   }
@@ -184,6 +202,31 @@ const Intrebari = () => {
       { merge: true }
     );
     //console.log(docSnap.data());
+  };
+
+  /*
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      console.log(q);
+      const aux = await getDocs(q);
+      const document = aux.docs[0];
+      console.log(document.id);
+
+      await setDoc(
+        doc(db, "users", document.id),
+        { orare: [...document.data().orare, orarGenerat] },
+        { merge: true }
+      );
+  */
+
+  const addPoints = async (points) => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    await setDoc(
+      doc(db, "users", document.id),
+      { puncte: document.data().puncte + points },
+      { merge: true }
+    );
   };
 
   interface AccordionLabelProps {
@@ -240,7 +283,8 @@ const Intrebari = () => {
   dayjs.locale("ro");
 
   return (
-    <div className="intrebari">
+    <div className="intrebari" style={{ height: "auto", minHeight: "71vh" }}>
+      <LoadingOverlay visible={visible} />
       <Center>
         <Paper shadow="xs" radius="md" withBorder style={{ margin: "2rem" }}>
           <StyledAccordion style={{ margin: "1rem" }}>
@@ -333,6 +377,14 @@ const Intrebari = () => {
                       style={{ display: "inline-block", marginLeft: "0.4rem" }}
                       onClick={() => {
                         addAnswer(idIntrebariFinal[index], raspuns);
+                        addPoints(100);
+                        showNotification({
+                          title: "Răspunsul tău a fost adăugat!",
+                          message: "Ai primit 100 puncte!",
+                          autoClose: 2000,
+                          color: "green",
+                          icon: <Check />,
+                        });
                       }}
                     >
                       Adaugă răspuns

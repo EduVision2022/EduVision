@@ -54,6 +54,8 @@ import { Clock } from "tabler-icons-react";
 import { Calendar } from "tabler-icons-react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useListState } from "@mantine/hooks";
+import { Stepper } from "@mantine/core";
+
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
@@ -231,6 +233,12 @@ const Home = () => {
   const [showBack, setShowBack] = useState(false);
 
   const [days, setDays] = useState([]);
+
+  const [active, setActive] = useState(1);
+  const nextStep = () =>
+    setActive((current) => (current < 3 ? current + 1 : current));
+  const prevStep = () =>
+    setActive((current) => (current > 0 ? current - 1 : current));
 
   const [User, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
@@ -1808,17 +1816,35 @@ const Home = () => {
         ) : (
           <>
             <Center style={{ paddingTop: "2rem" }}>
-              <Progress
-                radius="md"
-                size="xl"
-                value={progress}
-                style={{ width: "30rem" }}
-                label={`${progress}%`}
-              />
+              <Paper radius="md" p="md" withBorder>
+                <Stepper
+                  active={active}
+                  onStepClick={setActive}
+                  breakpoint="sm"
+                >
+                  <Stepper.Step
+                    label="Primul pas"
+                    description="Creați un cont"
+                  ></Stepper.Step>
+                  <Stepper.Step
+                    label="Pasul doi"
+                    description="Completați un formular"
+                  ></Stepper.Step>
+                  <Stepper.Step
+                    label="Pasul trei"
+                    description="Rezolvă un test"
+                  ></Stepper.Step>
+                </Stepper>
+              </Paper>
             </Center>
-
             <Center style={{ paddingTop: "2rem" }}>
-              <Paper shadow="xl" p="md" withBorder style={{ width: "22rem" }}>
+              <Paper
+                shadow="xl"
+                p="md"
+                radius="md"
+                withBorder
+                style={{ width: "22rem" }}
+              >
                 {contents[pas]}
                 {showBack && pas != 6 && pas != 7 ? (
                   <Button
@@ -1827,6 +1853,12 @@ const Home = () => {
                     mr="sm"
                     color="red"
                     onClick={() => {
+                      if (pas == 6) {
+                        prevStep();
+                      }
+                      if (pas == 4) {
+                        prevStep();
+                      }
                       setPas(pas - 1);
                       setProgress(progress - 10);
                     }}
@@ -1858,9 +1890,13 @@ const Home = () => {
                       if (pas == 4) {
                         setTrans(true);
                         SetMaterii(materie3);
+                        nextStep();
                       }
                       if (pas == 5) {
                         console.log("GRESITE : ", Gresite);
+                      }
+                      if (pas == 5) {
+                        nextStep();
                       }
                       console.log("PAS: ", pas);
                       console.log("MATERIE 1 : ", materie1);

@@ -39,6 +39,17 @@ import { Logout } from "tabler-icons-react";
 import { CalendarEvent } from "tabler-icons-react";
 import { QuestionMark } from "tabler-icons-react";
 import { User } from "tabler-icons-react";
+import { Badge } from "@mantine/core";
+import { Crown } from "tabler-icons-react";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -94,7 +105,7 @@ const useStyles = createStyles((theme) => ({
   links: {
     width: 260,
 
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan("md")]: {
       display: "none",
     },
   },
@@ -163,7 +174,11 @@ for (var i = 0; i <= 2; i++) {
 
 links[0] = new HeaderProps("/about", "About");
 links[1] = new HeaderProps("/contact", "Contact");
-links[2] = new HeaderProps("/login", "Login");
+links[2] = new HeaderProps("/store", "Store");
+
+const logOut = () => {
+  signOut(auth);
+};
 
 export function HeaderMiddle() {
   function refreshPage() {
@@ -175,7 +190,7 @@ export function HeaderMiddle() {
   const dark = colorScheme === "dark";
 
   const [opened, toggleOpened] = useBooleanToggle(false);
-  const [active, setActive] = useState(links[0].link);
+  const [active, setActive] = useState(null);
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
 
@@ -188,6 +203,10 @@ export function HeaderMiddle() {
   const [name, setName] = useState("Guest");
   const [profilepic, setProfilepic] = useState("");
   const [mail, setMail] = useState("");
+
+  const [puncte, setPuncte] = useState(0);
+
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const redirectTo = (input) => {
     history.push(input);
@@ -202,15 +221,39 @@ export function HeaderMiddle() {
       setName(data.name);
       setProfilepic(data.picture);
       setMail(data.email);
+      setLoggedIn(true);
     } catch (err) {
       console.error(err);
     }
   };
   useEffect(() => {
-    if (!user) {
-    }
     fetchUserName();
+    waitForChanges();
   }, [user, loading]);
+
+  const fetchPuncte = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    setPuncte(document.data().puncte);
+    setTimeout(fetchPuncte, 3000);
+  };
+
+  const waitForChanges = async () => {
+    fetchPuncte();
+    if (loggedIn) {
+      setTimeout(waitForChanges, 3000);
+    }
+  };
+
+  const resetLogin = () => {
+    logOut();
+    setLoggedIn(false);
+    setName("Guest");
+    setProfilepic("");
+    setMail("");
+    history.push("/");
+  };
 
   const [windowDimension, detectHW] = useState({
     winWidth: window.innerWidth,
@@ -232,6 +275,30 @@ export function HeaderMiddle() {
     };
   }, [windowDimension]);
 
+  const rewards = (puncte) => {
+    return (
+      <div className="status">
+        {puncte >= 0 && puncte < 100 ? (
+          <Badge color="dark">Începător</Badge>
+        ) : null}
+        {puncte >= 100 && puncte < 200 ? (
+          <Badge style={{ color: "#a4a9b2" }}>Intermediar</Badge>
+        ) : null}
+        {puncte >= 200 && puncte < 300 ? (
+          <Badge color="teal">Semi-avansat</Badge>
+        ) : null}
+        {puncte >= 300 && puncte < 400 ? (
+          <Badge color="violet">Avansat</Badge>
+        ) : null}
+        {puncte >= 400 ? (
+          <Badge color="yellow" leftSection={<Crown size={12} />} size="xs">
+            Legendă
+          </Badge>
+        ) : null}
+      </div>
+    );
+  };
+
   const items = links.map((link) => (
     <a
       key={link.label}
@@ -247,6 +314,7 @@ export function HeaderMiddle() {
       {link.label}
     </a>
   ));
+  console.log("current Pathname 👉️", window.location.hash);
 
   return (
     <Header height={56}>
@@ -275,9 +343,31 @@ export function HeaderMiddle() {
                 <Text size="sm" weight={500}>
                   {name ? name : "Guest"}
                 </Text>
-                <Text color="dimmed" size="xs">
-                  {mail}
-                </Text>
+                {loggedIn ? (
+                  <Group>
+                    <Text
+                      color="dimmed"
+                      size="xs"
+                      style={{ display: "inline-block" }}
+                    >
+                      <div
+                        className="reward"
+                        style={{ display: "inline-block" }}
+                      >
+                        {rewards(puncte)}
+                      </div>
+                      <div
+                        className="puncte"
+                        style={{
+                          display: "inline-block",
+                          marginLeft: "0.5rem",
+                        }}
+                      >
+                        {puncte} puncte
+                      </div>
+                    </Text>
+                  </Group>
+                ) : null}
               </div>
             </Button>
           }
@@ -331,22 +421,27 @@ export function HeaderMiddle() {
                 Ctrl + L
               </Text>
             }
-            onClick={logout}
+            onClick={() => {
+              resetLogin();
+            }}
           >
             Log Out
           </Menu.Item>
         </Menu>
 
-        <Group className={classes.links} spacing={5}>
-          {items}
-        </Group>
+        {windowDimension.winWidth > 720 ? (
+          <Group className={classes.links} spacing={5}>
+            {items}
+          </Group>
+        ) : null}
 
         {/* LOGO */}
-        {windowDimension.winWidth > 720 ? (
+        {windowDimension.winWidth > 1080 ? (
           <Center
             style={{ width: 400, height: 200 }}
             onClick={() => {
               history.push("/");
+              setActive(null);
             }}
           >
             {dark ? (
@@ -361,7 +456,7 @@ export function HeaderMiddle() {
             </Text>
           </Center>
         ) : null}
-        {windowDimension.winWidth > 720 ? (
+        {windowDimension.winWidth > 1080 ? (
           <>
             <Group
               spacing={0}

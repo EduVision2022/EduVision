@@ -7,8 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import dayjs, { locale } from "dayjs";
 import "dayjs/locale/ro";
 
+// Component imports
+import Delayed from "./Delayed.tsx";
+
 // Mantine imports
-import { Accordion, AccordionProps, createStyles } from "@mantine/core";
+import { Accordion, AccordionProps, createStyles, Grid } from "@mantine/core";
 import { Paper } from "@mantine/core";
 import { Center } from "@mantine/core";
 import { Code } from "@mantine/core";
@@ -35,6 +38,8 @@ import "./smallestPixel.css";
 import { FileDatabase, Plus } from "tabler-icons-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Help } from "tabler-icons-react";
+import { LayoutList } from "tabler-icons-react";
+import { CalendarEvent } from "tabler-icons-react";
 
 // Image imports
 import backgroundLight from "./images/defaultLight.png";
@@ -202,20 +207,32 @@ const View = () => {
     }
   };
 
+  function AccordionLabel({ date, important }) {
+    var data = dayjs(setFormatDDMMYYYYtoMMDDYYYY(date)).format(
+      "dddd, D MMMM, YYYY"
+    );
+    return (
+      <>
+        <div className="accordion-label" style={{ display: "flex" }}>
+          <Text style={{ display: "" }}>
+            {dayjs(setFormatDDMMYYYYtoMMDDYYYY(date)).format(
+              "dddd, D MMMM, YYYY"
+            )}
+          </Text>
+          <Space w={180}></Space>
+          <div className="important">
+            {important ? <Badge color="teal">Important</Badge> : null}
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
-    <div
-      className="view"
-      style={{
-        background: dark
-          ? "url(" + backgroundDark + ")"
-          : "url(" + backgroundLight + ")",
-        height: "130vh",
-        marginBottom: "-8.8rem",
-      }}
-    >
+    <div className="view" style={{}}>
       <Center>
         <Tabs grow style={{ marginTop: "3rem" }} variant="pills">
-          <Tabs.Tab label="Lista">
+          <Tabs.Tab label="Lista" icon={<LayoutList size={14} />}>
             <Paper
               shadow="xl"
               radius="md"
@@ -226,9 +243,12 @@ const View = () => {
               <StyledAccordion iconPosition="left" multiple>
                 {date.map((date, index) => (
                   <Accordion.Item
-                    label={dayjs(setFormatDDMMYYYYtoMMDDYYYY(date)).format(
-                      "dddd, D MMMM, YYYY"
-                    )}
+                    label={
+                      <AccordionLabel
+                        date={date}
+                        important={orar.importante[index]}
+                      />
+                    }
                     style={{
                       alignContent: "left",
                       alignItems: "left",
@@ -358,7 +378,11 @@ const View = () => {
                               onChange={(event) =>
                                 setIntrebare(event.currentTarget.value)
                               }
-                              style={{ display: "inline-block", width: "75%" }}
+                              style={{
+                                display: "inline-block",
+                                width: "75%",
+                                marginRight: "0.5rem",
+                              }}
                             />
                             <Button
                               variant="default"
@@ -383,7 +407,7 @@ const View = () => {
               </StyledAccordion>
             </Paper>
           </Tabs.Tab>
-          <Tabs.Tab label="Calendar">
+          <Tabs.Tab label="Calendar" icon={<CalendarEvent size={14} />}>
             <Paper
               shadow="xl"
               radius="md"
@@ -404,10 +428,16 @@ const View = () => {
                       return (
                         <>
                           <Indicator
-                            color={dark ? "violet" : "blue"}
+                            color="teal"
+                            disabled={
+                              orar.importante[orar.date.indexOf(day)] ==
+                                false || date.includes(day) == false
+                            }
+                            label="Important"
+                            size={18}
+                            position="bottom-center"
                             withBorder
-                            offset={8}
-                            disabled={date.includes(day) == false}
+                            radius="md"
                             onClick={() => {
                               date.includes(day)
                                 ? setOpenModal(true)
@@ -415,7 +445,20 @@ const View = () => {
                               setCurrDate(day);
                             }}
                           >
-                            <div>{dayj.format("D")}</div>
+                            <Indicator
+                              color={dark ? "violet" : "blue"}
+                              withBorder
+                              offset={8}
+                              disabled={date.includes(day) == false}
+                              onClick={() => {
+                                date.includes(day)
+                                  ? setOpenModal(true)
+                                  : setOpenModal(false);
+                                setCurrDate(day);
+                              }}
+                            >
+                              <div>{dayj.format("D")}</div>
+                            </Indicator>
                           </Indicator>
                         </>
                       );
@@ -446,6 +489,12 @@ const View = () => {
                         }}
                       >
                         <Paper p="xs" withBorder>
+                          <Center>
+                            {orar.importante[orar.date.indexOf(currDate)] ==
+                            true ? (
+                              <Badge color="teal">IMPORTANT</Badge>
+                            ) : null}
+                          </Center>
                           <div
                             className="paper-content"
                             style={{
@@ -548,6 +597,60 @@ const View = () => {
                               </Paper>
                             </div>
                           </div>
+                        </Paper>
+                        <Paper
+                          shadow="xl"
+                          radius="md"
+                          p="md"
+                          withBorder
+                          style={{ marginTop: "1rem" }}
+                        >
+                          <Text weight="600" size="sm">
+                            Pune o întrebare despre ora aceasta
+                          </Text>
+                          <Text weight="600" size="xs" color="dimmed">
+                            Întrebarea va fi publicată la secțiunea
+                            <Badge color="gray">Întrebări</Badge> și orice
+                            utliziator îți va putea răspunde.
+                          </Text>
+                          <Checkbox
+                            label={"Doresc să rămân anonim"}
+                            style={{
+                              marginBottom: "0.5rem",
+                              marginTop: "0.5rem",
+                            }}
+                            checked={anonim}
+                            onChange={(event) =>
+                              setAnonim(event.currentTarget.checked)
+                            }
+                          />
+                          <TextInput
+                            variant="default"
+                            placeholder="Intrebare"
+                            value={intrebare}
+                            onChange={(event) =>
+                              setIntrebare(event.currentTarget.value)
+                            }
+                            style={{
+                              display: "inline-block",
+                              width: "75%",
+                              marginRight: "0.5rem",
+                            }}
+                          />
+                          <Button
+                            variant="default"
+                            style={{ display: "inline-block" }}
+                            onClick={() => {
+                              addQuestion(
+                                intrebare,
+                                orar.materii[orar.date.indexOf(currDate)],
+                                orar.capitole[orar.date.indexOf(currDate)],
+                                anonim == true ? "Anonim" : user.displayName
+                              );
+                            }}
+                          >
+                            Intreaba
+                          </Button>
                         </Paper>
                       </Paper>
                     </Center>

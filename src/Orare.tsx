@@ -28,12 +28,15 @@ import {
 import orarPNG from "./images/orar.png";
 import orarPreview1 from "./images/orarPreview1.png";
 import orarPreview2 from "./images/orarPreview2.png";
+import orarPreviewDark from "./images/orarPreviewDark.png";
+import orarPreviewDark2 from "./images/orarPreviewDark2.png";
 import { useMantineColorScheme } from "@mantine/core";
 import { Trash } from "tabler-icons-react";
 import { Edit } from "tabler-icons-react";
 import { Modal } from "@mantine/core";
 
 import Error401 from "./401Error.tsx";
+import Delayed from "./Delayed.tsx";
 
 const Orare = () => {
   const theme = useMantineTheme();
@@ -78,161 +81,178 @@ const Orare = () => {
   }
 
   return (
-    <>
-      <div className="orare">
-        {user == null ||
-        user == undefined ||
-        auth == null ||
-        auth == undefined ? (
-          <Error401 />
-        ) : orare.length == 0 ? (
-          <NotFoundTitle />
-        ) : null}
+    <div className="ontop" style={{ height: "auto", minHeight: "65vh" }}>
+      <Delayed>
+        <>
+          <div className="orare" style={{ height: "auto", minHeight: "65vh" }}>
+            {user == null ||
+            user == undefined ||
+            auth == null ||
+            auth == undefined ? (
+              <Error401 />
+            ) : orare.length == 0 ? (
+              <NotFoundTitle />
+            ) : null}
 
-        <SimpleGrid cols={5} style={{ margin: "3rem" }}>
-          {orare.map(
-            (orar: Orare, index) => (
-              console.log("ORAR", orar),
-              (
-                <div style={{ width: 340, margin: "auto" }}>
-                  <Card shadow="sm" p="lg">
-                    <Card.Section>
-                      <Image src={orarPreview1} height={180} alt="Orar" />
-                    </Card.Section>
+            <SimpleGrid cols={5} style={{ margin: "3rem" }}>
+              {orare.map(
+                (orar: Orare, index) => (
+                  console.log("ORAR", orar),
+                  (
+                    <div style={{ width: 340, margin: "auto" }}>
+                      <Card shadow="sm" p="lg" withBorder>
+                        <Card.Section>
+                          <Image
+                            src={dark ? orarPreviewDark2 : orarPreview1}
+                            height={180}
+                            alt="Orar"
+                          />
+                        </Card.Section>
 
-                    <Group
-                      position="apart"
-                      style={{ marginBottom: 5, marginTop: theme.spacing.sm }}
-                    >
-                      <Text weight={500}>{orar.nume}</Text>
-                      {orar.important ? (
-                        <Badge color={dark ? "violet" : "blue"} variant="light">
-                          IMPORTANT
-                        </Badge>
-                      ) : null}
-                    </Group>
-
-                    <Text
-                      color="dimmed"
-                      size="sm"
-                      style={{
-                        alignContent: "left",
-                        alignItems: "left",
-                        textAlign: "left",
-                      }}
-                    >
-                      {orar.descriere}
-                    </Text>
-                    <Button
-                      variant="light"
-                      color="blue"
-                      fullWidth
-                      style={{ marginTop: 14 }}
-                      onClick={() => {
-                        history.push({
-                          pathname: "/orare/view",
-                          state: {
-                            orar: orar,
-                          },
-                        });
-                      }}
-                    >
-                      Go
-                    </Button>
-                    <Button
-                      variant="light"
-                      color="red"
-                      style={{
-                        marginTop: 14,
-                        width: "145px",
-                        float: "left",
-                      }}
-                      leftIcon={<Trash />}
-                      onClick={() => {
-                        setOpenModal(true);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      variant="light"
-                      color="gray"
-                      style={{
-                        marginTop: 14,
-                        width: "145px",
-                        float: "right",
-                      }}
-                      leftIcon={<Edit />}
-                    >
-                      Edit
-                    </Button>
-                    <Modal
-                      centered
-                      overlayColor={
-                        theme.colorScheme === "dark"
-                          ? theme.colors.dark[9]
-                          : theme.colors.gray[2]
-                      }
-                      overlayOpacity={0.55}
-                      overlayBlur={3}
-                      opened={openModal}
-                      onClose={() => {
-                        setOpenModal(false);
-                      }}
-                      title="AVERTIZARE"
-                    >
-                      <Paper shadow="xl" p="md" radius="md" withBorder>
-                        <Text size="md" style={{ display: "inline-block" }}>
-                          <Badge radius="sm" p="3px" size="lg">
-                            Atentie!
-                          </Badge>{" "}
-                          Aceasta actiune va{" "}
-                          <Text color="red" style={{ display: "inline-block" }}>
-                            {" "}
-                            <Badge color="red" radius="sm" p="3px">
-                              sterge
+                        <Group
+                          position="apart"
+                          style={{
+                            marginBottom: 5,
+                            marginTop: theme.spacing.sm,
+                          }}
+                        >
+                          <Text weight={500}>{orar.nume}</Text>
+                          {orar.important ? (
+                            <Badge
+                              color={dark ? "violet" : "blue"}
+                              variant="light"
+                            >
+                              IMPORTANT
                             </Badge>
-                          </Text>{" "}
-                          definitiv si ireversibil orarul din contul tau.
+                          ) : null}
+                        </Group>
+
+                        <Text
+                          color="dimmed"
+                          size="sm"
+                          style={{
+                            alignContent: "left",
+                            alignItems: "left",
+                            textAlign: "left",
+                          }}
+                        >
+                          {orar.descriere}
                         </Text>
-                      </Paper>
-                      <Button
-                        color="red"
-                        variant="filled"
-                        style={{
-                          float: "right",
-                          marginRight: "1.5rem",
-                          marginTop: "1rem",
-                        }}
-                        onClick={() => {
-                          deleteOrar(orar.nume);
-                          setOpenModal(false);
-                        }}
-                      >
-                        STERGE
-                      </Button>
-                      <Button
-                        variant="light"
-                        style={{
-                          float: "left",
-                          marginLeft: "1rem",
-                          marginTop: "1rem",
-                        }}
-                        onClick={() => {
-                          setOpenModal(false);
-                        }}
-                      >
-                        ANULEAZA
-                      </Button>
-                    </Modal>
-                  </Card>
-                </div>
-              )
-            )
-          )}
-        </SimpleGrid>
-      </div>
-    </>
+                        <Button
+                          variant="light"
+                          color="blue"
+                          fullWidth
+                          style={{ marginTop: 14 }}
+                          onClick={() => {
+                            history.push({
+                              pathname: "/orare/view",
+                              state: {
+                                orar: orar,
+                              },
+                            });
+                          }}
+                        >
+                          Go
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="red"
+                          style={{
+                            marginTop: 14,
+                            width: "145px",
+                            float: "left",
+                          }}
+                          leftIcon={<Trash />}
+                          onClick={() => {
+                            setOpenModal(true);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="gray"
+                          style={{
+                            marginTop: 14,
+                            width: "145px",
+                            float: "right",
+                          }}
+                          leftIcon={<Edit />}
+                        >
+                          Edit
+                        </Button>
+                        <Modal
+                          centered
+                          overlayColor={
+                            theme.colorScheme === "dark"
+                              ? theme.colors.dark[9]
+                              : theme.colors.gray[2]
+                          }
+                          overlayOpacity={0.55}
+                          overlayBlur={3}
+                          opened={openModal}
+                          onClose={() => {
+                            setOpenModal(false);
+                          }}
+                          title="AVERTIZARE"
+                        >
+                          <Paper shadow="xl" p="md" radius="md" withBorder>
+                            <Text size="md" style={{ display: "inline-block" }}>
+                              <Badge radius="sm" p="3px" size="lg">
+                                Atentie!
+                              </Badge>{" "}
+                              Aceasta actiune va{" "}
+                              <Text
+                                color="red"
+                                style={{ display: "inline-block" }}
+                              >
+                                {" "}
+                                <Badge color="red" radius="sm" p="3px">
+                                  sterge
+                                </Badge>
+                              </Text>{" "}
+                              definitiv si ireversibil orarul din contul tau.
+                            </Text>
+                          </Paper>
+                          <Button
+                            color="red"
+                            variant="filled"
+                            style={{
+                              float: "right",
+                              marginRight: "1.5rem",
+                              marginTop: "1rem",
+                            }}
+                            onClick={() => {
+                              deleteOrar(orar.nume);
+                              setOpenModal(false);
+                            }}
+                          >
+                            STERGE
+                          </Button>
+                          <Button
+                            variant="light"
+                            style={{
+                              float: "left",
+                              marginLeft: "1rem",
+                              marginTop: "1rem",
+                            }}
+                            onClick={() => {
+                              setOpenModal(false);
+                            }}
+                          >
+                            ANULEAZA
+                          </Button>
+                        </Modal>
+                      </Card>
+                    </div>
+                  )
+                )
+              )}
+            </SimpleGrid>
+          </div>
+        </>
+      </Delayed>
+    </div>
   );
 };
 export default Orare;

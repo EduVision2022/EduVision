@@ -1,3 +1,4 @@
+import { showNotification } from "@mantine/notifications";
 import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
@@ -18,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { setUser, selectUsername, selectObject } from "./userSlice";
+import { Check, X } from "tabler-icons-react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAYv-TF955BPhLNDpyU33_RXYOc_3JfAxo",
@@ -39,6 +41,10 @@ const googleProvider = new GoogleAuthProvider();
 
 const SignInWithGoogle = async () => {
   try {
+    const date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
@@ -51,6 +57,15 @@ const SignInWithGoogle = async () => {
         email: user.email,
         picture: user.photoURL,
         orare: [],
+        puncte: 50,
+        registered: new Date(),
+      });
+      showNotification({
+        title: "Ți-ai creat un cont nou!",
+        message: "Ai primit 50 puncte!",
+        autoClose: 2000,
+        color: "green",
+        icon: <Check />,
       });
     }
 

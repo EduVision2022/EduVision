@@ -11,6 +11,7 @@ import { BrandTwitter, BrandYoutube, BrandInstagram } from "tabler-icons-react";
 import { useMantineTheme } from "@mantine/core";
 import { useMantineColorScheme } from "@mantine/core";
 import "./smallestPixel.css";
+import { useHistory } from "react-router-dom";
 
 // Images
 import logoLight from "./images/logoLight.png";
@@ -60,6 +61,8 @@ links[1] = new HeaderProps("/contact", "Contact");
 links[2] = new HeaderProps("/login", "Login");
 
 export function Footer() {
+  const history = useHistory();
+
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -70,7 +73,10 @@ export function Footer() {
         key={link.label}
         href={link.link}
         sx={{ lineHeight: 1 }}
-        onClick={(event) => event.preventDefault()}
+        onClick={(event) => {
+          event.preventDefault();
+          history.push(link.link);
+        }}
         size="sm"
       >
         {link.label}
@@ -81,7 +87,12 @@ export function Footer() {
   return (
     <div className={classes.footer}>
       <div className={classes.inner}>
-        <Center style={{}}>
+        <Center
+          style={{}}
+          onClick={() => {
+            history.push("/");
+          }}
+        >
           {dark ? (
             <img src={logoDark} width="48px" height="48px" />
           ) : (

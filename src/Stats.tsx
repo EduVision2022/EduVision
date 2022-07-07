@@ -50,7 +50,11 @@ const StatsGridIcons = (props) => {
             variant="light"
             sx={(theme) => ({
               color:
-                props.diff > 0 ? theme.colors.teal[6] : theme.colors.red[6],
+                props.diff > 0
+                  ? theme.colors.teal[6]
+                  : props.diff < 0
+                  ? theme.colors.red[6]
+                  : theme.colors.gray[6],
             })}
             size={38}
             radius="md"
@@ -61,12 +65,17 @@ const StatsGridIcons = (props) => {
         <Text color="dimmed" size="sm" mt="md">
           <Text
             component="span"
-            color={props.diff > 0 ? "teal" : "red"}
+            color={props.diff > 0 ? "teal" : props.diff < 0 ? "red" : "gray"}
             weight={700}
           >
-            {props.diff}%
+            {props.diff}
           </Text>{" "}
-          {props.diff > 0 ? "increase" : "decrease"} compared to last month
+          {props.diff > 0
+            ? "mai multe"
+            : props.diff < 0
+            ? "mai puține"
+            : "schimbat"}{" "}
+          față de ultima lună
         </Text>
       </Paper>
     </div>

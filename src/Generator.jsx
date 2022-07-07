@@ -62,6 +62,8 @@ import { useMantineColorScheme } from "@mantine/core";
 import { Transition } from "@mantine/core";
 import { useid } from "react-router-dom";
 import "dayjs/locale/ro";
+import { showNotification } from "@mantine/notifications";
+import { Check, X } from "tabler-icons-react";
 
 var pushedAlt = false;
 
@@ -188,6 +190,17 @@ const Generator = (props) => {
     const aux = await getDocs(q);
     const document = aux.docs[0];
     setOrare(document.data().orare);
+  };
+
+  const addPoints = async (points) => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    await setDoc(
+      doc(db, "users", document.id),
+      { puncte: document.data().puncte + points },
+      { merge: true }
+    );
   };
 
   useEffect(() => {
@@ -988,30 +1001,36 @@ const Generator = (props) => {
             >
               <Title order={3}>Ultimele detalii...</Title>
               <TextInput
+                placeholder="Nume"
+                label="Numele orarului"
+                variant="filled"
                 value={orarName}
                 onChange={(event) => setOrarName(event.currentTarget.value)}
               />
               <TextInput
+                placeholder="Descriere"
+                label="Descrierea oraului"
+                variant="filled"
                 value={orarDescriere}
                 onChange={(event) =>
                   setOrarDescriere(event.currentTarget.value)
                 }
               />
-              <Button
-                variant="light"
-                style={{ marginTop: "1rem" }}
-                onClick={() => {
-                  saveDetails();
-                }}
-              >
-                Salveaza detaliile
-              </Button>
             </div>
             <div style={{ marginTop: "1rem" }}>
               <Button
                 variant="filled"
                 onClick={() => {
+                  saveDetails();
                   addToDataBase(orarGenerat);
+                  addPoints(75);
+                  showNotification({
+                    title: "Ai creat un orar nou!",
+                    message: "Ai primit 75 puncte!",
+                    autoClose: 2000,
+                    color: "green",
+                    icon: <Check />,
+                  });
                 }}
               >
                 Salveaza

@@ -11,7 +11,7 @@ import Home from "./Home";
 import Theme from "./Theme";
 import HeaderMiddle from "./Navbar";
 import store from "./store";
-import About from "./About";
+import about from "./about";
 import Footer from "./Footer";
 import Generator from "./Generator";
 import NotFoundTitle from "./404Page";
@@ -19,6 +19,8 @@ import Orare from "./Orare.tsx";
 import View from "./View.tsx";
 import Intrebari from "./Intrebari.tsx";
 import Profile from "./Profile.tsx";
+import About from "./About.tsx";
+import Contact from "./Contact.tsx";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -52,6 +54,7 @@ function App() {
                     <Route exact path="/orare/view" component={View} />
                     <Route path="/intrebari" component={Intrebari} />
                     <Route path="/profile" component={Profile} />
+                    <Route path="/contact" component={Contact} />
                     <Route path="*" component={NotFoundTitle} />
                   </Switch>
                   <Footer />
