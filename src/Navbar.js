@@ -50,6 +50,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
+import { Login } from "tabler-icons-react";
 
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
@@ -70,6 +71,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { addDoc, getDocs } from "firebase/firestore";
 import { getFirestore, query, collection, where } from "firebase/firestore";
 import { db } from "./firebase";
+
+// Custom style import
+import "./blazingFire.css";
+import "./bubbleFrame.css";
+import "./rgbFrame.css";
 
 const useStyles = createStyles((theme) => ({
   user2: {
@@ -210,6 +216,8 @@ export function HeaderMiddle() {
 
   const [maxPoints, setMaxPoints] = useState(0);
 
+  const [boughtItems, setBoughtItems] = useState([]);
+
   const redirectTo = (input) => {
     history.push(input);
   };
@@ -239,6 +247,8 @@ export function HeaderMiddle() {
     const document = aux.docs[0];
     setPuncte(document.data().puncte);
     setMaxPoints(document.data().maxPoints);
+    //sets items
+    setBoughtItems(document.data().items);
     setTimeout(fetchPuncte, 3000);
   };
 
@@ -337,14 +347,26 @@ export function HeaderMiddle() {
               className={classes.user}
             >
               <Avatar
-                referrerpolicy="no-referrer"
                 src={profilepic}
                 radius="xl"
                 style={{ marginRight: "10px" }}
+                className={
+                  boughtItems.includes("electricborder")
+                    ? "box"
+                    : boughtItems.includes("bubbleborder")
+                    ? "Bubble"
+                    : ""
+                }
               />
               <div style={{ flex: 1 }}>
                 <Text size="sm" weight={500}>
-                  {name ? name : "Guest"}
+                  <div
+                    className={
+                      boughtItems.includes("blazingfire") ? "Blazing" : ""
+                    }
+                  >
+                    {name ? name : "Guest"}
+                  </div>
                 </Text>
                 {loggedIn ? (
                   <Group>
@@ -378,58 +400,101 @@ export function HeaderMiddle() {
           placement="end"
           size="lg"
         >
-          <Menu.Item
-            icon={<User size={16} color={theme.colors.orange[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + U
-              </Text>
-            }
-            onClick={() => {
-              redirectTo("/profile");
-            }}
-          >
-            Profil
-          </Menu.Item>
-          <Menu.Item
-            icon={<QuestionMark size={16} color={theme.colors.orange[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + I
-              </Text>
-            }
-            onClick={() => {
-              redirectTo("/intrebari");
-            }}
-          >
-            Întrebări
-          </Menu.Item>
-          <Menu.Item
-            icon={<CalendarEvent size={16} color={theme.colors.blue[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + O
-              </Text>
-            }
-            onClick={() => {
-              redirectTo("/orare");
-            }}
-          >
-            Orare
-          </Menu.Item>
-          <Menu.Item
-            icon={<Logout size={16} color={theme.colors.violet[6]} />}
-            rightSection={
-              <Text size="xs" transform="uppercase" weight={700} color="dimmed">
-                Ctrl + L
-              </Text>
-            }
-            onClick={() => {
-              resetLogin();
-            }}
-          >
-            Log Out
-          </Menu.Item>
+          {loggedIn ? (
+            <>
+              <Menu.Item
+                icon={<User size={16} color={theme.colors.orange[6]} />}
+                rightSection={
+                  <Text
+                    size="xs"
+                    transform="uppercase"
+                    weight={700}
+                    color="dimmed"
+                  >
+                    Ctrl + U
+                  </Text>
+                }
+                onClick={() => {
+                  redirectTo("/profile");
+                }}
+              >
+                Profil
+              </Menu.Item>
+              <Menu.Item
+                icon={<QuestionMark size={16} color={theme.colors.orange[6]} />}
+                rightSection={
+                  <Text
+                    size="xs"
+                    transform="uppercase"
+                    weight={700}
+                    color="dimmed"
+                  >
+                    Ctrl + I
+                  </Text>
+                }
+                onClick={() => {
+                  redirectTo("/intrebari");
+                }}
+              >
+                Întrebări
+              </Menu.Item>
+              <Menu.Item
+                icon={<CalendarEvent size={16} color={theme.colors.blue[6]} />}
+                rightSection={
+                  <Text
+                    size="xs"
+                    transform="uppercase"
+                    weight={700}
+                    color="dimmed"
+                  >
+                    Ctrl + O
+                  </Text>
+                }
+                onClick={() => {
+                  redirectTo("/orare");
+                }}
+              >
+                Orare
+              </Menu.Item>
+              <Menu.Item
+                icon={<Logout size={16} color={theme.colors.violet[6]} />}
+                rightSection={
+                  <Text
+                    size="xs"
+                    transform="uppercase"
+                    weight={700}
+                    color="dimmed"
+                  >
+                    Ctrl + L
+                  </Text>
+                }
+                onClick={() => {
+                  resetLogin();
+                }}
+              >
+                Log Out
+              </Menu.Item>
+            </>
+          ) : (
+            <Menu.Item
+              icon={<Login size={16} color={theme.colors.blue[6]} />}
+              rightSection={
+                <Text
+                  size="xs"
+                  transform="uppercase"
+                  weight={700}
+                  color="dimmed"
+                >
+                  Ctrl + L
+                </Text>
+              }
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              Log In
+            </Menu.Item>
+          )}
         </Menu>
 
         {windowDimension.winWidth > 720 ? (
@@ -441,7 +506,7 @@ export function HeaderMiddle() {
         {/* LOGO */}
         {windowDimension.winWidth > 1080 ? (
           <Center
-            style={{ width: 400, height: 200 }}
+            style={{ height: 54 }}
             onClick={() => {
               history.push("/");
               setActive(null);

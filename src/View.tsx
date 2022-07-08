@@ -1,3 +1,5 @@
+// @ts-nocheck
+import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useId } from "react";
@@ -40,6 +42,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Help } from "tabler-icons-react";
 import { LayoutList } from "tabler-icons-react";
 import { CalendarEvent } from "tabler-icons-react";
+import { Check, X } from "tabler-icons-react";
 
 // Image imports
 import backgroundLight from "./images/defaultLight.png";
@@ -47,13 +50,23 @@ import backgroundDark from "./images/defaultDark.png";
 import backgroundLightInverted from "./images/invertedLight.png";
 import backgroundDarkInverted from "./images/invertedDark.png";
 
-// Firebase imports
-import { getFirestore, query, collection, where } from "firebase/firestore";
+// Firestore firebase imports
+import {
+  getFirestore,
+  query,
+  collection,
+  where,
+  Firestore,
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 import { addDoc, getDocs } from "firebase/firestore";
 import { logout, db } from "./firebase";
 import { userInfo } from "os";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, SignInWithGoogle } from "./firebase";
+import { showNotification } from "@mantine/notifications";
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   icon: { ref: getRef("icon") },
@@ -125,13 +138,15 @@ const View = () => {
   const Location = useLocation();
   const orar = Location.state.orar;
 
-  const sorted = orar.date.sort(sortByDate);
+  const date = orar.date;
+
+  /*const sorted = orar.date.sort(sortByDate);
   const date = sorted.filter(function (item, pos) {
     return sorted.indexOf(item) == pos;
   });
   var aux = date[0];
   date[0] = date[date.length - 1];
-  date[date.length - 1] = aux;
+  date[date.length - 1] = aux;*/
 
   console.log(orar);
 
@@ -207,6 +222,20 @@ const View = () => {
     }
   };
 
+  const addPoints = async (points) => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    await setDoc(
+      doc(db, "users", document.id),
+      {
+        puncte: document.data().puncte + points,
+        maxPoints: document.data().maxPoints + points,
+      },
+      { merge: true }
+    );
+  };
+
   function AccordionLabel({ date, important }) {
     var data = dayjs(setFormatDDMMYYYYtoMMDDYYYY(date)).format(
       "dddd, D MMMM, YYYY"
@@ -227,7 +256,6 @@ const View = () => {
       </>
     );
   }
-
   return (
     <div className="view" style={{}}>
       <Center>
@@ -394,6 +422,14 @@ const View = () => {
                                   orar.capitole[index],
                                   anonim == true ? "Anonim" : user.displayName
                                 );
+                                addPoints(25);
+                                showNotification({
+                                  title: "Întrebarea a fost adăugată!",
+                                  message: "Ai primit 25 puncte!",
+                                  autoClose: 2000,
+                                  color: "green",
+                                  icon: <Check />,
+                                });
                               }}
                             >
                               Intreaba
@@ -430,8 +466,11 @@ const View = () => {
                           <Indicator
                             color="teal"
                             disabled={
+                              date.includes(day) == false ||
+                              orar.date.indexOf(day) == -1 ||
                               orar.importante[orar.date.indexOf(day)] ==
-                                false || date.includes(day) == false
+                                undefined ||
+                              orar.importante[orar.date.indexOf(day)] == false
                             }
                             label="Important"
                             size={18}

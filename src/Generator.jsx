@@ -41,7 +41,7 @@ import { BrandGoogle, Currency, LayersDifference } from "tabler-icons-react";
 import dayjs from "dayjs";
 
 import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { Calendar } from "@mantine/dates";
+import { Calendar, DateRangePicker } from "@mantine/dates";
 import { Indicator } from "@mantine/core";
 import { Modal, useMantineTheme } from "@mantine/core";
 import { Title } from "@mantine/core";
@@ -582,21 +582,89 @@ const Generator = (props) => {
     fillImportante(false);
     Layer1();
     Layer2();
+    shuffleOrar(orarFinal);
+    orarFinal.date.sort(function (a, b) {
+      var aa = a.split("/").reverse().join(),
+        bb = b.split("/").reverse().join();
+      return aa < bb ? -1 : aa > bb ? 1 : 0;
+    });
+    orarFinal.date = [...new Set(orarFinal.date)];
     setOrarGenerat(orarFinal);
     console.log("DATE : ", orarFinal.date);
   };
 
-  function generateOrar() {
-    for (var i = 0; i < zile; i++) {}
-    orarFinal.date = [4, 5, 6];
-    orarFinal.ore = ["8:00", "12:00", "10:30"];
-    orarFinal.durata = ["1:30", "1:00", "0:50"];
-    orarFinal.materii = ["Informatica", "Romana", "Matematica"];
-    orarFinal.capitole = ["Tablouri", "Literatura", "Numere complexe"];
-    orarFinal.completate = [false, false, false];
+  const manageSortOrar = (orar) => {
+    let newOrar = sortOrar(
+      orar.date,
+      orar.durata,
+      orar.importante,
+      orar.materii,
+      orar.capitole,
+      orar.ore
+    );
+    orar.date = newOrar.date;
+    orar.durata = newOrar.durata;
+    orar.important = newOrar.importante;
+    orar.materii = newOrar.materii;
+    orar.capitole = newOrar.capitole;
+    orar.ore = newOrar.ore;
+  };
+
+  const rebuildDate = (date) => {
+    return date;
+  };
+
+  // Durstenfeld shuffle, an optimized version of Fisher-Yates shuffle:
+  function shuffleOrar(orar) {
+    for (let i = orar.materii.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [orar.materii[i], orar.materii[j]] = [orar.materii[j], orar.materii[i]];
+      [orar.capitole[i], orar.capitole[j]] = [
+        orar.capitole[j],
+        orar.capitole[i],
+      ];
+      [orar.ore[i], orar.ore[j]] = [orar.ore[j], orar.ore[i]];
+      [orar.durata[i], orar.durata[j]] = [orar.durata[j], orar.durata[i]];
+      [orar.importante[i], orar.importante[j]] = [
+        orar.importante[j],
+        orar.importante[i],
+      ];
+    }
   }
 
-  console.log("LOCATION STATE: ", Location);
+  const sortOrar = (date, durata, importante, materii, capitole, ore) => {
+    for (var i = 0; i < date.length - 1; i++) {
+      var partsi = date[i].split("/");
+      for (var j = i + 1; j < date.length; j++) {
+        var partsj = date[j].split("/");
+        if (
+          new Date(partsi[1] + "/" + partsi[0] + "/" + partsi[2]).getTime() >
+          new Date(partsj[1] + "/" + partsj[0] + "/" + partsj[2]).getTime()
+        ) {
+          var aux = date[i];
+          date[i] = date[j];
+          date[j] = aux;
+          aux = durata[i];
+          durata[i] = durata[j];
+          durata[j] = aux;
+          aux = importante[i];
+          importante[i] = importante[j];
+          importante[j] = aux;
+          aux = materii[i];
+          materii[i] = materii[j];
+          materii[j] = aux;
+          aux = capitole[i];
+          capitole[i] = capitole[j];
+          capitole[j] = aux;
+          aux = ore[i];
+          ore[i] = ore[j];
+          ore[j] = aux;
+        }
+      }
+    }
+    console.log("ORAR SORTED DATES: ", date);
+    return { date, durata, importante, materii, capitole, ore };
+  };
 
   function daysToNumbers(input) {
     for (var i = 0; i < input.length; i++) {
@@ -681,6 +749,10 @@ const Generator = (props) => {
                     const day = dayj.format("DD/MM/YYYY");
                     return (
                       <>
+                        {console.log(
+                          "ORARGENERAT FROM CALENDAR: ",
+                          orarGenerat
+                        )}
                         <Indicator
                           color={dark ? "violet" : "blue"}
                           withBorder
@@ -1025,6 +1097,7 @@ const Generator = (props) => {
                 variant="filled"
                 onClick={() => {
                   saveDetails();
+                  setOrarGenerat(orarFinal);
                   addToDataBase(orarGenerat);
                   addPoints(75);
                   showNotification({

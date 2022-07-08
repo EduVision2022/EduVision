@@ -310,37 +310,25 @@ const Intrebari = () => {
                   style={{ textAlign: "left" }}
                 >
                   <div className="intrebare">
-                    <Code style={{ fontSize: "16px" }}>ENUNȚ:</Code>
-                    <Paper
-                      p="0.4rem"
-                      style={{
-                        backgroundColor: dark ? "#141517" : "#f1f3f5",
-                        display: "inline-block",
-                        paddingLeft: "0.7rem",
-                        paddingRight: "0.7rem",
-                        margin: "0.5rem",
-                      }}
-                    >
-                      {intrebare.intrebare}
+                    <Text weight="600" size="sm">
+                      Enunț
+                    </Text>
+                    <Paper radius="md" p="xs" withBorder>
+                      <Text weight="500">{intrebare.intrebare}</Text>
                     </Paper>
                   </div>
-                  <div className="autor">
-                    <Code style={{ fontSize: "16px" }}>AUTOR:</Code>
-                    <Paper
-                      p="0.4rem"
-                      style={{
-                        backgroundColor: dark ? "#141517" : "#f1f3f5",
-                        display: "inline-block",
-                        paddingLeft: "0.7rem",
-                        paddingRight: "0.7rem",
-                        margin: "0.5rem",
-                      }}
-                    >
-                      {intrebare.autor}
+                  <div className="autor" style={{ marginTop: "1rem" }}>
+                    <Text weight="600" size="sm">
+                      Autor
+                    </Text>
+                    <Paper radius="md" p="xs" withBorder>
+                      <Text weight="500">{intrebare.autor}</Text>
                     </Paper>
                   </div>
-                  <div className="raspunsuri">
-                    <Code style={{ fontSize: "16px" }}>RASPUNSURI:</Code>
+                  <div className="raspunsuri" style={{ marginTop: "1rem" }}>
+                    <Text weight="600" size="sm">
+                      Răspunsuri
+                    </Text>
                     {raspunsuriFinal.map((raspuns, index) => (
                       <div className="raspuns" key={raspuns + index}>
                         <Paper
@@ -348,7 +336,9 @@ const Intrebari = () => {
                           radius="md"
                           p="md"
                           withBorder
-                          style={{ margin: "1rem" }}
+                          style={{
+                            margin: "1rem",
+                          }}
                         >
                           <Text weight="600">
                             {autoriRaspunsuriFinal[index]}

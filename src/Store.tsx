@@ -32,6 +32,14 @@ import {
 import { SimpleGrid } from "@mantine/core";
 import { Title } from "@mantine/core";
 import { Butterfly } from "tabler-icons-react";
+import { showNotification } from "@mantine/notifications";
+
+// Icons imports
+import { Check, X } from "tabler-icons-react";
+import React, { useEffect } from "react";
+
+// React imports
+import { useState } from "react";
 
 interface StoreItemProps {
   displayName: string;
@@ -41,36 +49,55 @@ interface StoreItemProps {
   price: number;
 }
 
-/*
-  const addPoints = async (points) => {
-    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-    const aux = await getDocs(q);
-    const document = aux.docs[0];
-    await setDoc(
-      doc(db, "users", document.id),
-      { puncte: document.data().puncte + points },
-      { merge: true }
-    );
-  };
-*/
-
 function StoreItem({ item }: StoreItemProps) {
   const theme = useMantineTheme();
   const [user, loading, error] = useAuthState(auth);
+
+  const [items, setItems] = useState([]);
 
   const buyItem = async (item) => {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
     const aux = await getDocs(q);
     const document = aux.docs[0];
-    await setDoc(
-      doc(db, "users", document.id),
-      {
-        puncte: document.data().puncte - item.price,
-        items: [...document.data().items, item.name],
-      },
-      { merge: true }
-    );
+    if (document.data().puncte >= item.price) {
+      await setDoc(
+        doc(db, "users", document.id),
+        {
+          puncte: document.data().puncte - item.price,
+          items: [...document.data().items, item.name],
+        },
+        { merge: true }
+      );
+      showNotification({
+        title: "Ai cumpărat cu succes " + item.displayName + "!",
+        message: "Ai plătit " + item.price + " puncte!",
+        autoClose: 2000,
+        color: "green",
+        icon: <Check />,
+      });
+    } else {
+      showNotification({
+        title: "Nu ai suficiente puncte!",
+        message: "Cumpărarea a eșuat!",
+        autoClose: 2000,
+        color: "red",
+        icon: <X />,
+      });
+    }
   };
+
+  const fetchItems = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    const items = document.data().items;
+    setItems(items);
+    setTimeout(fetchItems, 1000);
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   const secondaryColor =
     theme.colorScheme === "dark" ? theme.colors.dark[1] : theme.colors.gray[7];
@@ -98,13 +125,14 @@ function StoreItem({ item }: StoreItemProps) {
         <Button
           variant="light"
           color="blue"
+          disabled={items.includes(item.name)}
           fullWidth
           style={{ marginTop: 14 }}
           onClick={() => {
             buyItem(item);
           }}
         >
-          Cumpara
+          {items.includes(item.name) ? "Cumpărat" : "Cumpără"}
         </Button>
       </Card>
     </div>

@@ -159,26 +159,32 @@ const Contact = () => {
       </Title>
       <Center>
         <SimpleGrid cols={2} breakpoints={[{ maxWidth: 755, cols: 1 }]}>
-          <Box
-            sx={(theme) => ({
-              padding: theme.spacing.xl,
-              borderRadius: theme.radius.md,
-              backgroundColor: dark ? theme.colors.dark[6] : theme.white,
-            })}
-          >
-            <ContactIconsList />
-          </Box>
-          <Box
-            sx={(theme) => ({
-              padding: theme.spacing.xl,
-              borderRadius: theme.radius.md,
-              backgroundImage: `linear-gradient(135deg, ${
-                theme.colors[theme.primaryColor][6]
-              } 0%, ${theme.colors[theme.primaryColor][4]} 100%)`,
-            })}
-          >
-            <ContactIconsList2 variant="white" />
-          </Box>
+          <div className="as">
+            <Title order={3}>Andrei Stan</Title>
+            <Box
+              sx={(theme) => ({
+                padding: theme.spacing.xl,
+                borderRadius: theme.radius.md,
+                backgroundColor: dark ? theme.colors.dark[6] : theme.white,
+              })}
+            >
+              <ContactIconsList />
+            </Box>
+          </div>
+          <div className="sb">
+            <Title order={3}>Șerban Toader</Title>
+            <Box
+              sx={(theme) => ({
+                padding: theme.spacing.xl,
+                borderRadius: theme.radius.md,
+                backgroundImage: `linear-gradient(135deg, ${
+                  theme.colors[theme.primaryColor][6]
+                } 0%, ${theme.colors[theme.primaryColor][4]} 100%)`,
+              })}
+            >
+              <ContactIconsList2 variant="white" />
+            </Box>
+          </div>
         </SimpleGrid>
       </Center>
     </div>

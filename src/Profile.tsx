@@ -44,6 +44,11 @@ import "dayjs/locale/ro";
 import { Crown } from "tabler-icons-react";
 import { BoxMultiple5 } from "tabler-icons-react";
 
+// Custom styles imports
+import "./blazingFire.css";
+import "./bubbleFrame.css";
+import "./rgbFrame.css";
+
 const Profile = () => {
   const [windowDimension, detectHW] = useState({
     winWidth: window.innerWidth,
@@ -73,6 +78,7 @@ const Profile = () => {
   const [registered, setRegistered] = useState(new Date());
   const [provider, setProvider] = useState("");
   const [maxPoints, setMaxPoints] = useState(0);
+  const [items, setItems] = useState([]);
 
   const id = useId();
 
@@ -89,6 +95,7 @@ const Profile = () => {
       fetchRegistered();
       fetchProvider();
       fetchMaxPoints();
+      fetchItems();
     }
   }, []);
 
@@ -145,6 +152,14 @@ const Profile = () => {
     setProvider(proveider);
   };
 
+  const fetchItems = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    const items = document.data().items;
+    setItems(items);
+  };
+
   const setFormatDDMMYYYYtoMMDDYYYY = (date, separator = "/") => {
     const [day, month, year] = date.split("/");
     return month + separator + day + separator + year;
@@ -166,10 +181,28 @@ const Profile = () => {
             >
               <Paper radius="md" p="md" withBorder>
                 <Center>
-                  <Avatar src={user.photoURL} size="xl" radius="50%" />
+                  <Avatar
+                    src={user.photoURL}
+                    size="xl"
+                    radius="50%"
+                    className={
+                      items.includes("electricborder")
+                        ? "box"
+                        : items.includes("bubbleborder")
+                        ? "Bubble"
+                        : ""
+                    }
+                  />
                 </Center>
                 <div className="nume" style={{ display: "inline-block" }}>
-                  <h3 style={{ display: "inline-block" }}>
+                  <h3
+                    style={{
+                      display: "inline-block",
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                    className={items.includes("blazingfire") ? "Blazing" : ""}
+                  >
                     {user.displayName}
                   </h3>
                   <Text
@@ -181,36 +214,38 @@ const Profile = () => {
                     {user.email}
                   </Text>
                 </div>
-                <Group>
-                  <div className="status">
-                    {maxPoints >= 0 && maxPoints < 100 ? (
-                      <Badge color="dark">Începător</Badge>
-                    ) : null}
-                    {maxPoints >= 100 && maxPoints < 200 ? (
-                      <Badge style={{ color: "#a4a9b2" }}>Intermediar</Badge>
-                    ) : null}
-                    {maxPoints >= 200 && maxPoints < 300 ? (
-                      <Badge color="teal">Semi-avansat</Badge>
-                    ) : null}
-                    {maxPoints >= 300 && maxPoints < 400 ? (
-                      <Badge color="violet">Avansat</Badge>
-                    ) : null}
-                    {maxPoints >= 400 ? (
-                      <Badge color="yellow" leftSection={<Crown size={12} />}>
-                        Legendă
-                      </Badge>
-                    ) : null}
-                    {orare >= 5 ? (
-                      <Badge
-                        variant="gradient"
-                        gradient={{ from: "teal", to: "blue", deg: 60 }}
-                        leftSection={<BoxMultiple5 size={12} />}
-                      >
-                        Veteran
-                      </Badge>
-                    ) : null}
-                  </div>
-                </Group>
+                <Center>
+                  <Group>
+                    <div className="status">
+                      {maxPoints >= 0 && maxPoints < 100 ? (
+                        <Badge color="dark">Începător</Badge>
+                      ) : null}
+                      {maxPoints >= 100 && maxPoints < 200 ? (
+                        <Badge style={{ color: "#a4a9b2" }}>Intermediar</Badge>
+                      ) : null}
+                      {maxPoints >= 200 && maxPoints < 300 ? (
+                        <Badge color="teal">Semi-avansat</Badge>
+                      ) : null}
+                      {maxPoints >= 300 && maxPoints < 400 ? (
+                        <Badge color="violet">Avansat</Badge>
+                      ) : null}
+                      {maxPoints >= 400 ? (
+                        <Badge color="yellow" leftSection={<Crown size={12} />}>
+                          Legendă
+                        </Badge>
+                      ) : null}
+                      {orare >= 5 ? (
+                        <Badge
+                          variant="gradient"
+                          gradient={{ from: "teal", to: "blue", deg: 60 }}
+                          leftSection={<BoxMultiple5 size={12} />}
+                        >
+                          Veteran
+                        </Badge>
+                      ) : null}
+                    </div>
+                  </Group>
+                </Center>
               </Paper>
               <Grid style={{ marginRight: "auto" }}>
                 <Grid.Col span={10}>
