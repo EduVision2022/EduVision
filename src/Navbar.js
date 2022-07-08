@@ -208,6 +208,8 @@ export function HeaderMiddle() {
 
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const [maxPoints, setMaxPoints] = useState(0);
+
   const redirectTo = (input) => {
     history.push(input);
   };
@@ -236,6 +238,7 @@ export function HeaderMiddle() {
     const aux = await getDocs(q);
     const document = aux.docs[0];
     setPuncte(document.data().puncte);
+    setMaxPoints(document.data().maxPoints);
     setTimeout(fetchPuncte, 3000);
   };
 
@@ -278,19 +281,19 @@ export function HeaderMiddle() {
   const rewards = (puncte) => {
     return (
       <div className="status">
-        {puncte >= 0 && puncte < 100 ? (
+        {maxPoints >= 0 && maxPoints < 100 ? (
           <Badge color="dark">Începător</Badge>
         ) : null}
-        {puncte >= 100 && puncte < 200 ? (
+        {maxPoints >= 100 && maxPoints < 200 ? (
           <Badge style={{ color: "#a4a9b2" }}>Intermediar</Badge>
         ) : null}
-        {puncte >= 200 && puncte < 300 ? (
+        {maxPoints >= 200 && maxPoints < 300 ? (
           <Badge color="teal">Semi-avansat</Badge>
         ) : null}
-        {puncte >= 300 && puncte < 400 ? (
+        {maxPoints >= 300 && maxPoints < 400 ? (
           <Badge color="violet">Avansat</Badge>
         ) : null}
-        {puncte >= 400 ? (
+        {maxPoints >= 400 ? (
           <Badge color="yellow" leftSection={<Crown size={12} />} size="xs">
             Legendă
           </Badge>
@@ -354,7 +357,7 @@ export function HeaderMiddle() {
                         className="reward"
                         style={{ display: "inline-block" }}
                       >
-                        {rewards(puncte)}
+                        {rewards(maxPoints)}
                       </div>
                       <div
                         className="puncte"

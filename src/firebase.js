@@ -58,6 +58,8 @@ const SignInWithGoogle = async () => {
         picture: user.photoURL,
         orare: [],
         puncte: 50,
+        maxPoints: 50,
+        items: [],
         registered: new Date(),
       });
       showNotification({

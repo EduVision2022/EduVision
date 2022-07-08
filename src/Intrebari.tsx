@@ -224,7 +224,10 @@ const Intrebari = () => {
     const document = aux.docs[0];
     await setDoc(
       doc(db, "users", document.id),
-      { puncte: document.data().puncte + points },
+      {
+        puncte: document.data().puncte + points,
+        maxPoints: document.data().maxPoints + points,
+      },
       { merge: true }
     );
   };

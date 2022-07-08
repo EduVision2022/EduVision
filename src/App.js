@@ -21,6 +21,7 @@ import Intrebari from "./Intrebari.tsx";
 import Profile from "./Profile.tsx";
 import About from "./About.tsx";
 import Contact from "./Contact.tsx";
+import Store from "./Store.tsx";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -55,6 +56,7 @@ function App() {
                     <Route path="/intrebari" component={Intrebari} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/contact" component={Contact} />
+                    <Route path="/store" component={Store} />
                     <Route path="*" component={NotFoundTitle} />
                   </Switch>
                   <Footer />
