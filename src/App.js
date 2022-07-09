@@ -1,10 +1,15 @@
 import "./App.css";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
-import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "react-redux";
 import { NotificationsProvider } from "@mantine/notifications";
+import {
+  MantineProvider,
+  ColorSchemeProvider,
+  ColorScheme,
+} from "@mantine/core";
+import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 
 // Components import
 import Home from "./Home";
@@ -24,9 +29,16 @@ import Contact from "./Contact.tsx";
 import Store from "./Store.tsx";
 
 function App() {
-  const [colorScheme, setColorScheme] = useState("light");
+  const [colorScheme, setColorScheme] = useLocalStorage({
+    key: "color-scheme",
+    defaultValue: "light",
+    getInitialValueInEffect: true,
+  });
+
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   return (
     <GoogleOAuthProvider clientId="659959791723-d4cg060bjtk048i427hmblvng5q6g7ne.apps.googleusercontent.com">

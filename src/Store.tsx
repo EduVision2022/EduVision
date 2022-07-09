@@ -28,6 +28,7 @@ import {
   Button,
   Group,
   useMantineTheme,
+  NumberInputStylesNames,
 } from "@mantine/core";
 import { SimpleGrid } from "@mantine/core";
 import { Title } from "@mantine/core";
@@ -55,7 +56,26 @@ function StoreItem({ item }: StoreItemProps) {
 
   const [items, setItems] = useState([]);
 
+  class Activity {
+    name: string;
+    description: string;
+    price: number;
+    date: Date;
+    constructur(name: string, description: string, price: number, date: Date) {
+      this.name = name;
+      this.description = description;
+      this.price = price;
+      this.date = date;
+    }
+  }
+
   const buyItem = async (item) => {
+    const activity = {
+      name: "Cumpărare",
+      description: "Ai cumpărat " + item.displayName,
+      price: item.price,
+      date: new Date(),
+    };
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
     const aux = await getDocs(q);
     const document = aux.docs[0];
@@ -65,6 +85,7 @@ function StoreItem({ item }: StoreItemProps) {
         {
           puncte: document.data().puncte - item.price,
           items: [...document.data().items, item.name],
+          recentActivities: [...document.data().recentActivities, activity],
         },
         { merge: true }
       );

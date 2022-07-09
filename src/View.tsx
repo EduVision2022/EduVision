@@ -31,6 +31,9 @@ import { Checkbox } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { TextInput } from "@mantine/core";
 import { Badge } from "@mantine/core";
+import { Stack } from "@mantine/core";
+import { SegmentedControl } from "@mantine/core";
+
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
 
 //Font import
@@ -140,13 +143,9 @@ const View = () => {
 
   const date = orar.date;
 
-  /*const sorted = orar.date.sort(sortByDate);
-  const date = sorted.filter(function (item, pos) {
-    return sorted.indexOf(item) == pos;
-  });
-  var aux = date[0];
-  date[0] = date[date.length - 1];
-  date[date.length - 1] = aux;*/
+  const [testModal, setTestModal] = useState(false);
+  const [pasTest, setPasTest] = useState(0);
+  const [score, setScore] = useState(0);
 
   console.log(orar);
 
@@ -170,12 +169,17 @@ const View = () => {
     };
   }, [windowDimension]);
 
+  const [segValue, setSegValue] = useState("react");
+
   const [value, setValue] = useState(new Date());
   const [openModal, setOpenModal] = useState(false);
   const [currDate, setCurrDate] = useState(0);
 
   const [intrebare, setIntrebare] = useState("");
   const [anonim, setAnonim] = useState(false);
+
+  const [testMaterie, setTestMaterie] = useState("");
+  const [testCapitol, setTestCapitol] = useState("");
 
   function getDayName(dateStr, locale) {
     var date = new Date(dateStr);
@@ -188,6 +192,131 @@ const View = () => {
   var localizedFormat = require("dayjs/plugin/localizedFormat");
   dayjs.extend(localizedFormat);
   dayjs.locale("ro");
+
+  function intrebareMaterie(
+    materie,
+    capitol,
+    intrebare,
+    raspunsuri = [],
+    raspunsCorect
+  ) {
+    this.materie = materie;
+    this.capitol = capitol;
+    this.intrebare = intrebare;
+    this.raspunsuri = raspunsuri;
+    this.raspunsCorect = raspunsCorect;
+  }
+
+  var intrebariInformatica = [
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Indicați expresia C/C++ cu valoarea 0",
+      ["sqrt(16)==4", "45*5==200+5*5", "25/10==15/10", "64/4==8*2"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Grafuri",
+      "Numim pădure un graf neorientat în care fiecare componentă conexă a sa este un arbore. Orice pădure cu cel putin doi arbori este un graf care:",
+      [
+        "Are cicluri şi este conex",
+        "Are cicluri şi nu este conex",
+        "Nu are cicluri şi este conex",
+        "Nu are cicluri şi nu este conex",
+      ],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Declararea variabilelor",
+      "Alegeți declararea corectă a unei variabile structurale cu 2 componente, una de tip real și una de tip întreg.",
+
+      [
+        "int float x[10] ;",
+        "struct { float x; int y} a;",
+        "float a[20];",
+        "struct { float x; int y} int a;",
+      ],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Variabilele x și y sunt întregi. Indicați expresia C/C++ echivalentă cu (x<3)&&(y>=5).",
+      [
+        "!(!(x<3)||!(y>=5))",
+        "!(x>=3)&&(y<5)",
+        "!((x>=3)&&(y<5))",
+        "!((x<3)||(y>=5))",
+      ],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Grafuri",
+      "Valorile care pot reprezenta gradele nodurilor unui graf neorientat, cu 6 noduri, sunt:",
+      ["2,2,5,5,0,1", "6,5,4,3,2,1", "2,2,3,4,0,3", "1,0,0,2,2,2"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Structuri repetitive",
+      "Ce se afisează, în urma executării următoarelor instrucțiuni: int b[5]={88,87,76,36,21},i;for( i=1;i<4;i++){cout<<b[i]<<' ';}",
+      [
+        "87 76 36",
+        "88 87 76 36 21",
+        "87 76 36 21",
+        "Secventa are erori de sintaxa.",
+      ],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Matrici",
+      "Variabilele i şi j sunt de tip întreg, iar variabila m memorează un tablou bidimensional cu 5 linii şi 5 coloane, numerotate de la 0 la 4, cu elemente numere întregi. O expresie C/C++ a cărei valoare este egală cu produsul dintre primul element de pe linia i și ultimul element de pe coloana j din acest tablou este:",
+      ["m(0,i)*m(j,4)", "m(i)(0)*m(4)(j)", "m[i][0]*m[4][j]", "m[0,i]*m[j,4]"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Backtracking",
+      "Utilizând metoda backtracking se generează toate modalităţile de a scrie numărul 6 ca sumă de numere naturale impare. Termenii fiecărei sume sunt în ordine crescătoare. Cele patru soluţii sunt obţinute în această ordine: 1+1+1+1+1+1; 1+1+1+3; 1+5; 3+3. Aplicând acelaşi algoritm, numărul soluţiilor obţinute pentru scrierea lui 8 este:",
+      ["9", "6", "5", "8"],
+      2
+    ),
+  ];
+
+  const [currIntrebari, setCurrIntrebari] = useState([]);
+  const generateIntrebari = async (materie, capitol) => {
+    var intrebari = [];
+
+    for (var i = 0; i < intrebariInformatica.length; i++) {
+      if (intrebariInformatica[i].materie == materie) {
+        if (intrebariInformatica[i].capitol == capitol) {
+          intrebari.push(intrebariInformatica[i]);
+        }
+      }
+    }
+    console.log("intrebari: ", intrebari);
+    await setCurrIntrebari(intrebari);
+  };
+
+  const manageTest = async () => {
+    setPasTest(0);
+    setTestMaterie(orar.materii[orar.date.indexOf(currDate)]);
+    setTestCapitol(orar.capitole[orar.date.indexOf(currDate)]);
+    setTimeout(console.log("currintrebari from onclick", currIntrebari), 2000);
+    setTestModal(true);
+  };
+
+  const checkScore = () => {
+    if (score >= currIntrebari.length) {
+      console.log("passed");
+    } else {
+      console.log("failed");
+    }
+  };
 
   class Intrebare {
     intrebare: string;
@@ -482,6 +611,10 @@ const View = () => {
                                 ? setOpenModal(true)
                                 : setOpenModal(false);
                               setCurrDate(day);
+                              generateIntrebari(
+                                orar.materii[orar.date.indexOf(currDate)],
+                                orar.capitole[orar.date.indexOf(currDate)]
+                              );
                             }}
                           >
                             <Indicator
@@ -494,6 +627,10 @@ const View = () => {
                                   ? setOpenModal(true)
                                   : setOpenModal(false);
                                 setCurrDate(day);
+                                generateIntrebari(
+                                  orar.materii[orar.date.indexOf(currDate)],
+                                  orar.capitole[orar.date.indexOf(currDate)]
+                                );
                               }}
                             >
                               <div>{dayj.format("D")}</div>
@@ -691,12 +828,126 @@ const View = () => {
                             Intreaba
                           </Button>
                         </Paper>
+                        <Paper
+                          shadow="xl"
+                          radius="md"
+                          p="md"
+                          withBorder
+                          style={{ marginTop: "1rem" }}
+                        >
+                          <Text weight="600" size="sm">
+                            Completează ora
+                          </Text>
+                          <Text weight="600" size="xs" color="dimmed">
+                            Pentru a completa ora, trebuie sa raspunzi corect la{" "}
+                            cel puțin jumătate <br />
+                            din întrebările care îți vor fi puse. Când ești
+                            pregătit, apasă butonul de mai jos.
+                          </Text>
+                          <Button
+                            variant="default"
+                            style={{ marginTop: "0.5rem" }}
+                            onClick={() => {}}
+                          >
+                            Generează întrebările
+                          </Button>
+                          <Button
+                            variant="default"
+                            style={{ marginTop: "0.5rem" }}
+                            onClick={() => {
+                              generateIntrebari(
+                                orar.materii[orar.date.indexOf(currDate)],
+                                orar.capitole[orar.date.indexOf(currDate)]
+                              );
+                              manageTest();
+                            }}
+                          >
+                            Completează ora
+                          </Button>
+                        </Paper>
                       </Paper>
                     </Center>
                   ) : null
                 }
               </Transition>
             </Paper>
+            <Modal
+              centered
+              opened={testModal}
+              onClose={() => setTestModal(false)}
+              closeOnClickOutside={false}
+              title={
+                <Title order={4}>
+                  Test {testMaterie}, {testCapitol}
+                </Title>
+              }
+            >
+              {currIntrebari.length > 0 ? (
+                <>
+                  <Paper shadow="xl" radius="md" p="md" withBorder>
+                    <Text weight="600" size="sm">
+                      {currIntrebari[pasTest].intrebare}
+                    </Text>
+                  </Paper>
+                  <Center style={{ marginTop: "1rem" }}>
+                    <SegmentedControl
+                      value={segValue}
+                      onChange={setSegValue}
+                      orientation="vertical"
+                      size="md"
+                      data={[
+                        {
+                          value: currIntrebari[pasTest].raspunsuri[0],
+                          label: currIntrebari[pasTest].raspunsuri[0],
+                        },
+                        {
+                          value: currIntrebari[pasTest].raspunsuri[1],
+                          label: currIntrebari[pasTest].raspunsuri[1],
+                        },
+                        {
+                          value: currIntrebari[pasTest].raspunsuri[2],
+                          label: currIntrebari[pasTest].raspunsuri[2],
+                        },
+                        {
+                          value: currIntrebari[pasTest].raspunsuri[3],
+                          label: currIntrebari[pasTest].raspunsuri[3],
+                        },
+                      ]}
+                    />
+                  </Center>
+                </>
+              ) : null}
+              <Center style={{ marginTop: "1rem" }}>
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    if (pasTest < currIntrebari.length - 1) {
+                      if (
+                        currIntrebari[pasTest].raspunsuri.indexOf(segValue) +
+                          1 ==
+                        currIntrebari[pasTest].raspunsCorect
+                      ) {
+                        setScore((value) => value + 1);
+                      }
+                      setPasTest((value) => value + 1);
+                    } else {
+                      if (
+                        currIntrebari[pasTest].raspunsuri.indexOf(segValue) +
+                          1 ==
+                        currIntrebari[pasTest].raspunsCorect
+                      ) {
+                        setScore((value) => value + 1);
+                      }
+                      checkScore();
+                      setTestModal(false);
+                      setPasTest(0);
+                    }
+                  }}
+                >
+                  {pasTest < 3 ? "Următoarea întrebare" : "Finalizare"}
+                </Button>
+              </Center>
+            </Modal>
             <Modal
               centered
               opened={openModal && windowDimension.winWidth < 720}

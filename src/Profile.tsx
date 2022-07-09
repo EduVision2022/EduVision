@@ -32,6 +32,7 @@ import { Grid } from "@mantine/core";
 import { Badge } from "@mantine/core";
 import { Group } from "@mantine/core";
 import { Tooltip } from "@mantine/core";
+import { Stack } from "@mantine/core";
 
 // React imports
 import { useId } from "react";
@@ -79,6 +80,7 @@ const Profile = () => {
   const [provider, setProvider] = useState("");
   const [maxPoints, setMaxPoints] = useState(0);
   const [items, setItems] = useState([]);
+  const [activities, setActivities] = useState([]);
 
   const id = useId();
 
@@ -96,6 +98,7 @@ const Profile = () => {
       fetchProvider();
       fetchMaxPoints();
       fetchItems();
+      fetchActivities();
     }
   }, []);
 
@@ -158,6 +161,14 @@ const Profile = () => {
     const document = aux.docs[0];
     const items = document.data().items;
     setItems(items);
+  };
+
+  const fetchActivities = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    const activities = document.data().recentActivities;
+    setActivities(activities);
   };
 
   const setFormatDDMMYYYYtoMMDDYYYY = (date, separator = "/") => {
@@ -388,6 +399,71 @@ const Profile = () => {
                   </Paper>
                 </Paper>
               ) : null}
+            </Paper>
+          </Center>
+          <Center>
+            <Paper radius="md" p="md" withBorder>
+              <Text weight={600} color="dimmed">
+                Activități recente:
+              </Text>
+              {activities.map((activity) => (
+                <>
+                  <div
+                    style={{
+                      alignContent: "left",
+                      alignItems: "left",
+                      textAlign: "left",
+                      display: "flex",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <Stack spacing={0} align="flex-start">
+                      <Text
+                        weight={600}
+                        color="dimmed"
+                        style={{
+                          marginTop: "0.3rem",
+                          display: "inline-block",
+                        }}
+                      >
+                        {activity.date.toDate().toLocaleDateString("ro-RO")}
+                      </Text>
+                      <Text
+                        weight={600}
+                        color="dimmed"
+                        style={{
+                          display: "inline-block",
+                        }}
+                      >
+                        {activity.date.toDate().toLocaleTimeString("ro-RO")}
+                      </Text>
+                    </Stack>
+                    <Center
+                      style={{ display: "inline-block", marginLeft: "1rem" }}
+                    >
+                      <Paper
+                        radius="md"
+                        p="xs"
+                        withBorder
+                        style={{ marginTop: "0.5rem", display: "inline-block" }}
+                      >
+                        <Text weight={600} size="sm"></Text>
+                        <Text weight={600} size="md">
+                          {activity.description} pentru{" "}
+                          <Text
+                            weight={800}
+                            color="green"
+                            style={{ display: "inline-block" }}
+                          >
+                            {activity.price}
+                          </Text>{" "}
+                          puncte
+                        </Text>
+                      </Paper>
+                    </Center>
+                  </div>
+                </>
+              ))}
             </Paper>
           </Center>
         </div>
