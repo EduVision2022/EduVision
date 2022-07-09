@@ -61,6 +61,7 @@ const SignInWithGoogle = async () => {
         maxPoints: 50,
         items: [],
         registered: new Date(),
+        recentActivities: [],
       });
       showNotification({
         title: "Ți-ai creat un cont nou!",
