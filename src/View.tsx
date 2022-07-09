@@ -33,7 +33,8 @@ import { TextInput } from "@mantine/core";
 import { Badge } from "@mantine/core";
 import { Stack } from "@mantine/core";
 import { SegmentedControl } from "@mantine/core";
-
+import { Group } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
 
 //Font import
@@ -63,6 +64,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { addDoc, getDocs } from "firebase/firestore";
 import { logout, db } from "./firebase";
@@ -302,20 +304,12 @@ const View = () => {
     await setCurrIntrebari(intrebari);
   };
 
-  const manageTest = async () => {
+  const manageTest = async (date = currDate) => {
     setPasTest(0);
-    setTestMaterie(orar.materii[orar.date.indexOf(currDate)]);
-    setTestCapitol(orar.capitole[orar.date.indexOf(currDate)]);
+    setTestMaterie(orar.materii[orar.date.indexOf(date)]);
+    setTestCapitol(orar.capitole[orar.date.indexOf(date)]);
     setTimeout(console.log("currintrebari from onclick", currIntrebari), 2000);
     setTestModal(true);
-  };
-
-  const checkScore = () => {
-    if (score >= currIntrebari.length) {
-      console.log("passed");
-    } else {
-      console.log("failed");
-    }
   };
 
   class Intrebare {
@@ -351,6 +345,68 @@ const View = () => {
     }
   };
 
+  const [completate, setCompletate] = useState([]);
+
+  const [shouldFetch, setShouldFetch] = useState(0);
+
+  const fetchCompletate = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    const orare = document.data().orare;
+    orare.forEach((element, index) => {
+      if (element.nume == orar.nume) {
+        setCompletate(orare[index].completate);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchCompletate();
+  }, []);
+
+  const checkScore = async (date = currDate) => {
+    if (score >= 1) {
+      setShouldFetch((value) => value + 1);
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const aux = await getDocs(q);
+      const document = aux.docs[0];
+      const orare = document.data().orare;
+      orare.forEach((element, index) => {
+        if (element.nume == orar.nume) {
+          orare[index].completate[orar.date.indexOf(date)] = true;
+        }
+      });
+      await setDoc(
+        doc(db, "users", document.id),
+        {
+          orare: orare,
+        },
+        { merge: true }
+      );
+
+      showNotification({
+        title: "Ai completat ora cu succes!",
+        message: "Ai primit 50 puncte!",
+        autoClose: 2000,
+        color: "green",
+        icon: <Check />,
+      });
+      fetchCompletate();
+    } else {
+      showNotification({
+        title: "Nu ai completat ora!",
+        message:
+          "Ai greșit prea multe răspunsuri, mai încearcă după ce te pregătești!",
+        autoClose: 2000,
+        color: "red",
+        icon: <X />,
+      });
+    }
+    console.log(score);
+    setScore(0);
+  };
+
   const addPoints = async (points) => {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
     const aux = await getDocs(q);
@@ -365,22 +421,32 @@ const View = () => {
     );
   };
 
-  function AccordionLabel({ date, important }) {
+  function AccordionLabel({ date, important, completat }) {
     var data = dayjs(setFormatDDMMYYYYtoMMDDYYYY(date)).format(
       "dddd, D MMMM, YYYY"
     );
     return (
       <>
-        <div className="accordion-label" style={{ display: "flex" }}>
-          <Text style={{ display: "" }}>
+        <div className="accordion-label" style={{ display: "inline-block" }}>
+          <Text style={{ display: "inline-block" }}>
             {dayjs(setFormatDDMMYYYYtoMMDDYYYY(date)).format(
               "dddd, D MMMM, YYYY"
             )}
           </Text>
-          <Space w={180}></Space>
-          <div className="important">
-            {important ? <Badge color="teal">Important</Badge> : null}
-          </div>
+          <Group position="right" style={{ display: "inline-block" }}>
+            <Container>
+              {important ? (
+                <Badge color="teal" size="md">
+                  Important
+                </Badge>
+              ) : null}
+              {completat ? (
+                <Badge color="green" size="md" style={{ marginLeft: "0.5rem" }}>
+                  COMPLETAT
+                </Badge>
+              ) : null}
+            </Container>
+          </Group>{" "}
         </div>
       </>
     );
@@ -404,6 +470,7 @@ const View = () => {
                       <AccordionLabel
                         date={date}
                         important={orar.importante[index]}
+                        completat={completate[orar.date.indexOf(date)]}
                       />
                     }
                     style={{
@@ -415,156 +482,313 @@ const View = () => {
                   >
                     {
                       <div className="accordion-content">
-                        <div className="materie">
-                          <Code>MATERIE:</Code>{" "}
-                          <Paper
-                            p="0.4rem"
-                            style={{
-                              backgroundColor: dark ? "#141517" : "#f1f3f5",
-                              display: "inline-block",
-                              paddingLeft: "0.7rem",
-                              paddingRight: "0.7rem",
-                              margin: "0.5rem",
-                            }}
-                          >
-                            <Center>
-                              <Text
-                                color={dark ? "#98a7ab" : "#495057"}
-                                size="sm"
-                                weight={500}
-                              >
-                                {orar.materii[index]}
-                              </Text>
-                            </Center>
-                          </Paper>
-                        </div>
-                        <div className="capitol">
-                          <Code>CAPITOL:</Code>{" "}
-                          <Paper
-                            p="0.4rem"
-                            style={{
-                              backgroundColor: dark ? "#141517" : "#f1f3f5",
-                              display: "inline-block",
-                              paddingLeft: "0.7rem",
-                              paddingRight: "0.7rem",
-                              margin: "0.5rem",
-                            }}
-                          >
-                            <Center>
-                              <Text
-                                color={dark ? "#98a7ab" : "#495057"}
-                                size="sm"
-                                weight={500}
-                              >
-                                {orar.capitole[index]}
-                              </Text>
-                            </Center>
-                          </Paper>
-                        </div>
-                        <div className="ora">
-                          <Code>ORA:</Code>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <Paper
-                            p="0.4rem"
-                            style={{
-                              backgroundColor: dark ? "#141517" : "#f1f3f5",
-                              display: "inline-block",
-                              paddingLeft: "0.7rem",
-                              paddingRight: "0.7rem",
-                              margin: "0.5rem",
-                            }}
-                          >
-                            <Center>
-                              <Text
-                                color={dark ? "#98a7ab" : "#495057"}
-                                size="sm"
-                                weight={500}
-                              >
-                                {orar.ore[index]}
-                              </Text>
-                            </Center>
-                          </Paper>
-                        </div>
-                        <div className="durata">
-                          <Code>DURATA: </Code> &nbsp;
-                          <Paper
-                            p="0.4rem"
-                            style={{
-                              backgroundColor: dark ? "#141517" : "#f1f3f5",
-                              display: "inline-block",
-                              paddingLeft: "0.7rem",
-                              paddingRight: "0.7rem",
-                              margin: "0.5rem",
-                            }}
-                          >
-                            <Center>
-                              <Text
-                                color={dark ? "#98a7ab" : "#495057"}
-                                size="sm"
-                                weight={500}
-                              >
-                                {orar.durata[index]}
-                              </Text>
-                            </Center>
-                          </Paper>
-                          <br />
-                          <Paper shadow="xl" radius="md" p="md" withBorder>
-                            <Text weight="600" size="sm">
-                              Pune o întrebare despre ora aceasta
+                        <Stack spacing="xs" style={{ marginLeft: "1rem" }}>
+                          <div className="materie">
+                            <Text weight="bold" size="sm">
+                              Materia
                             </Text>
-                            <Text weight="600" size="xs" color="dimmed">
-                              Întrebarea va fi publicată la secțiunea
-                              <Badge color="gray">Întrebări</Badge> și orice
-                              utliziator îți va putea răspunde.
-                            </Text>
-                            <Checkbox
-                              label={"Doresc să rămân anonim"}
+                            <Center
                               style={{
-                                marginBottom: "0.5rem",
-                                marginTop: "0.5rem",
-                              }}
-                              checked={anonim}
-                              onChange={(event) =>
-                                setAnonim(event.currentTarget.checked)
-                              }
-                            />
-                            <TextInput
-                              variant="default"
-                              placeholder="Intrebare"
-                              value={intrebare}
-                              onChange={(event) =>
-                                setIntrebare(event.currentTarget.value)
-                              }
-                              style={{
-                                display: "inline-block",
-                                width: "75%",
-                                marginRight: "0.5rem",
-                              }}
-                            />
-                            <Button
-                              variant="default"
-                              style={{ display: "inline-block" }}
-                              onClick={() => {
-                                addQuestion(
-                                  intrebare,
-                                  orar.materii[index],
-                                  orar.capitole[index],
-                                  anonim == true ? "Anonim" : user.displayName
-                                );
-                                addPoints(25);
-                                showNotification({
-                                  title: "Întrebarea a fost adăugată!",
-                                  message: "Ai primit 25 puncte!",
-                                  autoClose: 2000,
-                                  color: "green",
-                                  icon: <Check />,
-                                });
+                                alignContent: "left",
+
+                                float: "left",
                               }}
                             >
-                              Intreaba
+                              <Paper p="xs" radius="md" withBorder>
+                                <Text
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="sm"
+                                  weight={500}
+                                >
+                                  {orar.materii[index]}
+                                </Text>
+                              </Paper>
+                            </Center>
+                          </div>
+                          <div className="capitol">
+                            <Text weight="bold" size="sm">
+                              Capitol
+                            </Text>
+                            <Center
+                              style={{
+                                alignContent: "left",
+                                float: "left",
+                              }}
+                            >
+                              <Paper p="xs" radius="md" withBorder>
+                                <Text
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="sm"
+                                  weight={500}
+                                >
+                                  {orar.capitole[index]}
+                                </Text>
+                              </Paper>
+                            </Center>
+                          </div>
+                          <div className="ora">
+                            <Text weight="bold" size="sm">
+                              Ora
+                            </Text>
+                            <Center
+                              style={{
+                                alignContent: "left",
+                                float: "left",
+                              }}
+                            >
+                              <Paper p="xs" radius="md" withBorder>
+                                <Text
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="sm"
+                                  weight={500}
+                                >
+                                  {orar.ore[index]}
+                                </Text>
+                              </Paper>
+                            </Center>
+                          </div>
+                          <div className="durata">
+                            <Text weight="bold" size="sm">
+                              Durata
+                            </Text>
+                            <Center
+                              style={{
+                                alignContent: "left",
+                                float: "left",
+                              }}
+                            >
+                              <Paper p="xs" radius="md" withBorder>
+                                <Text
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="sm"
+                                  weight={500}
+                                >
+                                  {orar.durata[index]}
+                                </Text>
+                              </Paper>
+                            </Center>
+                          </div>
+                        </Stack>
+                        <br />
+                        <Paper shadow="xl" radius="md" p="md" withBorder>
+                          <Text weight="600" size="sm">
+                            Pune o întrebare despre ora aceasta
+                          </Text>
+                          <Text weight="600" size="xs" color="dimmed">
+                            Întrebarea va fi publicată la secțiunea
+                            <Badge color="gray">Întrebări</Badge> și orice
+                            utliziator îți va putea răspunde.
+                          </Text>
+                          <Checkbox
+                            label={"Doresc să rămân anonim"}
+                            style={{
+                              marginBottom: "0.5rem",
+                              marginTop: "0.5rem",
+                            }}
+                            checked={anonim}
+                            onChange={(event) =>
+                              setAnonim(event.currentTarget.checked)
+                            }
+                          />
+                          <TextInput
+                            variant="default"
+                            placeholder="Intrebare"
+                            value={intrebare}
+                            onChange={(event) =>
+                              setIntrebare(event.currentTarget.value)
+                            }
+                            style={{
+                              display: "inline-block",
+                              width: "75%",
+                              marginRight: "0.5rem",
+                            }}
+                          />
+                          <Button
+                            variant="default"
+                            style={{ display: "inline-block" }}
+                            onClick={() => {
+                              addQuestion(
+                                intrebare,
+                                orar.materii[index],
+                                orar.capitole[index],
+                                anonim == true ? "Anonim" : user.displayName
+                              );
+                              addPoints(25);
+                              showNotification({
+                                title: "Întrebarea a fost adăugată!",
+                                message: "Ai primit 25 puncte!",
+                                autoClose: 2000,
+                                color: "green",
+                                icon: <Check />,
+                              });
+                            }}
+                          >
+                            Intreaba
+                          </Button>
+                        </Paper>
+                        <Paper
+                          shadow="xl"
+                          radius="md"
+                          p="md"
+                          withBorder
+                          style={{ marginTop: "1rem" }}
+                        >
+                          <Text weight="600" size="sm">
+                            Completează ora
+                          </Text>
+                          <Text weight="600" size="xs" color="dimmed">
+                            {completate[orar.date.indexOf(date)] ? (
+                              <Text weight="600" size="md" color="green">
+                                Ora a fost completată
+                              </Text>
+                            ) : (
+                              <>
+                                Pentru a completa ora, trebuie sa raspunzi
+                                corect la cel puțin jumătate <br />
+                                din întrebările care îți vor fi puse. Când ești
+                                pregătit, apasă butonul{" "}
+                                <Text
+                                  weight="600"
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="xs"
+                                  style={{ display: "inline-block" }}
+                                >
+                                  {" "}
+                                  Afișează întrebările
+                                </Text>
+                                <br />
+                                După ce ai rezolvat testul, apasă butonul{" "}
+                                <Text
+                                  weight="600"
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="xs"
+                                  style={{ display: "inline-block" }}
+                                >
+                                  {" "}
+                                  Completază ora
+                                </Text>
+                              </>
+                            )}
+                          </Text>
+                          {!completate[orar.date.indexOf(date)] ? (
+                            <>
+                              <Button
+                                variant="default"
+                                style={{ marginTop: "0.5rem" }}
+                                onClick={() => {
+                                  generateIntrebari(
+                                    orar.materii[orar.date.indexOf(date)],
+                                    orar.capitole[orar.date.indexOf(date)]
+                                  );
+                                  manageTest(date);
+                                }}
+                                disabled={completate[orar.date.indexOf(date)]}
+                              >
+                                Afișează întrebările
+                              </Button>
+                              <Button
+                                variant="default"
+                                onClick={() => {
+                                  checkScore(date);
+                                }}
+                                disabled={completate[orar.date.indexOf(date)]}
+                                style={{ marginLeft: "0.5rem" }}
+                              >
+                                Completează ora
+                              </Button>
+                            </>
+                          ) : null}
+                        </Paper>
+                        <Modal
+                          centered
+                          opened={testModal}
+                          onClose={() => setTestModal(false)}
+                          closeOnClickOutside={false}
+                          title={
+                            <Title order={4}>
+                              Test {testMaterie}, {testCapitol}
+                            </Title>
+                          }
+                        >
+                          {currIntrebari.length > 0 ? (
+                            <>
+                              <Paper shadow="xl" radius="md" p="md" withBorder>
+                                <Text weight="600" size="sm">
+                                  {currIntrebari[pasTest].intrebare}
+                                </Text>
+                              </Paper>
+                              <Center style={{ marginTop: "1rem" }}>
+                                <SegmentedControl
+                                  value={segValue}
+                                  onChange={setSegValue}
+                                  orientation="vertical"
+                                  size="md"
+                                  data={[
+                                    {
+                                      value:
+                                        currIntrebari[pasTest].raspunsuri[0],
+                                      label:
+                                        currIntrebari[pasTest].raspunsuri[0],
+                                    },
+                                    {
+                                      value:
+                                        currIntrebari[pasTest].raspunsuri[1],
+                                      label:
+                                        currIntrebari[pasTest].raspunsuri[1],
+                                    },
+                                    {
+                                      value:
+                                        currIntrebari[pasTest].raspunsuri[2],
+                                      label:
+                                        currIntrebari[pasTest].raspunsuri[2],
+                                    },
+                                    {
+                                      value:
+                                        currIntrebari[pasTest].raspunsuri[3],
+                                      label:
+                                        currIntrebari[pasTest].raspunsuri[3],
+                                    },
+                                  ]}
+                                />
+                              </Center>
+                            </>
+                          ) : null}
+                          <Center style={{ marginTop: "1rem" }}>
+                            <Button
+                              variant="default"
+                              onClick={() => {
+                                if (pasTest < currIntrebari?.length - 1) {
+                                  if (
+                                    currIntrebari[pasTest].raspunsuri.indexOf(
+                                      segValue
+                                    ) +
+                                      1 ==
+                                    currIntrebari[pasTest].raspunsCorect
+                                  ) {
+                                    setScore((value) => value + 1);
+                                  }
+                                  setPasTest((value) => value + 1);
+                                } else {
+                                  if (
+                                    currIntrebari[pasTest].raspunsuri.indexOf(
+                                      segValue
+                                    ) +
+                                      1 ==
+                                    currIntrebari[pasTest].raspunsCorect
+                                  ) {
+                                    setScore((value) => value + 1);
+                                  }
+                                  setTestModal(false);
+                                  setPasTest(0);
+                                }
+                              }}
+                            >
+                              {pasTest < currIntrebari?.length - 1
+                                ? "Următoarea întrebare"
+                                : "Finalizare"}
                             </Button>
-                          </Paper>
-                        </div>
+                          </Center>
+                        </Modal>
                       </div>
                     }
                   </Accordion.Item>
@@ -586,7 +810,7 @@ const View = () => {
                     locale="ro"
                     value={value}
                     onChange={setValue}
-                    size="xl"
+                    size={"xl"}
                     renderDay={(dateday) => {
                       const dayj = dayjs(dateday);
                       const day = dayj.format("DD/MM/YYYY");
@@ -659,8 +883,6 @@ const View = () => {
                         withBorder
                         style={{
                           ...styles,
-                          //marginTop: "0rem",
-                          //marginBottom: "3.5rem",
                           marginLeft: "2rem",
                         }}
                       >
@@ -669,6 +891,15 @@ const View = () => {
                             {orar.importante[orar.date.indexOf(currDate)] ==
                             true ? (
                               <Badge color="teal">IMPORTANT</Badge>
+                            ) : null}
+                            {"  "}
+                            {completate[orar.date.indexOf(currDate)] == true ? (
+                              <Badge
+                                color="green"
+                                style={{ marginLeft: "0.5rem" }}
+                              >
+                                COMPLETAT
+                              </Badge>
                             ) : null}
                           </Center>
                           <div
@@ -679,99 +910,101 @@ const View = () => {
                               textAlign: "left",
                             }}
                           >
-                            <div className="materie">
-                              <Code>MATERIE:</Code>{" "}
-                              <Paper
-                                p="0.4rem"
-                                style={{
-                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
-                                  display: "inline-block",
-                                  paddingLeft: "0.7rem",
-                                  paddingRight: "0.7rem",
-                                  margin: "0.5rem",
-                                }}
-                              >
-                                <Center>
-                                  <Text
-                                    color={dark ? "#98a7ab" : "#495057"}
-                                    size="sm"
-                                    weight={500}
-                                  >
-                                    {orar.materii[orar.date.indexOf(currDate)]}
-                                  </Text>
+                            <Stack spacing="xs" style={{ marginLeft: "1rem" }}>
+                              <div className="materie">
+                                <Text weight="bold" size="sm">
+                                  Materia
+                                </Text>
+                                <Center
+                                  style={{
+                                    alignContent: "left",
+
+                                    float: "left",
+                                  }}
+                                >
+                                  <Paper p="xs" radius="md" withBorder>
+                                    <Text
+                                      color={dark ? "#98a7ab" : "#495057"}
+                                      size="sm"
+                                      weight={500}
+                                    >
+                                      {
+                                        orar.materii[
+                                          orar.date.indexOf(currDate)
+                                        ]
+                                      }
+                                    </Text>
+                                  </Paper>
                                 </Center>
-                              </Paper>
-                            </div>
-                            <div className="capitol">
-                              <Code>CAPITOL:</Code>{" "}
-                              <Paper
-                                p="0.4rem"
-                                style={{
-                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
-                                  display: "inline-block",
-                                  paddingLeft: "0.7rem",
-                                  paddingRight: "0.7rem",
-                                  margin: "0.5rem",
-                                }}
-                              >
-                                <Center>
-                                  <Text
-                                    color={dark ? "#98a7ab" : "#495057"}
-                                    size="sm"
-                                    weight={500}
-                                  >
-                                    {orar.capitole[orar.date.indexOf(currDate)]}
-                                  </Text>
+                              </div>
+                              <div className="capitol">
+                                <Text weight="bold" size="sm">
+                                  Capitol
+                                </Text>
+                                <Center
+                                  style={{
+                                    alignContent: "left",
+                                    float: "left",
+                                  }}
+                                >
+                                  <Paper p="xs" radius="md" withBorder>
+                                    <Text
+                                      color={dark ? "#98a7ab" : "#495057"}
+                                      size="sm"
+                                      weight={500}
+                                    >
+                                      {
+                                        orar.capitole[
+                                          orar.date.indexOf(currDate)
+                                        ]
+                                      }
+                                    </Text>
+                                  </Paper>
                                 </Center>
-                              </Paper>
-                            </div>
-                            <div className="ora">
-                              <Code>ORA:</Code>
-                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <Paper
-                                p="0.4rem"
-                                style={{
-                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
-                                  display: "inline-block",
-                                  paddingLeft: "0.7rem",
-                                  paddingRight: "0.7rem",
-                                  margin: "0.5rem",
-                                }}
-                              >
-                                <Center>
-                                  <Text
-                                    color={dark ? "#98a7ab" : "#495057"}
-                                    size="sm"
-                                    weight={500}
-                                  >
-                                    {orar.ore[orar.date.indexOf(currDate)]}
-                                  </Text>
+                              </div>
+                              <div className="ora">
+                                <Text weight="bold" size="sm">
+                                  Ora
+                                </Text>
+                                <Center
+                                  style={{
+                                    alignContent: "left",
+                                    float: "left",
+                                  }}
+                                >
+                                  <Paper p="xs" radius="md" withBorder>
+                                    <Text
+                                      color={dark ? "#98a7ab" : "#495057"}
+                                      size="sm"
+                                      weight={500}
+                                    >
+                                      {orar.ore[orar.date.indexOf(currDate)]}
+                                    </Text>
+                                  </Paper>
                                 </Center>
-                              </Paper>
-                            </div>
-                            <div className="durata">
-                              <Code>DURATA: </Code> &nbsp;
-                              <Paper
-                                p="0.4rem"
-                                style={{
-                                  backgroundColor: dark ? "#141517" : "#f1f3f5",
-                                  display: "inline-block",
-                                  paddingLeft: "0.7rem",
-                                  paddingRight: "0.7rem",
-                                  margin: "0.5rem",
-                                }}
-                              >
-                                <Center>
-                                  <Text
-                                    color={dark ? "#98a7ab" : "#495057"}
-                                    size="sm"
-                                    weight={500}
-                                  >
-                                    {orar.durata[orar.date.indexOf(currDate)]}
-                                  </Text>
+                              </div>
+                              <div className="durata">
+                                <Text weight="bold" size="sm">
+                                  Durata
+                                </Text>
+                                <Center
+                                  style={{
+                                    alignContent: "left",
+                                    float: "left",
+                                  }}
+                                >
+                                  <Paper p="xs" radius="md" withBorder>
+                                    <Text
+                                      color={dark ? "#98a7ab" : "#495057"}
+                                      size="sm"
+                                      weight={500}
+                                    >
+                                      {orar.durata[orar.date.indexOf(currDate)]}
+                                    </Text>
+                                  </Paper>
                                 </Center>
-                              </Paper>
-                            </div>
+                              </div>
+                            </Stack>
                           </div>
                         </Paper>
                         <Paper
@@ -839,31 +1072,71 @@ const View = () => {
                             Completează ora
                           </Text>
                           <Text weight="600" size="xs" color="dimmed">
-                            Pentru a completa ora, trebuie sa raspunzi corect la{" "}
-                            cel puțin jumătate <br />
-                            din întrebările care îți vor fi puse. Când ești
-                            pregătit, apasă butonul de mai jos.
+                            {completate[orar.date.indexOf(currDate)] ? (
+                              <Text weight="600" size="md" color="green">
+                                Ora a fost completată
+                              </Text>
+                            ) : (
+                              <>
+                                Pentru a completa ora, trebuie sa raspunzi
+                                corect la cel puțin jumătate <br />
+                                din întrebările care îți vor fi puse. Când ești
+                                pregătit, apasă butonul{" "}
+                                <Text
+                                  weight="600"
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="xs"
+                                  style={{ display: "inline-block" }}
+                                >
+                                  {" "}
+                                  Afișează întrebările
+                                </Text>
+                                <br />
+                                După ce ai rezolvat testul, apasă butonul{" "}
+                                <Text
+                                  weight="600"
+                                  color={dark ? "#98a7ab" : "#495057"}
+                                  size="xs"
+                                  style={{ display: "inline-block" }}
+                                >
+                                  {" "}
+                                  Completază ora
+                                </Text>
+                              </>
+                            )}
                           </Text>
-                          <Button
-                            variant="default"
-                            style={{ marginTop: "0.5rem" }}
-                            onClick={() => {}}
-                          >
-                            Generează întrebările
-                          </Button>
-                          <Button
-                            variant="default"
-                            style={{ marginTop: "0.5rem" }}
-                            onClick={() => {
-                              generateIntrebari(
-                                orar.materii[orar.date.indexOf(currDate)],
-                                orar.capitole[orar.date.indexOf(currDate)]
-                              );
-                              manageTest();
-                            }}
-                          >
-                            Completează ora
-                          </Button>
+                          {!completate[orar.date.indexOf(currDate)] ? (
+                            <>
+                              <Button
+                                variant="default"
+                                style={{ marginTop: "0.5rem" }}
+                                onClick={() => {
+                                  generateIntrebari(
+                                    orar.materii[orar.date.indexOf(currDate)],
+                                    orar.capitole[orar.date.indexOf(currDate)]
+                                  );
+                                  manageTest();
+                                }}
+                                disabled={
+                                  completate[orar.date.indexOf(currDate)]
+                                }
+                              >
+                                Afișează întrebările
+                              </Button>
+                              <Button
+                                variant="default"
+                                onClick={() => {
+                                  checkScore();
+                                }}
+                                disabled={
+                                  completate[orar.date.indexOf(currDate)]
+                                }
+                                style={{ marginLeft: "0.5rem" }}
+                              >
+                                Completează ora
+                              </Button>
+                            </>
+                          ) : null}
                         </Paper>
                       </Paper>
                     </Center>
@@ -921,7 +1194,7 @@ const View = () => {
                 <Button
                   variant="default"
                   onClick={() => {
-                    if (pasTest < currIntrebari.length - 1) {
+                    if (pasTest < currIntrebari?.length - 1) {
                       if (
                         currIntrebari[pasTest].raspunsuri.indexOf(segValue) +
                           1 ==
@@ -938,13 +1211,14 @@ const View = () => {
                       ) {
                         setScore((value) => value + 1);
                       }
-                      checkScore();
                       setTestModal(false);
                       setPasTest(0);
                     }
                   }}
                 >
-                  {pasTest < 3 ? "Următoarea întrebare" : "Finalizare"}
+                  {pasTest < currIntrebari?.length - 1
+                    ? "Următoarea întrebare"
+                    : "Finalizare"}
                 </Button>
               </Center>
             </Modal>

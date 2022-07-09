@@ -421,6 +421,7 @@ const Profile = () => {
                       <Text
                         weight={600}
                         color="dimmed"
+                        size="sm"
                         style={{
                           marginTop: "0.3rem",
                           display: "inline-block",
@@ -431,6 +432,7 @@ const Profile = () => {
                       <Text
                         weight={600}
                         color="dimmed"
+                        size="sm"
                         style={{
                           display: "inline-block",
                         }}

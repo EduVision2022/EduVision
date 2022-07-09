@@ -261,6 +261,7 @@ const Generator = (props) => {
     materii: [],
     capitole: [],
     importante: [],
+    completate: [],
   };
 
   var capitoleRomanaTemp = Location.gresite.Romana.Capitole;
@@ -577,9 +578,16 @@ const Generator = (props) => {
     }
   };
 
+  const fillCompletate = (input) => {
+    for(var i = 0; i< 100; i++){
+      orarFinal.completate.push(input);
+    }
+  }
+
   const GenerateOrar = () => {
     daysToNumbers(Location.zile);
     fillImportante(false);
+    fillCompletate(false);
     Layer1();
     Layer2();
     shuffleOrar(orarFinal);
