@@ -249,13 +249,12 @@ export function HeaderMiddle() {
     setMaxPoints(document.data().maxPoints);
     //sets items
     setBoughtItems(document.data().items);
-    setTimeout(fetchPuncte, 3000);
   };
 
   const waitForChanges = async () => {
     fetchPuncte();
     if (loggedIn) {
-      setTimeout(waitForChanges, 3000);
+      setTimeout(waitForChanges, 15000);
     }
   };
 

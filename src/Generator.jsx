@@ -218,6 +218,12 @@ const Generator = (props) => {
   console.log("ZILE:", zile);
 
   const addToDataBase = async (item) => {
+    const activity = {
+      name: "Generare",
+      description: "Ai generat un orar nou!",
+      price: 0,
+      date: new Date(),
+    };
     console.log("ORARNAME FROM ADD TO DB: ", orarName);
     setOrarGenerat({
       ...orarGenerat,
@@ -234,7 +240,10 @@ const Generator = (props) => {
 
     await setDoc(
       doc(db, "users", document.id),
-      { orare: [...document.data().orare, orarGenerat] },
+      {
+        orare: [...document.data().orare, orarGenerat],
+        recentActivities: [...document.data().recentActivities, activity],
+      },
       { merge: true }
     );
   };
@@ -579,10 +588,10 @@ const Generator = (props) => {
   };
 
   const fillCompletate = (input) => {
-    for(var i = 0; i< 100; i++){
+    for (var i = 0; i < 100; i++) {
       orarFinal.completate.push(input);
     }
-  }
+  };
 
   const GenerateOrar = () => {
     daysToNumbers(Location.zile);

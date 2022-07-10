@@ -308,7 +308,6 @@ const View = () => {
     setPasTest(0);
     setTestMaterie(orar.materii[orar.date.indexOf(date)]);
     setTestCapitol(orar.capitole[orar.date.indexOf(date)]);
-    setTimeout(console.log("currintrebari from onclick", currIntrebari), 2000);
     setTestModal(true);
   };
 
@@ -717,40 +716,7 @@ const View = () => {
                                   {currIntrebari[pasTest].intrebare}
                                 </Text>
                               </Paper>
-                              <Center style={{ marginTop: "1rem" }}>
-                                <SegmentedControl
-                                  value={segValue}
-                                  onChange={setSegValue}
-                                  orientation="vertical"
-                                  size="md"
-                                  data={[
-                                    {
-                                      value:
-                                        currIntrebari[pasTest].raspunsuri[0],
-                                      label:
-                                        currIntrebari[pasTest].raspunsuri[0],
-                                    },
-                                    {
-                                      value:
-                                        currIntrebari[pasTest].raspunsuri[1],
-                                      label:
-                                        currIntrebari[pasTest].raspunsuri[1],
-                                    },
-                                    {
-                                      value:
-                                        currIntrebari[pasTest].raspunsuri[2],
-                                      label:
-                                        currIntrebari[pasTest].raspunsuri[2],
-                                    },
-                                    {
-                                      value:
-                                        currIntrebari[pasTest].raspunsuri[3],
-                                      label:
-                                        currIntrebari[pasTest].raspunsuri[3],
-                                    },
-                                  ]}
-                                />
-                              </Center>
+                              <Center style={{ marginTop: "1rem" }}></Center>
                             </>
                           ) : null}
                           <Center style={{ marginTop: "1rem" }}>

@@ -107,13 +107,14 @@ function StoreItem({ item }: StoreItemProps) {
     }
   };
 
+  const [shouldUpdate, setShouldUpdate] = useState(0);
+
   const fetchItems = async () => {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
     const aux = await getDocs(q);
     const document = aux.docs[0];
     const items = document.data().items;
     setItems(items);
-    setTimeout(fetchItems, 1000);
   };
 
   useEffect(() => {
@@ -151,6 +152,7 @@ function StoreItem({ item }: StoreItemProps) {
           style={{ marginTop: 14 }}
           onClick={() => {
             buyItem(item);
+            setShouldUpdate((value) => value + 1);
           }}
         >
           {items.includes(item.name) ? "Cumpărat" : "Cumpără"}

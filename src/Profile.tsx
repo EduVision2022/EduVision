@@ -451,15 +451,20 @@ const Profile = () => {
                       >
                         <Text weight={600} size="sm"></Text>
                         <Text weight={600} size="md">
-                          {activity.description} pentru{" "}
-                          <Text
-                            weight={800}
-                            color="green"
-                            style={{ display: "inline-block" }}
-                          >
-                            {activity.price}
-                          </Text>{" "}
-                          puncte
+                          {activity.description}
+                          {activity.price > 0 ? (
+                            <>
+                              pentru{" "}
+                              <Text
+                                weight={800}
+                                color="green"
+                                style={{ display: "inline-block" }}
+                              >
+                                {activity.price}
+                              </Text>{" "}
+                              puncte
+                            </>
+                          ) : null}
                         </Text>
                       </Paper>
                     </Center>
