@@ -35,6 +35,8 @@ import { Stack } from "@mantine/core";
 import { SegmentedControl } from "@mantine/core";
 import { Group } from "@mantine/core";
 import { Container } from "@mantine/core";
+import { RadioGroup, Radio } from "@mantine/core";
+import { ScrollArea } from "@mantine/core";
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
 
 //Font import
@@ -209,6 +211,84 @@ const View = () => {
     this.raspunsCorect = raspunsCorect;
   }
 
+  var intrebariMain = [
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Valoarea expresiei C/C++: 12*2+2 este:",
+      ["48", "28", "26", "24"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Valoarea expresiei C/C++: 78*4+2%1 este:",
+      ["312", "302", "322", "292"],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Valoarea expresiei C/C++: 42/10*29/10 este:",
+      ["10", "15", "11", "9"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Valoarea expresiei C/C++: 98%6+4%4 este:",
+      ["5", "1", "3", "2"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Expresii",
+      "Variabilele x și y sunt întregi. Indicați expresia C/C++ echivalentă cu (x<3)&&(y>=5).",
+      [
+        "!(!(x<3)||!(y>=5))",
+        "!(x>=3)&&(y<5)",
+        "!((x>=3)&&(y<5))",
+        "!((x<3)||(y>=5))",
+      ],
+      1
+    ),
+    new intrebareMaterie(
+      "Matematică",
+      "Geometrie",
+      "Ecuatia dreptei care trece prin punctele M(1,2) si N(2,5)  este:",
+      ["2x + y = 2", "x = 0", "y = 3", "3x - y = 1"],
+      4
+    ),
+    new intrebareMaterie(
+      "Matematică",
+      "Geometrie",
+      "Sa se determine coordonatele mijlocului segmentului AB, unde A(-3,4) si B(7,-2)",
+      ["(2,1)", "(1,2)", "(7,-2)", "(-3,4)"],
+      1
+    ),
+    new intrebareMaterie(
+      "Matematică",
+      "Geometrie",
+      "Aria cercului de diametru 2 este:",
+      ["3π", "π;", "6π;", "4π;"],
+      2
+    ),
+    new intrebareMaterie(
+      "Matematică",
+      "Geometrie",
+      "Daca x ≤ 3 - 2x atunci:",
+      ["x ≤ -5 ", "x = 0 ", "x ≤ -11", "x ≤ 1 "],
+      4
+    ),
+    new intrebareMaterie(
+      "Matematică",
+      "Geometrie",
+      "Solutia ecuatiei 5x-12=3x este:",
+      ["-5", "6", "4", "5"],
+      2
+    ),
+  ];
+
   var intrebariInformatica = [
     new intrebareMaterie(
       "Informatică",
@@ -293,10 +373,10 @@ const View = () => {
   const generateIntrebari = async (materie, capitol) => {
     var intrebari = [];
 
-    for (var i = 0; i < intrebariInformatica.length; i++) {
-      if (intrebariInformatica[i].materie == materie) {
-        if (intrebariInformatica[i].capitol == capitol) {
-          intrebari.push(intrebariInformatica[i]);
+    for (var i = 0; i < intrebariMain.length; i++) {
+      if (intrebariMain[i].materie == materie) {
+        if (intrebariMain[i].capitol == capitol) {
+          intrebari.push(intrebariMain[i]);
         }
       }
     }
@@ -365,8 +445,16 @@ const View = () => {
   }, []);
 
   const checkScore = async (date = currDate) => {
-    if (score >= 1) {
+    if (score >= currIntrebari.length / 2) {
       setShouldFetch((value) => value + 1);
+      const activity = {
+        name: "Completare",
+        description:
+          "Ai completat o ora nouă de " + currIntrebari[0].materie + "!",
+        price: 0,
+        date: new Date(),
+      };
+
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const aux = await getDocs(q);
       const document = aux.docs[0];
@@ -380,6 +468,7 @@ const View = () => {
         doc(db, "users", document.id),
         {
           orare: orare,
+          recentActivities: [...document.data().recentActivities, activity],
         },
         { merge: true }
       );
@@ -1129,30 +1218,32 @@ const View = () => {
                     </Text>
                   </Paper>
                   <Center style={{ marginTop: "1rem" }}>
-                    <SegmentedControl
+                    <RadioGroup
                       value={segValue}
                       onChange={setSegValue}
                       orientation="vertical"
+                      label="Alege un raspuns"
+                      spacing="sm"
                       size="md"
-                      data={[
-                        {
-                          value: currIntrebari[pasTest].raspunsuri[0],
-                          label: currIntrebari[pasTest].raspunsuri[0],
-                        },
-                        {
-                          value: currIntrebari[pasTest].raspunsuri[1],
-                          label: currIntrebari[pasTest].raspunsuri[1],
-                        },
-                        {
-                          value: currIntrebari[pasTest].raspunsuri[2],
-                          label: currIntrebari[pasTest].raspunsuri[2],
-                        },
-                        {
-                          value: currIntrebari[pasTest].raspunsuri[3],
-                          label: currIntrebari[pasTest].raspunsuri[3],
-                        },
-                      ]}
-                    />
+                      required
+                    >
+                      <Radio
+                        value={currIntrebari[pasTest].raspunsuri[0]}
+                        label={currIntrebari[pasTest].raspunsuri[0]}
+                      />
+                      <Radio
+                        value={currIntrebari[pasTest].raspunsuri[1]}
+                        label={currIntrebari[pasTest].raspunsuri[1]}
+                      />
+                      <Radio
+                        value={currIntrebari[pasTest].raspunsuri[2]}
+                        label={currIntrebari[pasTest].raspunsuri[2]}
+                      />
+                      <Radio
+                        value={currIntrebari[pasTest].raspunsuri[3]}
+                        label={currIntrebari[pasTest].raspunsuri[3]}
+                      />
+                    </RadioGroup>
                   </Center>
                 </>
               ) : null}

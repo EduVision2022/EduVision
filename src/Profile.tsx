@@ -33,6 +33,7 @@ import { Badge } from "@mantine/core";
 import { Group } from "@mantine/core";
 import { Tooltip } from "@mantine/core";
 import { Stack } from "@mantine/core";
+import { ScrollArea } from "@mantine/core";
 
 // React imports
 import { useId } from "react";
@@ -406,71 +407,79 @@ const Profile = () => {
               <Text weight={600} color="dimmed">
                 Activități recente:
               </Text>
-              {activities.map((activity) => (
-                <>
-                  <div
-                    style={{
-                      alignContent: "left",
-                      alignItems: "left",
-                      textAlign: "left",
-                      display: "flex",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <Stack spacing={0} align="flex-start">
-                      <Text
-                        weight={600}
-                        color="dimmed"
-                        size="sm"
-                        style={{
-                          marginTop: "0.3rem",
-                          display: "inline-block",
-                        }}
-                      >
-                        {activity.date.toDate().toLocaleDateString("ro-RO")}
-                      </Text>
-                      <Text
-                        weight={600}
-                        color="dimmed"
-                        size="sm"
-                        style={{
-                          display: "inline-block",
-                        }}
-                      >
-                        {activity.date.toDate().toLocaleTimeString("ro-RO")}
-                      </Text>
-                    </Stack>
-                    <Center
-                      style={{ display: "inline-block", marginLeft: "1rem" }}
+              <ScrollArea
+                style={{ height: 100 * activities.length - 80 }}
+                type="hover"
+              >
+                {activities.map((activity) => (
+                  <>
+                    <div
+                      style={{
+                        alignContent: "left",
+                        alignItems: "left",
+                        textAlign: "left",
+                        display: "flex",
+                        marginTop: "1rem",
+                      }}
                     >
-                      <Paper
-                        radius="md"
-                        p="xs"
-                        withBorder
-                        style={{ marginTop: "0.5rem", display: "inline-block" }}
-                      >
-                        <Text weight={600} size="sm"></Text>
-                        <Text weight={600} size="md">
-                          {activity.description}
-                          {activity.price > 0 ? (
-                            <>
-                              pentru{" "}
-                              <Text
-                                weight={800}
-                                color="green"
-                                style={{ display: "inline-block" }}
-                              >
-                                {activity.price}
-                              </Text>{" "}
-                              puncte
-                            </>
-                          ) : null}
+                      <Stack spacing={0} align="flex-start">
+                        <Text
+                          weight={600}
+                          color="dimmed"
+                          size="sm"
+                          style={{
+                            marginTop: "0.3rem",
+                            display: "inline-block",
+                          }}
+                        >
+                          {activity.date.toDate().toLocaleDateString("ro-RO")}
                         </Text>
-                      </Paper>
-                    </Center>
-                  </div>
-                </>
-              ))}
+                        <Text
+                          weight={600}
+                          color="dimmed"
+                          size="sm"
+                          style={{
+                            display: "inline-block",
+                          }}
+                        >
+                          {activity.date.toDate().toLocaleTimeString("ro-RO")}
+                        </Text>
+                      </Stack>
+                      <Center
+                        style={{ display: "inline-block", marginLeft: "1rem" }}
+                      >
+                        <Paper
+                          radius="md"
+                          p="xs"
+                          withBorder
+                          style={{
+                            marginTop: "0.5rem",
+                            display: "inline-block",
+                          }}
+                        >
+                          <Text weight={600} size="sm"></Text>
+                          <Text weight={600} size="md">
+                            {activity.description}
+                            {activity.price > 0 ? (
+                              <>
+                                pentru{" "}
+                                <Text
+                                  weight={800}
+                                  color="green"
+                                  style={{ display: "inline-block" }}
+                                >
+                                  {activity.price}
+                                </Text>{" "}
+                                puncte
+                              </>
+                            ) : null}
+                          </Text>
+                        </Paper>
+                      </Center>
+                    </div>
+                  </>
+                ))}
+              </ScrollArea>
             </Paper>
           </Center>
         </div>
