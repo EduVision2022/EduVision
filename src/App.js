@@ -16,7 +16,6 @@ import Home from "./Home";
 import Theme from "./Theme";
 import HeaderMiddle from "./Navbar";
 import store from "./store";
-import about from "./about";
 import Footer from "./Footer";
 import Generator from "./Generator";
 import NotFoundTitle from "./404Page";
