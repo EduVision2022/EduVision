@@ -313,17 +313,17 @@ export function HeaderMiddle() {
           <Badge color="dark">Începător</Badge>
         ) : null}
         {maxPoints >= 100 && maxPoints < 200 ? (
-          <Badge style={{ color: "#a4a9b2" }}>Intermediar</Badge>
+          <Badge style={{ color: "#a4a9b2" }}>Ambiţios</Badge>
         ) : null}
         {maxPoints >= 200 && maxPoints < 300 ? (
-          <Badge color="teal">Semi-avansat</Badge>
+          <Badge color="teal">Expert</Badge>
         ) : null}
         {maxPoints >= 300 && maxPoints < 400 ? (
-          <Badge color="violet">Avansat</Badge>
+          <Badge color="violet">As</Badge>
         ) : null}
         {maxPoints >= 400 ? (
           <Badge color="yellow" leftSection={<Crown size={12} />} size="xs">
-            Legendă
+            Geniu
           </Badge>
         ) : null}
       </div>

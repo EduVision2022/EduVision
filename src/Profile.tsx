@@ -234,17 +234,17 @@ const Profile = () => {
                         <Badge color="dark">Începător</Badge>
                       ) : null}
                       {maxPoints >= 100 && maxPoints < 200 ? (
-                        <Badge style={{ color: "#a4a9b2" }}>Intermediar</Badge>
+                        <Badge style={{ color: "#a4a9b2" }}>Ambiţios</Badge>
                       ) : null}
                       {maxPoints >= 200 && maxPoints < 300 ? (
-                        <Badge color="teal">Semi-avansat</Badge>
+                        <Badge color="teal">Expert</Badge>
                       ) : null}
                       {maxPoints >= 300 && maxPoints < 400 ? (
-                        <Badge color="violet">Avansat</Badge>
+                        <Badge color="violet">As</Badge>
                       ) : null}
                       {maxPoints >= 400 ? (
                         <Badge color="yellow" leftSection={<Crown size={12} />}>
-                          Legendă
+                          Geniu
                         </Badge>
                       ) : null}
                       {orare >= 5 ? (
@@ -319,9 +319,7 @@ const Profile = () => {
                             label="Realizare primită pentru că ai depășit 100 de puncte"
                             withArrow
                           >
-                            <Badge style={{ color: "#a4a9b2" }}>
-                              Intermediar
-                            </Badge>
+                            <Badge style={{ color: "#a4a9b2" }}>Ambiţios</Badge>
                           </Tooltip>
                         ) : null}
                         {maxPoints >= 200 ? (
@@ -329,7 +327,7 @@ const Profile = () => {
                             label="Realizare primită pentru că ai depășit 200 de puncte"
                             withArrow
                           >
-                            <Badge color="teal">Semi-avansat</Badge>
+                            <Badge color="teal">Expert</Badge>
                           </Tooltip>
                         ) : null}
                         {maxPoints >= 300 ? (
@@ -337,7 +335,7 @@ const Profile = () => {
                             label="Realizare primită pentru că ai depășit 300 de puncte"
                             withArrow
                           >
-                            <Badge color="violet">Avansat</Badge>
+                            <Badge color="violet">As</Badge>
                           </Tooltip>
                         ) : null}
                         {maxPoints >= 400 ? (
@@ -349,7 +347,7 @@ const Profile = () => {
                               color="yellow"
                               leftSection={<Crown size={12} />}
                             >
-                              Legendă
+                              Geniu
                             </Badge>
                           </Tooltip>
                         ) : null}

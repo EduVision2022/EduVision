@@ -14,6 +14,8 @@ const Login = () => {
     history.push("/");
   });
 
-  return <div className="Login">testing</div>;
+  return (
+    <div className="Login">Contul tau este creat, te rugam sa astepti</div>
+  );
 };
 export default Login;
