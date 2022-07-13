@@ -271,6 +271,7 @@ export function HeaderMiddle() {
 
   if (pointsProvider) {
     fetchPuncte();
+    fetchUserName();
     setTimeout(() => {
       setPointsProvider(false);
     }, 1000);

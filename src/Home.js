@@ -88,7 +88,9 @@ import { getFirestore, query, collection, where } from "firebase/firestore";
 import { addDoc, getDocs } from "firebase/firestore";
 import FeaturesImages from "./Features.tsx";
 
+// Context imports
 import { usePointsContext } from "./points.tsx";
+import { useRefreshContext } from "./Refresh.tsx";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAYv-TF955BPhLNDpyU33_RXYOc_3JfAxo",
@@ -218,6 +220,7 @@ const Home = () => {
   const history = useHistory();
 
   const [pointsProvider, setPointsProvider] = usePointsContext();
+  const [refreshValue, setRefreshValue] = useRefreshContext();
 
   const user = useSelector(selectUsername);
   const dispatch = useDispatch();
@@ -263,6 +266,7 @@ const Home = () => {
   useEffect(() => {
     fetchUserName();
   }, [User, loading]);
+  console.log(refreshValue);
 
   const [Form, setForm] = useState({
     Buttons: {
@@ -1652,7 +1656,11 @@ const Home = () => {
                           ></path>
                         </svg>
                       }
-                      onClick={SignInWithGoogle}
+                      onClick={() => {
+                        SignInWithGoogle().then(function () {
+                          setTimeout(history.push("/login"), 1000);
+                        });
+                      }}
                       variant="default"
                       radius="xl"
                       size="sm"

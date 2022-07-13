@@ -20,6 +20,11 @@ import {
 import { useDispatch } from "react-redux";
 import { setUser, selectUsername, selectObject } from "./userSlice";
 import { Check, X } from "tabler-icons-react";
+import { useState } from "react";
+import { Redirect } from "react-router";
+
+// Context Providers
+import { useRefreshContext } from "./Refresh.tsx";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAYv-TF955BPhLNDpyU33_RXYOc_3JfAxo",
@@ -71,7 +76,6 @@ const SignInWithGoogle = async () => {
         icon: <Check />,
       });
     }
-
     console.log(auth);
     console.log("USER :", res.user);
   } catch (err) {
