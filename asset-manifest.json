@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9c54a070.css",
+    "main.js": "/static/js/main.77fbb6d6.js",
+    "static/js/787.f36d6bea.chunk.js": "/static/js/787.f36d6bea.chunk.js",
+    "static/media/invertedLight.png": "/static/media/invertedLight.edc8dd0dc046e77e5d0d.png",
+    "static/media/invertedDark.png": "/static/media/invertedDark.6b09a52d0cff02b329eb.png",
+    "static/media/defaultLight.png": "/static/media/defaultLight.e939c7b50298c705d5b4.png",
+    "static/media/defaultDark.png": "/static/media/defaultDark.7c3a00b6818849f9c0bb.png",
+    "static/media/orarPreview1.png": "/static/media/orarPreview1.46e413d8660ea822b754.png",
+    "static/media/logoLight.png": "/static/media/logoLight.dd85afdb8c8fd539850e.png",
+    "static/media/orarPreviewDark2.png": "/static/media/orarPreviewDark2.33e7c72beb4a1d57351e.png",
+    "static/media/logoDark.png": "/static/media/logoDark.a19b06d59fca29b527ca.png",
+    "static/media/question.png": "/static/media/question.57a33d95680b1d40f0e8.png",
+    "static/media/coin.png": "/static/media/coin.a125d2ec2de8d17e4743.png",
+    "static/media/image.svg": "/static/media/image.3a4683fda22e8090fc0c01efdccc9f54.svg",
+    "static/media/schedule.png": "/static/media/schedule.b7ca21abf9a52766a749.png",
+    "static/media/exam.png": "/static/media/exam.d9674ce6fccfa9b8c8f0.png",
+    "index.html": "/index.html",
+    "main.9c54a070.css.map": "/static/css/main.9c54a070.css.map",
+    "main.77fbb6d6.js.map": "/static/js/main.77fbb6d6.js.map",
+    "787.f36d6bea.chunk.js.map": "/static/js/787.f36d6bea.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9c54a070.css",
+    "static/js/main.77fbb6d6.js"
+  ]
+}
