@@ -59,7 +59,7 @@ const Error401 = () => {
     <Container className={classes.root}>
       <div className={classes.label}>401</div>
       <Title className={classes.title}>
-        You are unauthorized to access this page.
+        Nu ești autorizat să accesezi această pagină.
       </Title>
       <Text
         color="dimmed"
@@ -67,12 +67,13 @@ const Error401 = () => {
         align="center"
         className={classes.description}
       >
-        Unfortunately, this is only a 401 page. You do not have authorization to
-        access this page.
+        Din păcate, aceasta este doar o pagina de 401. Nu ai autorizația de a
+        accesa această pagina. În cazul în care nu ești conectat, te rugăm să te
+        conectezi.
       </Text>
       <Group position="center">
         <Button variant="subtle" size="md" onClick={() => history.push("/")}>
-          Take me back to home page
+          Pagina principală
         </Button>
       </Group>
     </Container>

@@ -55,6 +55,7 @@ import { Calendar } from "tabler-icons-react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useListState } from "@mantine/hooks";
 import { Stepper } from "@mantine/core";
+import { useScrollIntoView } from "@mantine/hooks";
 
 // Login Imports
 import { GoogleLogin } from "@react-oauth/google";
@@ -69,7 +70,6 @@ import backgroundDark from "./images/defaultDark.png";
 import backgroundLightInverted from "./images/invertedLight.png";
 import backgroundDarkInverted from "./images/invertedDark.png";
 
-//New login fuck
 import { auth, SignInWithGoogle, logout } from "./firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
@@ -221,6 +221,10 @@ const Home = () => {
 
   const user = useSelector(selectUsername);
   const dispatch = useDispatch();
+
+  const { scrollIntoView, targetRef } = useScrollIntoView();
+
+  const [mountDouble, setMountDouble] = useState(false);
 
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -794,18 +798,6 @@ const Home = () => {
       'Cine a scris "Povestea lui Harap-Alb"?',
       ["Ioan Slavici", "Ion Creanga", "Mihai Eminescu", "Ion Luca Caragiale"],
       2
-    ),
-    new Intrebare(
-      "Romana",
-      "Marii Clasici",
-      'Poemul "Luceafărul" apare pentru prima dată:',
-      [
-        "la București",
-        "la Timisoara, în anul 1883",
-        'la Viena, în Almanahul societății academice social-literare "România jună"',
-        'în revista "Convorbiri literare" din Iași',
-      ],
-      3
     ),
   ];
 
@@ -1575,10 +1567,11 @@ const Home = () => {
           <div className={classes.inner}>
             <div className={classes.content}>
               <Title className={classes.title}>
-                Edu<span className={classes.highlight}>Vision</span> <br />{" "}
+                Edu
+                <span className={classes.highlight}>Vision</span> <br />{" "}
               </Title>
               <Text color="dimmed" mt="md">
-                Generează orare de învățare pentru Bacalaureat în 3 pași simpli
+                Generează orare de învățare pentru elevi în 3 pași simpli
               </Text>
               <List
                 spacing="xs"
@@ -1676,9 +1669,8 @@ const Home = () => {
                   className={classes.control}
                   onClick={() => {
                     if (!loggedin) {
-                      document
-                        .getElementById("second")
-                        .scrollIntoView({ behavior: "smooth" });
+                      setMountDouble(true);
+                      scrollIntoView({ alignment: "center" });
                     } else {
                       navigate("https://github.com/", true);
                     }
@@ -1691,7 +1683,6 @@ const Home = () => {
             <Image src={image} className={classes.image} />
           </div>
         </Container>
-
         <Container style={{ paddingTop: "80vh" }}>
           <SimpleGrid
             cols={3}
@@ -1782,7 +1773,7 @@ const Home = () => {
           </SimpleGrid>
         </Container>
       </div>
-      <div className="second" id="second">
+      <div className="second" id="second" ref={targetRef}>
         {!loggedin ? (
           <Container>
             <Title order={3} style={{ paddingTop: "2rem" }}>

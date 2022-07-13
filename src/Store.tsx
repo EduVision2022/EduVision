@@ -42,6 +42,9 @@ import React, { useEffect } from "react";
 // React imports
 import { useState } from "react";
 
+// Components imports
+import Error401 from "./401Error.tsx";
+
 interface StoreItemProps {
   displayName: string;
   name: string;
@@ -168,6 +171,11 @@ const items = StoreItems.map((item) => {
 
 const Store = () => {
   const theme = useMantineTheme();
+
+  const [user, loading, error] = useAuthState(auth);
+  if (!user) {
+    return <Error401 />;
+  }
 
   return (
     <Delayed>

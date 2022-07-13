@@ -1,26 +1,35 @@
-import { Gauge, Cookie, User, Message2, Lock } from "tabler-icons-react";
+import {
+  Gauge,
+  Cookie,
+  User,
+  Message2,
+  Lock,
+  CalendarEvent,
+} from "tabler-icons-react";
 
 export const MOCKDATA = [
   {
-    image: "auditors",
-    title: "Pharmacists",
+    image: "orare",
+    title: "Orare",
     description:
-      "Azurill can be seen bouncing and playing on its big, rubbery tail",
+      "Poți genera orare de învățare pentru orice disciplină, în orice an, în orice semestru, pe orice perioadă, și îl poți vizualiza în orice moment.",
   },
   {
-    image: "lawyers",
-    title: "Lawyers",
-    description: "Fans obsess over the particular length and angle of its arms",
-  },
-  {
-    image: "accountants",
-    title: "Bank owners",
+    image: "intrebari",
+    title: "Întrebări și răspunsuri",
     description:
-      "They divvy up their prey evenly among the members of their pack",
+      "Poți pune întrebări și răspunsuri pentru orice ora de învățare, de la orice disciplină.",
   },
   {
-    image: "others",
-    title: "Others",
-    description: "Phanpy uses its long nose to shower itself",
+    image: "test",
+    title: "Teste",
+    description:
+      "Poți completa ore dând un test pentru a putea vedea îmbunătățiri în disciplina respectivă.",
+  },
+  {
+    image: "puncte",
+    title: "Puncte",
+    description:
+      "Vei fi recompensat pentru fiecare activitate cu puncte, în funcție de tipul activității. Punctele le poți cheltui la secțiunea 'Store'.",
   },
 ];

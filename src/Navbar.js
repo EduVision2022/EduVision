@@ -364,7 +364,8 @@ export function HeaderMiddle() {
               className={classes.user}
             >
               <Avatar
-                src={profilepic}
+                src={user?.photoURL ? user.photoURL : null}
+                referrerpolicy="no-referrer"
                 radius="xl"
                 style={{ marginRight: "10px" }}
                 className={
@@ -374,7 +375,7 @@ export function HeaderMiddle() {
                     ? "Bubble"
                     : ""
                 }
-              />
+              ></Avatar>
               <div style={{ flex: 1 }}>
                 <Text size="sm" weight={500}>
                   <div

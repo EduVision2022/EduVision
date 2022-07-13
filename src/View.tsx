@@ -291,6 +291,46 @@ const View = () => {
     ),
     new intrebareMaterie(
       "Informatică",
+      "Grafuri",
+      "Care este numarul maxim de componente conexe pe care le poate avea un graf neorientat cu 20 de noduri, 12 muchii?",
+      ["6", "12", "10", "15"],
+      4
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Grafuri",
+      "Cate grafuri neorientate distincte cu 4 varfuri se pot construi?",
+      ["4^6", "2^6", "6^4", "4"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Grafuri",
+      "Care este suma gradelor varfurilor unui graf neorientat cu n varfuri si m muchii?",
+      ["2*m", "2*n", "2*(m-1)", "2"],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Grafuri",
+      "Care dintre urmatoarele este falsa?",
+      [
+        "Matricea de adiacenta a unui graf neorientat este simetrica fata de diagonala principala",
+        "Matricea de adiacenta a unui graf neorientat are numar impart de valori nenule",
+        "Din matricea de adiacenta a unui graf neorientat se poate afla gradul unui nod",
+        "Din matricea de adiacenta a unui graf neorientat se poate afla numarul de muchii",
+      ],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Grafuri",
+      "Intr-un graf neorientat suma valorilor din matricea de adiacenta este m. Atunci numarul de muchii ale grafului este:",
+      ["m", "m/2", "2m", "m-1"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
       "Structuri repetitive",
       "Care dintre urmatoarele este forma structurii repetitive cu numar necunoscut de pasi, cu test final?",
       ["for", "while", "do-while", "foreach"],
@@ -306,6 +346,60 @@ const View = () => {
         "87 76 36 21",
         "Secventa are erori de sintaxa.",
       ],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Structuri repetitive",
+      "De cate ori va primi valorea 0 variabila 'ok' pentru n = 12? Secventa de cod: ok = 1; for(d = 2; d <= n; d++) {if(n % d == 0) ok = 0;}",
+      ["6 ori", "2 ori", "4 ori", "o singura data"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Structuri repetitive",
+      "Care este rezultatul urmatoarei secvente de cod? s = 0; for(d = 1; d <= n; d++) {if(n % d == 0) s += d;}",
+      [
+        "Numara in variabila 's' cati divizori are 'n'",
+        "In variabila 's' se va calcula suma numerelor de la 1 la 'n'",
+        "Determina daca n este prim sau nu",
+        "Calculeaza in 's' suma tuturor divizorilor lui 'n'",
+      ],
+      4
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Structuri repetitive",
+      "Care dintre urmatoarele enumerate reprezinta structuri de date repetitive?",
+      ["if-else", "for", "switch", "daca"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Matrici",
+      "Matricea patratica e o matrice de ordinul",
+      ["1 x n", "n x 1", "n x n", "n x m"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Matrici",
+      "Fie doua matrici patratice 'a' si 'b'. E posibila egalitatea a * b = b * a?",
+      ["Da", "Nu", "Nu se poate stabili", "Doar in anumite conditii"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Matrici",
+      "Matricea coloana este o matrice de ordinul",
+      ["1 x n", "n x 1", "n x n", "n x m"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Matrici",
+      "Matricea linie e o matrice de ordinul",
+      ["1 x n", "n x 1", "n x n", "n x m"],
       1
     ),
     new intrebareMaterie(
@@ -341,6 +435,34 @@ const View = () => {
       "Geometrie",
       "Solutia ecuatiei 5x-12=3x este:",
       ["-5", "6", "4", "5"],
+      2
+    ),
+    new intrebareMaterie(
+      "Romana",
+      "Literatura",
+      'Cine este purtătorul mesajului moralizator al nuvelei "Moara cu Noroc" ',
+      ["Lică Sămădăul", "Soacra lui Ghiță", "Ghiță", "Ana"],
+      2
+    ),
+    new intrebareMaterie(
+      "Romana",
+      "Literatura",
+      'Ce tip de opera este "Povestea lui Harap-Alb"?',
+      ["Basm", "Nuvelă", "Roman", "Comedie"],
+      1
+    ),
+    new intrebareMaterie(
+      "Romana",
+      "Literatura",
+      "Cine a scris Floare Albastra?",
+      ["Ion Creanga", "Ioan Slavici", "Mihai Eminescu", "Ion Pillat"],
+      3
+    ),
+    new intrebareMaterie(
+      "Romana",
+      "Literatura",
+      'Cine a scris "Povestea lui Harap-Alb"?',
+      ["Ioan Slavici", "Ion Creanga", "Mihai Eminescu", "Ion Luca Caragiale"],
       2
     ),
   ];

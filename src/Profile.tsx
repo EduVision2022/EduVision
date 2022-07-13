@@ -195,6 +195,7 @@ const Profile = () => {
                 <Center>
                   <Avatar
                     src={user.photoURL}
+                    referrerpolicy="no-referrer"
                     size="xl"
                     radius="50%"
                     className={
@@ -204,7 +205,7 @@ const Profile = () => {
                         ? "Bubble"
                         : ""
                     }
-                  />
+                  ></Avatar>
                 </Center>
                 <div className="nume" style={{ display: "inline-block" }}>
                   <h3
@@ -315,7 +316,7 @@ const Profile = () => {
                         ) : null}
                         {maxPoints >= 100 ? (
                           <Tooltip
-                            label="Realizare primită pentru că ai depășit 100 de maxPoints"
+                            label="Realizare primită pentru că ai depășit 100 de puncte"
                             withArrow
                           >
                             <Badge style={{ color: "#a4a9b2" }}>
@@ -325,7 +326,7 @@ const Profile = () => {
                         ) : null}
                         {maxPoints >= 200 ? (
                           <Tooltip
-                            label="Realizare primită pentru că ai depășit 200 de maxPoints"
+                            label="Realizare primită pentru că ai depășit 200 de puncte"
                             withArrow
                           >
                             <Badge color="teal">Semi-avansat</Badge>
@@ -333,7 +334,7 @@ const Profile = () => {
                         ) : null}
                         {maxPoints >= 300 ? (
                           <Tooltip
-                            label="Realizare primită pentru că ai depășit 300 de maxPoints"
+                            label="Realizare primită pentru că ai depășit 300 de puncte"
                             withArrow
                           >
                             <Badge color="violet">Avansat</Badge>
@@ -341,7 +342,7 @@ const Profile = () => {
                         ) : null}
                         {maxPoints >= 400 ? (
                           <Tooltip
-                            label="Realizare primită pentru că ai depășit 400 de maxPoints"
+                            label="Realizare primită pentru că ai depășit 400 de puncte"
                             withArrow
                           >
                             <Badge
@@ -462,6 +463,7 @@ const Profile = () => {
                             {activity.description}
                             {activity.price > 0 ? (
                               <>
+                                {" "}
                                 pentru{" "}
                                 <Text
                                   weight={800}
