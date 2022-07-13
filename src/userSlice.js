@@ -6,6 +6,7 @@ const initialState = {
   loggedin: false,
   picture: "",
   object: [],
+  shouldUpdate: false,
 };
 
 export const userSlice = createSlice({
@@ -18,6 +19,7 @@ export const userSlice = createSlice({
       state.loggedin = action.payload.loggedin;
       state.picture = action.payload.picture;
       state.object = action.payload.object;
+      state.shouldUpdate = action.payload.shouldUpdate;
     },
   },
 });
@@ -28,5 +30,7 @@ export const selectUsername = (state) => state.user.name;
 export const selectPicture = (state) => state.user.picture;
 export const selectEmail = (state) => state.user.email;
 export const selectObject = (state) => state.user.object;
+export const selectShouldUpdate = (state) => state.user.shouldUpdate;
+export const selectUser = (state) => state.user;
 
 export default userSlice.reducer;

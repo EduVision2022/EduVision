@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import {
   createStyles,
@@ -52,6 +52,8 @@ import {
 } from "firebase/auth";
 import { Login } from "tabler-icons-react";
 
+import UpdateContext from "./App";
+
 // Redux
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -60,6 +62,8 @@ import {
   selectUsername,
   selectPicture,
   selectEmail,
+  selectShouldUpdate,
+  selectUser,
 } from "./userSlice";
 
 // Images
@@ -76,6 +80,9 @@ import { db } from "./firebase";
 import "./blazingFire.css";
 import "./bubbleFrame.css";
 import "./rgbFrame.css";
+
+// Providers
+import { usePointsContext } from "./points.tsx";
 
 const useStyles = createStyles((theme) => ({
   user2: {
@@ -191,6 +198,8 @@ export function HeaderMiddle() {
     window.location.reload(false);
   }
 
+  const update = useContext(UpdateContext);
+
   const history = useHistory();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -203,7 +212,11 @@ export function HeaderMiddle() {
   const username = useSelector(selectUsername);
   const profilepicture = useSelector(selectPicture);
   const email = useSelector(selectEmail);
+  const shouldUpdate = useSelector(selectShouldUpdate);
+  const UserObject = useSelector(selectUser);
   const dispatch = useDispatch();
+
+  const [pointsProvider, setPointsProvider] = usePointsContext();
 
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("Guest");
@@ -238,25 +251,30 @@ export function HeaderMiddle() {
   };
   useEffect(() => {
     fetchUserName();
-    waitForChanges();
+    fetchPuncte();
   }, [user, loading]);
+
+  console.log("Points: ", pointsProvider);
 
   const fetchPuncte = async () => {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
     const aux = await getDocs(q);
     const document = aux.docs[0];
+    console.log("PUNCTE NAVBAR: ", document.data().puncte);
     setPuncte(document.data().puncte);
     setMaxPoints(document.data().maxPoints);
     //sets items
     setBoughtItems(document.data().items);
   };
 
-  const waitForChanges = async () => {
+  console.log("pointsProvider", pointsProvider);
+
+  if (pointsProvider) {
     fetchPuncte();
-    if (loggedIn) {
-      setTimeout(waitForChanges, 15000);
-    }
-  };
+    setTimeout(() => {
+      setPointsProvider(false);
+    }, 1000);
+  }
 
   const resetLogin = () => {
     logOut();

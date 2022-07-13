@@ -65,6 +65,8 @@ import "dayjs/locale/ro";
 import { showNotification } from "@mantine/notifications";
 import { Check, X } from "tabler-icons-react";
 
+import { usePointsContext } from "./points.tsx";
+
 var pushedAlt = false;
 
 const Generator = (props) => {
@@ -138,6 +140,8 @@ const Generator = (props) => {
   var diffLevel1 = 4;
   var diffLevel2 = 3;
   var diffLevel3 = 2;
+
+  const [pointsProvider, setPointsProvider] = usePointsContext();
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1117,6 +1121,7 @@ const Generator = (props) => {
                   setOrarGenerat(orarFinal);
                   addToDataBase(orarGenerat);
                   addPoints(75);
+                  setPointsProvider(true);
                   showNotification({
                     title: "Ai creat un orar nou!",
                     message: "Ai primit 75 puncte!",

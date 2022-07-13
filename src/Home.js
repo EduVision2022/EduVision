@@ -88,6 +88,8 @@ import { getFirestore, query, collection, where } from "firebase/firestore";
 import { addDoc, getDocs } from "firebase/firestore";
 import FeaturesImages from "./Features.tsx";
 
+import { usePointsContext } from "./points.tsx";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAYv-TF955BPhLNDpyU33_RXYOc_3JfAxo",
   authDomain: "fir-eduvision.firebaseapp.com",
@@ -214,6 +216,8 @@ function navigate(href, newTab) {
 
 const Home = () => {
   const history = useHistory();
+
+  const [pointsProvider, setPointsProvider] = usePointsContext();
 
   const user = useSelector(selectUsername);
   const dispatch = useDispatch();
@@ -853,7 +857,7 @@ const Home = () => {
     ),
     new Intrebare(
       "Informatica",
-      "Grafuri",
+      "Granfuri",
       "Numim pădure un graf neorientat în care fiecare componentă conexă a sa este un arbore. Orice pădure cu cel putin doi arbori este un graf care:",
       [
         "Are cicluri şi este conex",
@@ -1620,6 +1624,7 @@ const Home = () => {
                       document
                         .getElementById("second")
                         .scrollIntoView({ behavior: "smooth" });
+                      setPointsProvider(true);
                     }}
                   >
                     Get started

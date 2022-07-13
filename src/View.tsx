@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import dayjs, { locale } from "dayjs";
 import "dayjs/locale/ro";
 
+// User interface for the component
+import { selectShouldUpdate, setUser, selectUser } from "./userSlice";
+
 // Component imports
 import Delayed from "./Delayed.tsx";
 
@@ -74,6 +77,9 @@ import { userInfo } from "os";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, SignInWithGoogle } from "./firebase";
 import { showNotification } from "@mantine/notifications";
+
+// Providers
+import { usePointsContext } from "./points.tsx";
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   icon: { ref: getRef("icon") },
@@ -141,6 +147,10 @@ const View = () => {
   const dark = colorScheme === "dark";
 
   const [user, loading, error] = useAuthState(auth);
+
+  const shouldUpdate = useSelector(selectShouldUpdate);
+
+  const [pointsProvider, setPointsProvider] = usePointsContext();
 
   const Location = useLocation();
   const orar = Location.state.orar;
@@ -249,6 +259,52 @@ const View = () => {
         "!(x>=3)&&(y<5)",
         "!((x>=3)&&(y<5))",
         "!((x<3)||(y>=5))",
+      ],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Declararea variabilelor",
+      "Ce memoreaza tipurile float si double?",
+      ["Numere reale", "Nimic", "Caractere", "Adevarat sau fals"],
+      1
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Declararea variabilelor",
+      "Alegeți declararea corectă a unei variabile structurale cu 2 componente, una de tip real și una de tip întreg.",
+
+      [
+        "int float x[10] ;",
+        "struct { float x; int y} a;",
+        "float a[20];",
+        "struct { float x; int y} int a;",
+      ],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Declararea variabilelor",
+      "Alegeți declararea corectă a unui tablou unidimensional de tip real.",
+      ["int a[100];", "float a[100];", "int a = [100];", "float a = [100];"],
+      2
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Structuri repetitive",
+      "Care dintre urmatoarele este forma structurii repetitive cu numar necunoscut de pasi, cu test final?",
+      ["for", "while", "do-while", "foreach"],
+      3
+    ),
+    new intrebareMaterie(
+      "Informatică",
+      "Structuri repetitive",
+      "Ce se afisează, în urma executării următoarelor instrucțiuni: int b[5]={88,87,76,36,21},i;for( i=1;i<4;i++){cout<<b[i]<<' ';}",
+      [
+        "87 76 36",
+        "88 87 76 36 21",
+        "87 76 36 21",
+        "Secventa are erori de sintaxa.",
       ],
       1
     ),
@@ -369,6 +425,8 @@ const View = () => {
     ),
   ];
 
+  const UserObject = useSelector(selectUser);
+
   const [currIntrebari, setCurrIntrebari] = useState([]);
   const generateIntrebari = async (materie, capitol) => {
     var intrebari = [];
@@ -446,6 +504,8 @@ const View = () => {
 
   const checkScore = async (date = currDate) => {
     if (score >= currIntrebari.length / 2) {
+      addPoints(50);
+      setPointsProvider(true);
       setShouldFetch((value) => value + 1);
       const activity = {
         name: "Completare",
@@ -702,6 +762,7 @@ const View = () => {
                                 anonim == true ? "Anonim" : user.displayName
                               );
                               addPoints(25);
+                              setPointsProvider(true);
                               showNotification({
                                 title: "Întrebarea a fost adăugată!",
                                 message: "Ai primit 25 puncte!",
@@ -805,7 +866,34 @@ const View = () => {
                                   {currIntrebari[pasTest].intrebare}
                                 </Text>
                               </Paper>
-                              <Center style={{ marginTop: "1rem" }}></Center>
+                              <Center style={{ marginTop: "1rem" }}>
+                                <RadioGroup
+                                  value={segValue}
+                                  onChange={setSegValue}
+                                  orientation="vertical"
+                                  label="Alege un raspuns"
+                                  spacing="sm"
+                                  size="md"
+                                  required
+                                >
+                                  <Radio
+                                    value={currIntrebari[pasTest].raspunsuri[0]}
+                                    label={currIntrebari[pasTest].raspunsuri[0]}
+                                  />
+                                  <Radio
+                                    value={currIntrebari[pasTest].raspunsuri[1]}
+                                    label={currIntrebari[pasTest].raspunsuri[1]}
+                                  />
+                                  <Radio
+                                    value={currIntrebari[pasTest].raspunsuri[2]}
+                                    label={currIntrebari[pasTest].raspunsuri[2]}
+                                  />
+                                  <Radio
+                                    value={currIntrebari[pasTest].raspunsuri[3]}
+                                    label={currIntrebari[pasTest].raspunsuri[3]}
+                                  />
+                                </RadioGroup>
+                              </Center>
                             </>
                           ) : null}
                           <Center style={{ marginTop: "1rem" }}>

@@ -408,8 +408,8 @@ const Profile = () => {
                 Activități recente:
               </Text>
               <ScrollArea
-                style={{ height: 100 * activities.length - 80 }}
                 type="hover"
+                style={{ height: activities.length > 5 ? "15rem" : "auto" }}
               >
                 {activities.map((activity) => (
                   <>

@@ -48,6 +48,8 @@ import { Check, X } from "tabler-icons-react";
 import Error401 from "./401Error.tsx";
 import NotFoundTitle from "./404Page";
 
+import { usePointsContext } from "./points.tsx";
+
 const useStyles = createStyles((theme, _params, getRef) => ({
   icon: { ref: getRef("icon") },
 
@@ -104,6 +106,8 @@ const Intrebari = () => {
   const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
+
+  const [pointsProvider, setPointsProvider] = usePointsContext();
 
   const [value, setValue] = useState(0);
 
@@ -372,6 +376,7 @@ const Intrebari = () => {
                       onClick={() => {
                         addAnswer(idIntrebariFinal[index], raspuns);
                         addPoints(100);
+                        setPointsProvider(true);
                         showNotification({
                           title: "Răspunsul tău a fost adăugat!",
                           message: "Ai primit 100 puncte!",
