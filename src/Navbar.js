@@ -278,12 +278,19 @@ export function HeaderMiddle() {
   }
 
   const resetLogin = () => {
+    logout();
     logOut();
-    setLoggedIn(false);
-    setName("Guest");
-    setProfilepic("");
-    setMail("");
-    history.push("/");
+    setTimeout(() => {
+      setLoggedIn(false);
+      setName("Guest");
+      setProfilepic("");
+      setMail("");
+      setPuncte(0);
+      setMaxPoints(0);
+      setBoughtItems([]);
+      history.push("/logout");
+      logout();
+    }, 1000);
   };
 
   const [windowDimension, detectHW] = useState({

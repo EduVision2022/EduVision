@@ -927,29 +927,145 @@ const Home = () => {
     new Intrebare(
       "Chimie",
       "Hidrocarburi",
-      "Ce este o catena?",
-      ["a", "b", "c", "d"],
+      "Simetria orbitalilor sp3 este:",
+      ["cilindrica", "trigonala", "tetraedica", "planara"],
+      3
+    ),
+    new Intrebare(
+      "Chimie",
+      "Hidrocarburi",
+      "2-Pentena",
+      [
+        "Poate avea doi izomeri geometrici",
+        "Nu este izomera de pozitie cu 1-pentena",
+        "Nu se oxideaza cu bicromat de potasiu in prezenta acidului sulfuric",
+        "Se nitreaza cu amestec sulfonitric",
+      ],
       1
+    ),
+    new Intrebare(
+      "Chimie",
+      "Hidrocarburi",
+      "O alchenă şi un cicloalcan cu catena liniară cu acelaşi număr de atomi de carbon au:",
+      [
+        "Acelasi punct de topire",
+        "Acelasi indice de refractie",
+        "Aceeasi formula moleculara",
+        "Aceeasi stare de agregare",
+      ],
+      3
+    ),
+    new Intrebare(
+      "Chimie",
+      "Hidrocarburi",
+      "Pentru un aminoacid nu se poate spune că:",
+      [
+        "Este natural dacă este alifatic şi este un α−aminoacid",
+        "Este un aminoacid esenŃial dacă poate fi produs de organismul uman",
+        "Este acidul asparagic dacă este acidul α-aminosuccinic",
+        "Are un caracter de amfiion",
+      ],
+      2
+    ),
+    new Intrebare(
+      "Chimie",
+      "Hidrocarburi",
+      "Următoarea reactia nu este o reactie de halogenare:",
+      [
+        "Aditia bromului la 2-pentenă",
+        "Reactia toluenului cu clorura de acetil",
+        "Bromurarea fotochimică a metanului",
+        "Reactia dintre alcoolul tert-butilic şi acidul clorhidric.",
+      ],
+      2
     ),
   ];
 
   var intrebariFizica = [
     new Intrebare(
       "Fizica",
-      "Mecanica",
-      "Cum este definita o forta?",
-      ["a", "b", "c", "d"],
+      "Mecanică",
+      "Un camion parcurge un sfert din drumul său cu viteza v1 = 30 km/h, iar restul drumului cu viteza v2 = 60 km/h. Viteza medie a camionului pe întreaga distantă parcursă are valoarea:",
+      ["90 km/h", "50 km/h", "48 km/h", "45 km/h"],
+      3
+    ),
+    new Intrebare(
+      "Fizica",
+      "Mecanică",
+      "Un avion având masa m = 10t decolează de pe un aeroport situat la nivelul mării și ajunge la altitudinea h = 6000m. Variația energiei potențiale datorate interacțiunii gravitaționale avion-Pământ este de aproximativ:",
+      ["10^8 J", "3kJ", "6MJ", "600MJ"],
       4
+    ),
+    new Intrebare(
+      "Fizica",
+      "Mecanică",
+      "Asupra unui resort elastic acționează la ambele extremități, în sensuri contrare, câte o forță având modulul egal cu 30N. Alungirea resortului este egală cu 5cm. Constanta elastică a resortului este egală cu:",
+      ["1200 N/m", "600 N/m", "150 N/m", "6 N/m"],
+      2
+    ),
+    new Intrebare(
+      "Fizica",
+      "Termodinamică",
+      "Considerând că simbolurile mărimilor fizice și convențiile de semne pentru căldură și lucru mecanic sunt cele utilizate în manualele de fizică, expresia corectă a principiului I al termodinamicii este:",
+      ["U = Q + L", "ΔU = Q + L", "ΔU = Q - L", "U = Q - L"],
+      3
+    ),
+    new Intrebare(
+      "Fizica",
+      "Termodinamică",
+      "Într-o destindere adiabatică a unei mase constante de gaz ideal, densitatea acestuia:",
+      ["crește", "scade", "rămâne constantă", "crește și apoi scade"],
+      2
+    ),
+    new Intrebare(
+      "Fizica",
+      "Termodinamică",
+      "Unitatea de măsură a raportului dintre capacitatea calorică a unei bile de fier și căldura specifică a fierului este:",
+      ["J/K", "kg/mol", "kg", "mol"],
+      3
     ),
   ];
 
   var intrebariBiologie = [
     new Intrebare(
       "Biologie",
-      "Celule",
-      "Ce este euglena verde?",
-      ["a", "b", "c", "d"],
-      3
+      "Funcțiile fundamentale ale organismelor",
+      "Atriul stang comunica cu ventricului stang printr-un orificiu prevaut cu valva/valvula:",
+      ["Semilunara", "Bicuspida", "Sigmoida", "Tricuspida"],
+      2
+    ),
+    new Intrebare(
+      "Biologie",
+      "Funcțiile fundamentale ale organismelor",
+      "Substanța aflată în plasmă care are rol în coagulare este:",
+      ["Fibrinogenul", "Colesterolul", "Glucoza", "Toate substanele enumerate"],
+      1
+    ),
+    new Intrebare(
+      "Biologie",
+      "Funcțiile fundamentale ale organismelor",
+      "Ce orificiu se află între esofag și stomac?",
+      ["Pilor", "Cardia", "Sfincter", "Nu se află niciun orificiu"],
+      2
+    ),
+    new Intrebare(
+      "Biologie",
+      "Funcțiile fundamentale ale organismelor",
+      "Alegeți afirmația adevărată referitoare la schimbul de gaze:",
+      [
+        "Este un proces activ",
+        "O2 trece din sange in alveola",
+        "CO2 trece din alveola in sange",
+        "Se realizeaza prin difuziune",
+      ],
+      4
+    ),
+    new Intrebare(
+      "Biologie",
+      "Funcțiile fundamentale ale organismelor",
+      "Sunt căi urinare intrarenale:",
+      ["Ureterele", "Tubii colectori", "Vezica urinara", "Uretra"],
+      2
     ),
   ];
 
@@ -1327,7 +1443,7 @@ const Home = () => {
       }
     }
 
-    sleep(500).then(() => {
+    sleep(1500).then(() => {
       resetButtons();
       var numarIntrebari = 0;
       if (materie3 == "informatica") {
