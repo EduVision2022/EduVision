@@ -16,7 +16,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
 import { addDoc, getDocs } from "firebase/firestore";
 import { logout, db } from "./firebase";
-import { getFirestore, query, collection, where } from "firebase/firestore";
+import {
+  getFirestore,
+  query,
+  collection,
+  where,
+  Firestore,
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 import {
   Card,
   Image,
@@ -34,6 +43,7 @@ import { useMantineColorScheme } from "@mantine/core";
 import { Trash } from "tabler-icons-react";
 import { Edit } from "tabler-icons-react";
 import { Modal } from "@mantine/core";
+import { Center } from "@mantine/core";
 
 import Error401 from "./401Error.tsx";
 import Delayed from "./Delayed.tsx";
@@ -80,7 +90,22 @@ const Orare = () => {
     setOrare(document.data().orare);
   };
 
-  const deleteOrar = async () => {};
+  const deleteOrar = async (nume) => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const aux = await getDocs(q);
+    const document = aux.docs[0];
+    const oraretemp = [];
+    const orare = document.data().orare;
+    orare.map((element, index) => {
+      if (element.nume != nume) {
+        oraretemp.push(element);
+      }
+    });
+    setOrare(oraretemp);
+    await setDoc(doc(db, "users", document.id), {
+      orare: oraretemp,
+    });
+  };
 
   useEffect(() => {
     if (user) {
@@ -211,8 +236,6 @@ const Orare = () => {
                               ? theme.colors.dark[9]
                               : theme.colors.gray[2]
                           }
-                          overlayOpacity={0.55}
-                          overlayBlur={3}
                           opened={openModal}
                           onClose={() => {
                             setOpenModal(false);
@@ -271,6 +294,36 @@ const Orare = () => {
                   )
                 )
               )}
+              <Center>
+                <Card
+                  shadow="sm"
+                  p="xl"
+                  withBorder
+                  style={{
+                    minHeight: "22.8rem",
+                    width: windowDimension.winWidth > 768 ? "100%" : "21.5rem",
+                  }}
+                >
+                  <Button
+                    variant="subtle"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: "200px",
+                      height: "200px",
+                      fontSize: "3rem",
+                    }}
+                    size="xl"
+                    onClick={() => {
+                      history.push("/");
+                    }}
+                  >
+                    +
+                  </Button>
+                </Card>
+              </Center>
             </SimpleGrid>
           </div>
         </>
