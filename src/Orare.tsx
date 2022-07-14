@@ -39,6 +39,26 @@ import Error401 from "./401Error.tsx";
 import Delayed from "./Delayed.tsx";
 
 const Orare = () => {
+  const [windowDimension, detectHW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  });
+
+  const detectSize = () => {
+    detectHW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", detectSize);
+
+    return () => {
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimension]);
+
   const theme = useMantineTheme();
   const secondaryColor =
     theme.colorScheme === "dark" ? theme.colors.dark[1] : theme.colors.gray[7];
@@ -94,7 +114,10 @@ const Orare = () => {
               <NotFoundTitle />
             ) : null}
 
-            <SimpleGrid cols={5} style={{ margin: "3rem" }}>
+            <SimpleGrid
+              cols={windowDimension.winWidth > 740 ? 5 : 1}
+              style={{ margin: "3rem" }}
+            >
               {orare.map(
                 (orar: Orare, index) => (
                   console.log("ORAR", orar),

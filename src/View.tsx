@@ -901,7 +901,9 @@ const View = () => {
               radius="md"
               p="xl"
               withBorder
-              style={{ width: "35rem" }}
+              style={{
+                width: windowDimension.winWidth > 720 ? "35rem" : "auto",
+              }}
             >
               <StyledAccordion iconPosition="left" multiple>
                 {date.map((date, index) => (
@@ -1245,7 +1247,7 @@ const View = () => {
                     locale="ro"
                     value={value}
                     onChange={setValue}
-                    size={"xl"}
+                    size={windowDimension.winWidth > 768 ? "xl" : "sm"}
                     renderDay={(dateday) => {
                       const dayj = dayjs(dateday);
                       const day = dayj.format("DD/MM/YYYY");

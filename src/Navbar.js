@@ -51,7 +51,10 @@ import {
   signOut,
 } from "firebase/auth";
 import { Login } from "tabler-icons-react";
-
+import { Drawer } from "@mantine/core";
+import { Home2 } from "tabler-icons-react";
+import { AB } from "tabler-icons-react";
+import { PhoneOutgoing } from "tabler-icons-react";
 import UpdateContext from "./App";
 
 // Redux
@@ -69,6 +72,7 @@ import {
 // Images
 import logoLight from "./images/logoLight.png";
 import logoDark from "./images/logoDark.png";
+import { Stack } from "@mantine/core";
 
 import { auth, SignInWithGoogle, logout } from "./firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -362,7 +366,99 @@ export function HeaderMiddle() {
           onClick={() => toggleOpened()}
           size="sm"
           className={classes.burger}
-        />
+        ></Burger>
+        <Drawer
+          opened={opened}
+          onClose={() => toggleOpened()}
+          padding="md"
+          size="sm"
+        >
+          {loggedIn ? (
+            <>
+              <Stack>
+                <Button
+                  leftIcon={<Home2 size={12} color={theme.colors.blue[6]} />}
+                  variant="light"
+                  onClick={() => {
+                    redirectTo("/");
+                  }}
+                >
+                  Acasă
+                </Button>
+                <Button
+                  leftIcon={<User size={12} color={theme.colors.orange[6]} />}
+                  variant="light"
+                  onClick={() => {
+                    redirectTo("/profile");
+                  }}
+                >
+                  Profile
+                </Button>
+                <Button
+                  leftIcon={
+                    <QuestionMark size={12} color={theme.colors.orange[6]} />
+                  }
+                  variant="light"
+                  onClick={() => {
+                    redirectTo("/intrebari");
+                  }}
+                >
+                  Întrebări
+                </Button>
+                <Button
+                  leftIcon={
+                    <CalendarEvent size={12} color={theme.colors.blue[6]} />
+                  }
+                  variant="light"
+                  onClick={() => {
+                    redirectTo("/orare");
+                  }}
+                >
+                  Orare
+                </Button>
+                <Button
+                  leftIcon={<AB size={12} color={theme.colors.blue[6]} />}
+                  variant="light"
+                  onClick={() => {
+                    redirectTo("/about");
+                  }}
+                >
+                  Despre
+                </Button>
+                <Button
+                  leftIcon={
+                    <PhoneOutgoing size={12} color={theme.colors.blue[6]} />
+                  }
+                  variant="light"
+                  onClick={() => {
+                    redirectTo("/contact");
+                  }}
+                >
+                  Contact
+                </Button>
+                <Button
+                  leftIcon={<Logout size={12} color={theme.colors.violet[6]} />}
+                  variant="light"
+                  onClick={() => {
+                    resetLogin();
+                  }}
+                >
+                  Log Out
+                </Button>
+              </Stack>
+            </>
+          ) : (
+            <Button
+              leftIcon={<Login size={12} color={theme.colors.blue[6]} />}
+              variant="light"
+              onClick={() => {
+                redirectTo("/");
+              }}
+            >
+              Log In
+            </Button>
+          )}
+        </Drawer>
         <Menu
           className={classes.user}
           control={
@@ -571,7 +667,7 @@ export function HeaderMiddle() {
           </>
         ) : null}
         {windowDimension.winWidth < 720 ? (
-          <Group position="right" style={{ marginLeft: "78vw" }}>
+          <Group position="right" style={{ marginLeft: "70vw" }}>
             <Theme />
           </Group>
         ) : (

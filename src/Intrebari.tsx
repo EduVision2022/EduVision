@@ -37,6 +37,10 @@ import { Center } from "@mantine/core";
 import { Notification } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { LoadingOverlay } from "@mantine/core";
+import { Select } from "@mantine/core";
+import { SimpleGrid } from "@mantine/core";
+import { Stack } from "@mantine/core";
+import { Checkbox } from "@mantine/core";
 
 // Icons Imports
 import { Plus } from "tabler-icons-react";
@@ -47,6 +51,7 @@ import { Check, X } from "tabler-icons-react";
 // Components imports
 import Error401 from "./401Error.tsx";
 import NotFoundTitle from "./404Page";
+import HeaderIntrebari from "./HeaderIntrebari.tsx";
 
 import { usePointsContext } from "./points.tsx";
 
@@ -114,6 +119,10 @@ const Intrebari = () => {
   const [user, loading, error] = useAuthState(auth);
 
   const [visible, setVisible] = useState(true);
+
+  const [materieValue, setMaterieValue] = useState("Toate");
+  const [capitolValue, setCapitolValue] = useState("Toate");
+  const [raspunsValue, setRaspunsValue] = useState(false);
 
   var intrebari = [];
   var idIntrebari = [];
@@ -290,112 +299,239 @@ const Intrebari = () => {
   dayjs.extend(localizedFormat);
   dayjs.locale("ro");
 
+  const capitoleInformatica = [
+    { value: "Expresii", label: "Expresii" },
+    { value: "Matrici", label: "Matrici" },
+    { value: "Declararea variabilelor", label: "Declararea variabilelor" },
+    { value: "Backtracking", label: "Backtracking" },
+    { value: "Toate", label: "Toate" },
+  ];
+
+  const capitoleMatematica = [
+    { value: "Geometrie", label: "Geometrie" },
+    { value: "Toate", label: "Toate" },
+  ];
+
+  const capitoleRomana = [
+    { value: "Literatura", label: "Literatura" },
+    { value: "Toate", label: "Toate" },
+  ];
+
+  const capitoleFizica = [
+    { value: "Mecanică", label: "Mecanică" },
+    { value: "Termodinamică", label: "Termodinamică" },
+    { value: "Toate", label: "Toate" },
+  ];
+
+  const capitoleChimie = [
+    { value: "Hidrocarburi", label: "Hidrocarburi" },
+    { value: "Toate", label: "Toate" },
+  ];
+
+  const capitoleBiologie = [
+    {
+      value: "Funcțiile fundamentale ale organismelor",
+      label: "Funcțiile fundamentale ale organismelor",
+    },
+    { value: "Toate", label: "Toate" },
+  ];
+
   return (
-    <div className="intrebari" style={{ height: "auto", minHeight: "71vh" }}>
-      <LoadingOverlay visible={visible} />
-      <Center>
-        <Paper shadow="xs" radius="md" withBorder style={{ margin: "2rem" }}>
-          <StyledAccordion style={{ margin: "1rem" }}>
-            {intrebariFinal.map((intrebare: IntrebareProps, index) => (
-              <Accordion.Item
-                label={
-                  <AccordionLabel
-                    materie={intrebare.materie}
-                    capitol={intrebare.capitol}
-                    raspunsuri={intrebare.raspuns}
-                  />
-                }
-                onClick={() => {
-                  fetchAnswers(idIntrebariFinal[index]);
-                }}
-                key={index}
-              >
-                <div
-                  className="accordion-content"
-                  style={{ textAlign: "left" }}
-                >
-                  <div className="intrebare">
-                    <Text weight="600" size="sm">
-                      Enunț
-                    </Text>
-                    <Paper radius="md" p="xs" withBorder>
-                      <Text weight="500">{intrebare.intrebare}</Text>
-                    </Paper>
-                  </div>
-                  <div className="autor" style={{ marginTop: "1rem" }}>
-                    <Text weight="600" size="sm">
-                      Autor
-                    </Text>
-                    <Paper radius="md" p="xs" withBorder>
-                      <Text weight="500">{intrebare.autor}</Text>
-                    </Paper>
-                  </div>
-                  <div className="raspunsuri" style={{ marginTop: "1rem" }}>
-                    <Text weight="600" size="sm">
-                      Răspunsuri
-                    </Text>
-                    {raspunsuriFinal.map((raspuns, index) => (
-                      <div className="raspuns" key={raspuns + index}>
-                        <Paper
-                          shadow="xl"
-                          radius="md"
-                          p="md"
-                          withBorder
-                          style={{
-                            margin: "1rem",
-                          }}
-                        >
-                          <Text weight="600">
-                            {autoriRaspunsuriFinal[index]}
-                          </Text>
-                          <Text weight="600" size="sm" color="dimmed">
-                            {dayjs(
-                              new Date(dateRaspunsuriFinal[index].toDate())
-                            ).format("D MMMM, HH:mm")}
-                          </Text>
-                          <Paper shadow="sm" radius="md" p="sm" withBorder>
-                            {raspuns}
-                          </Paper>
-                        </Paper>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="input" style={{ display: "inline-block" }}>
-                    <TextInput
-                      style={{ display: "inline-block", width: "270px" }}
-                      label="Adaugă răspunsul tău"
-                      placeholder="Răspuns"
-                      value={raspuns}
-                      onChange={(event) =>
-                        setRaspuns(event.currentTarget.value)
+    <>
+      <HeaderIntrebari />
+      <div
+        className="intrebari"
+        style={{ height: "auto", minHeight: "71vh", marginTop: "-2rem" }}
+      >
+        <LoadingOverlay visible={visible} />
+        <Center style={{ margin: "1rem" }}>
+          <Stack align="flex-start" spacing="1">
+            <Text weight="600" size="sm" style={{ marginLeft: "0.5rem" }}>
+              Filtrare
+            </Text>
+            <Paper radius="md" p="md" withBorder>
+              <SimpleGrid cols={3}>
+                <Select
+                  label="Materie"
+                  placeholder="Alege o materie"
+                  value={materieValue}
+                  onChange={setMaterieValue}
+                  data={[
+                    { value: "Matematică", label: "Matematică" },
+                    { value: "Română", label: "Română" },
+                    { value: "Informatică", label: "Informatică" },
+                    { value: "Chimie", label: "Chimie" },
+                    { value: "Fizică", label: "Fizică" },
+                    { value: "Biologie", label: "Biologie" },
+                    { value: "Toate", label: "Toate" },
+                  ]}
+                />
+                <Select
+                  label="Capitol"
+                  placeholder="Alege un capitol"
+                  value={capitolValue}
+                  onChange={setCapitolValue}
+                  data={
+                    materieValue == "Informatică"
+                      ? capitoleInformatica
+                      : materieValue == "Fizică"
+                      ? capitoleFizica
+                      : materieValue == "Matematică"
+                      ? capitoleMatematica
+                      : materieValue == "Română"
+                      ? capitoleRomana
+                      : materieValue == "Chimie"
+                      ? capitoleChimie
+                      : materieValue == "Biologie"
+                      ? capitoleBiologie
+                      : [{ value: "Toate", label: "Toate" }]
+                  }
+                />
+                <Checkbox
+                  style={{ marginTop: "1.5rem" }}
+                  size="md"
+                  checked={raspunsValue}
+                  onChange={(event) =>
+                    setRaspunsValue(event.currentTarget.checked)
+                  }
+                  label="Au cel puțin un răspuns"
+                />
+              </SimpleGrid>
+            </Paper>
+          </Stack>
+        </Center>
+        <Center>
+          <Paper shadow="xs" radius="md" withBorder style={{ margin: "2rem" }}>
+            {intrebariFinal.length > 0 ? (
+              <StyledAccordion style={{ margin: "1rem" }}>
+                {intrebariFinal.map((intrebare: IntrebareProps, index) =>
+                  ((intrebare.materie == materieValue &&
+                    (intrebare.capitol == capitolValue ||
+                      capitolValue == "Toate")) ||
+                    materieValue == "Toate") &&
+                  (raspunsValue ? intrebare.raspuns.length > 0 : true) ? (
+                    <Accordion.Item
+                      label={
+                        <AccordionLabel
+                          materie={intrebare.materie}
+                          capitol={intrebare.capitol}
+                          raspunsuri={intrebare.raspuns}
+                        />
                       }
-                    />
-                    <Button
-                      variant="default"
-                      style={{ display: "inline-block", marginLeft: "0.4rem" }}
                       onClick={() => {
-                        addAnswer(idIntrebariFinal[index], raspuns);
-                        addPoints(100);
-                        setPointsProvider(true);
-                        showNotification({
-                          title: "Răspunsul tău a fost adăugat!",
-                          message: "Ai primit 100 puncte!",
-                          autoClose: 2000,
-                          color: "green",
-                          icon: <Check />,
-                        });
+                        fetchAnswers(idIntrebariFinal[index]);
                       }}
+                      key={index}
                     >
-                      Adaugă răspuns
-                    </Button>
-                  </div>
-                </div>
-              </Accordion.Item>
-            ))}
-          </StyledAccordion>
-        </Paper>
-      </Center>
-    </div>
+                      <div
+                        className="accordion-content"
+                        style={{ textAlign: "left" }}
+                      >
+                        <div className="intrebare">
+                          <Text weight="600" size="sm">
+                            Enunț
+                          </Text>
+                          <Paper radius="md" p="xs" withBorder>
+                            <Text weight="500">{intrebare.intrebare}</Text>
+                          </Paper>
+                        </div>
+                        <div className="autor" style={{ marginTop: "1rem" }}>
+                          <Text weight="600" size="sm">
+                            Autor
+                          </Text>
+                          <Paper radius="md" p="xs" withBorder>
+                            <Text weight="500">{intrebare.autor}</Text>
+                          </Paper>
+                        </div>
+                        <div
+                          className="raspunsuri"
+                          style={{ marginTop: "1rem" }}
+                        >
+                          <Text weight="600" size="sm">
+                            Răspunsuri
+                          </Text>
+                          {raspunsuriFinal.map((raspuns, index) => (
+                            <div className="raspuns" key={raspuns + index}>
+                              <Paper
+                                shadow="xl"
+                                radius="md"
+                                p="md"
+                                withBorder
+                                style={{
+                                  margin: "1rem",
+                                }}
+                              >
+                                <Text weight="600">
+                                  {autoriRaspunsuriFinal[index]}
+                                </Text>
+                                <Text weight="600" size="sm" color="dimmed">
+                                  {dayjs(
+                                    new Date(
+                                      dateRaspunsuriFinal[index].toDate()
+                                    )
+                                  ).format("D MMMM, HH:mm")}
+                                </Text>
+                                <Paper
+                                  shadow="sm"
+                                  radius="md"
+                                  p="sm"
+                                  withBorder
+                                >
+                                  {raspuns}
+                                </Paper>
+                              </Paper>
+                            </div>
+                          ))}
+                        </div>
+                        <div
+                          className="input"
+                          style={{ display: "inline-block" }}
+                        >
+                          <TextInput
+                            style={{ display: "inline-block", width: "270px" }}
+                            label="Adaugă răspunsul tău"
+                            placeholder="Răspuns"
+                            value={raspuns}
+                            onChange={(event) =>
+                              setRaspuns(event.currentTarget.value)
+                            }
+                          />
+                          <Button
+                            variant="default"
+                            style={{
+                              display: "inline-block",
+                              marginLeft: "0.4rem",
+                            }}
+                            onClick={() => {
+                              addAnswer(idIntrebariFinal[index], raspuns);
+                              addPoints(100);
+                              setPointsProvider(true);
+                              showNotification({
+                                title: "Răspunsul tău a fost adăugat!",
+                                message: "Ai primit 100 puncte!",
+                                autoClose: 2000,
+                                color: "green",
+                                icon: <Check />,
+                              });
+                            }}
+                          >
+                            Adaugă răspuns
+                          </Button>
+                        </div>
+                      </div>
+                    </Accordion.Item>
+                  ) : null
+                )}
+              </StyledAccordion>
+            ) : (
+              <Paper radius="md" p="md" withBorder>
+                <Text weight="600">Încă nu există nici o întrebare.</Text>
+              </Paper>
+            )}
+          </Paper>
+        </Center>
+      </div>
+    </>
   );
 };
 export default Intrebari;
