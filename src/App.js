@@ -27,6 +27,7 @@ import About from "./About.tsx";
 import Contact from "./Contact.tsx";
 import Store from "./Store.tsx";
 import Login from "./Login.tsx";
+import Logout from "./Logout.tsx";
 
 import React from "react";
 
@@ -84,6 +85,7 @@ function App() {
                           <Route path="/contact" component={Contact} />
                           <Route path="/store" component={Store} />
                           <Route path="/login" component={Login} />
+                          <Route path="/logout" component={Logout} />
                           <Route path="*" component={NotFoundTitle} />
                         </Switch>
                         <Footer />

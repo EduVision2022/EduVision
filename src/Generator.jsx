@@ -875,7 +875,7 @@ const Generator = (props) => {
                                     ] == "Informatică" ||
                                     orarGenerat.materii[
                                       orarGenerat.date.indexOf(currDate)
-                                    ] == "Fizica" ||
+                                    ] == "Fizică" ||
                                     orarGenerat.materii[
                                       orarGenerat.date.indexOf(currDate)
                                     ] == "Biologie" ||
