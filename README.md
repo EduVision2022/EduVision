@@ -7,7 +7,7 @@
 
 ## Ce este EduVision
 
-EduVision este un proiect care poate fi folosit de orice elev pentru a genera orare de învățare personalizate, cu rolul de a se îmbunătăți la materiile alese. EduVision nu numai că generează orarele elevilor, ci le permite să pună întrebări celorlalți membri înregistrați acolo unde nu se descurcă. Elevii sunt testați pentru a putea completa orele de învățare, iar dacă rezultatul este favorabil, aceștia vor fi recompensați cu puncte. Punctele pot fi folosite pentru a cumpăra diferite produse vizuale. De asemenea, exista un sistem de recompense pe ranguri, care le atribuie elevilor un nivel in funcție de maximul de puncte pe care l-au dobândit.
+EduVision este un proiect care poate fi folosit de orice elev pentru a genera orare de învățare personalizate, cu rolul de a se îmbunătăți la materiile alese. EduVision nu numai că generează orarele elevilor, ci le permite să pună întrebări celorlalți membri înregistrați acolo unde nu se descurcă. Elevii sunt testați pentru a putea completa orele de învățare, iar dacă rezultatul este favorabil, aceștia vor fi recompensați cu puncte. Punctele pot fi folosite pentru a cumpăra diferite produse vizuale. De asemenea, există un sistem de recompense pe ranguri, care le atribuie elevilor un nivel în funcție de maximul de puncte pe care l-au dobândit.
 
 ## Design
 
