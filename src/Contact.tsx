@@ -15,6 +15,7 @@ import { BrandGmail } from "tabler-icons-react";
 import { BrandGithub } from "tabler-icons-react";
 import { useMantineColorScheme } from "@mantine/core";
 import Theme from "./Theme";
+import HeaderContact from "./HeaderContact.tsx";
 
 type ContactIconVariant = "white" | "gradient";
 
@@ -78,31 +79,33 @@ function ContactIcon({
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
   return (
-    <div className={cx(classes.wrapper, className)} {...others}>
-      {variant === "gradient" ? (
-        <ThemeIcon size={40} radius="md" className={classes.icon}>
-          <Icon size={24} />
-        </ThemeIcon>
-      ) : (
-        <Box mr="md">
-          <Icon size={24} />
-        </Box>
-      )}
+    <>
+      <div className={cx(classes.wrapper, className)} {...others}>
+        {variant === "gradient" ? (
+          <ThemeIcon size={40} radius="md" className={classes.icon}>
+            <Icon size={24} />
+          </ThemeIcon>
+        ) : (
+          <Box mr="md">
+            <Icon size={24} />
+          </Box>
+        )}
 
-      <div>
-        <Text size="xs" className={classes.title}>
-          {title}
-        </Text>
-        <Text
-          className={classes.description}
-          style={{
-            color: variant == "white" ? "#fff" : dark ? "#fff" : "#000",
-          }}
-        >
-          {description}
-        </Text>
+        <div>
+          <Text size="xs" className={classes.title}>
+            {title}
+          </Text>
+          <Text
+            className={classes.description}
+            style={{
+              color: variant == "white" ? "#fff" : dark ? "#fff" : "#000",
+            }}
+          >
+            {description}
+          </Text>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -153,41 +156,41 @@ const Contact = () => {
   const dark = colorScheme === "dark";
 
   return (
-    <div className="contact" style={{ minHeight: "55vh", marginTop: "10rem" }}>
-      <Title align="center" className={classes.title2}>
-        Contact
-      </Title>
-      <Center>
-        <SimpleGrid cols={2} breakpoints={[{ maxWidth: 755, cols: 1 }]}>
-          <div className="as">
-            <Title order={3}>Andrei Stan</Title>
-            <Box
-              sx={(theme) => ({
-                padding: theme.spacing.xl,
-                borderRadius: theme.radius.md,
-                backgroundColor: dark ? theme.colors.dark[6] : theme.white,
-              })}
-            >
-              <ContactIconsList />
-            </Box>
-          </div>
-          <div className="sb">
-            <Title order={3}>Șerban Toader</Title>
-            <Box
-              sx={(theme) => ({
-                padding: theme.spacing.xl,
-                borderRadius: theme.radius.md,
-                backgroundImage: `linear-gradient(135deg, ${
-                  theme.colors[theme.primaryColor][6]
-                } 0%, ${theme.colors[theme.primaryColor][4]} 100%)`,
-              })}
-            >
-              <ContactIconsList2 variant="white" />
-            </Box>
-          </div>
-        </SimpleGrid>
-      </Center>
-    </div>
+    <>
+      <HeaderContact />
+      <div className="contact" style={{ minHeight: "55vh" }}>
+        <Center>
+          <SimpleGrid cols={2} breakpoints={[{ maxWidth: 755, cols: 1 }]}>
+            <div className="as">
+              <Title order={3}>Andrei Stan</Title>
+              <Box
+                sx={(theme) => ({
+                  padding: theme.spacing.xl,
+                  borderRadius: theme.radius.md,
+                  backgroundColor: dark ? theme.colors.dark[6] : theme.white,
+                })}
+              >
+                <ContactIconsList />
+              </Box>
+            </div>
+            <div className="sb">
+              <Title order={3}>Șerban Toader</Title>
+              <Box
+                sx={(theme) => ({
+                  padding: theme.spacing.xl,
+                  borderRadius: theme.radius.md,
+                  backgroundImage: `linear-gradient(135deg, ${
+                    theme.colors[theme.primaryColor][6]
+                  } 0%, ${theme.colors[theme.primaryColor][4]} 100%)`,
+                })}
+              >
+                <ContactIconsList2 variant="white" />
+              </Box>
+            </div>
+          </SimpleGrid>
+        </Center>
+      </div>
+    </>
   );
 };
 export default Contact;

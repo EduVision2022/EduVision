@@ -191,7 +191,7 @@ for (var i = 0; i <= 2; i++) {
 
 links[0] = new HeaderProps("/about", "About");
 links[1] = new HeaderProps("/contact", "Contact");
-links[2] = new HeaderProps("/store", "Store");
+links[2] = new HeaderProps("/store", "Magazin");
 
 const logOut = () => {
   signOut(auth);

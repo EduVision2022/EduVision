@@ -18,6 +18,7 @@ import { auth, SignInWithGoogle } from "./firebase";
 // Components imports
 import { StoreItems } from "./StoreItems";
 import Delayed from "./Delayed.tsx";
+import HeaderStore from "./HeaderStore.tsx";
 
 // Mantine imports
 import {
@@ -34,6 +35,8 @@ import { SimpleGrid } from "@mantine/core";
 import { Title } from "@mantine/core";
 import { Butterfly } from "tabler-icons-react";
 import { showNotification } from "@mantine/notifications";
+import { Paper } from "@mantine/core";
+import { Center } from "@mantine/core";
 
 // Icons imports
 import { Check, X } from "tabler-icons-react";
@@ -171,26 +174,59 @@ const items = StoreItems.map((item) => {
 
 const Store = () => {
   const theme = useMantineTheme();
-
   const [user, loading, error] = useAuthState(auth);
+
+  const [windowDimension, detectHW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  });
+
+  const detectSize = () => {
+    detectHW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", detectSize);
+
+    return () => {
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimension]);
+
   if (!user) {
     return <Error401 />;
   }
 
   return (
-    <Delayed>
-      <div className="store" style={{ minHeight: "70vh", marginTop: "2rem" }}>
-        <Title
-          align="center"
-          style={{ fontWeight: 400, marginBottom: theme.spacing.xl * 1.5 }}
+    <>
+      <HeaderStore />
+      <Delayed>
+        <div
+          className="store"
+          style={{ minHeight: "70vh", marginTop: "0.5rem" }}
         >
-          Store
-        </Title>
-        <SimpleGrid cols={5} style={{ margin: "3rem" }}>
-          {items}
-        </SimpleGrid>
-      </div>
-    </Delayed>
+          <Center>
+            <Paper
+              radius="md"
+              p="xl"
+              shadow="xl"
+              withBorder
+              style={{ margin: "3rem" }}
+            >
+              <SimpleGrid
+                cols={windowDimension.winWidth > 768 ? "3" : "1"}
+                style={{}}
+              >
+                {items}
+              </SimpleGrid>
+            </Paper>
+          </Center>
+        </div>
+      </Delayed>
+    </>
   );
 };
 export default Store;
