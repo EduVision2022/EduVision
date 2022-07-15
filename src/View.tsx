@@ -438,29 +438,29 @@ const View = () => {
       2
     ),
     new intrebareMaterie(
-      "Romana",
-      "Literatura",
+      "Română",
+      "Literatură",
       'Cine este purtătorul mesajului moralizator al nuvelei "Moara cu Noroc" ',
       ["Lică Sămădăul", "Soacra lui Ghiță", "Ghiță", "Ana"],
       2
     ),
     new intrebareMaterie(
-      "Romana",
-      "Literatura",
+      "Română",
+      "Literatură",
       'Ce tip de opera este "Povestea lui Harap-Alb"?',
       ["Basm", "Nuvelă", "Roman", "Comedie"],
       1
     ),
     new intrebareMaterie(
-      "Romana",
-      "Literatura",
+      "Română",
+      "Literatură",
       "Cine a scris Floare Albastra?",
       ["Ion Creanga", "Ioan Slavici", "Mihai Eminescu", "Ion Pillat"],
       3
     ),
     new intrebareMaterie(
-      "Romana",
-      "Literatura",
+      "Română",
+      "Literatură",
       'Cine a scris "Povestea lui Harap-Alb"?',
       ["Ioan Slavici", "Ion Creanga", "Mihai Eminescu", "Ion Luca Caragiale"],
       2
