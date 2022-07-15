@@ -4,33 +4,34 @@
 
 
 
-## Ce este <img style="margin-right: 30px; top:50%; transform:translate(50%, 50%); vertical-align:middle; margin-left: 30px" src=https://user-images.githubusercontent.com/84127665/179272073-9451c1bf-f4b6-4107-8017-6f9b69a16b36.svg height=45>
 
-EduVision este o aplicație web destinată elevilor de clasa a 12-a care au nevoie de ajutor în a-și planifica sesiunile de învățare înainte de cel mai dificil examen din viața lor de până atunci, **Bacalaureatul.**
+## Ce este EduVision
 
-## Pași de generare
+EduVision este un proiect care poate fi folosit de orice elev pentru a genera orare de învățare personalizate, cu rolul de a se îmbunătăți la materiile alese. EduVision nu numai că generează orarele elevilor, ci le permite să pună întrebări celorlalți membri înregistrați acolo unde nu se descurcă. Elevii sunt testați pentru a putea completa orele de învățare, iar dacă rezultatul este favorabil, aceștia vor fi recompensați cu puncte. Punctele pot fi folosite pentru a cumpăra diferite produse vizuale. De asemenea, exista un sistem de recompense pe ranguri, care le atribuie elevilor un nivel in funcție de maximul de puncte pe care l-au dobândit.
 
-### Setup
+## Design
 
-În partea de setup, sunt cerute câteva informații esențiale pentru a genera calendarul de învățare, cum ar fi:
+![Web capture_15-7-2022_2083_localhost](https://user-images.githubusercontent.com/84127665/179273720-092a35c3-1f93-482a-b53c-cb8564a79f60.jpeg)
 
-- Timpul pentru care o să se genereze calendarul
-- Materiile pentru care o să se genereze calendarul
-- Nivelul de dedicație dorit
-- Programul zilnic la liceu
-- Opțiunea de a învăța în weekend
 
-### Testarea
-
-Pentru a determina stadiul de pregătire, noi vom testa elevii din materiile alese de aceștia. Astfel, vom afla nivelul lor actual de pregătire, pentru a determina numărul de ore necesare pentru o pregătire optimă.
-
-### Generarea
-
-Pentru a genera orarul, folosim un algoritm foarte complex, ce aranjează niște sesiuni de învățare săptămânale pentru a acoperi fiecare materie, respectiv fiecare capitol la care se greșesc întrebările.
+## Pași de utilizare
+### Primul pas
+Primul pas constă în crearea unui cont, pentru a putea generara orare și pentru a putea accesa restul secțiunilor din site.
+### Generarea orarului
+Pentru a genera primul orar, trebuie să accesați secțiunea de jos a paginii Acasă. De acolo trebuie sa urmați pașii afișați pe ecran. Orarul generat poate fi salvat în contul dumneavoastră și poate fi accesat de la secțiunea "Orare".
+### Vizualizarea orarului
+Orarul generat anterior poate fi vizualizat în două modalități (Listă sau Calendar). În ambele modalități puteți vedea zilele, și orele din fiecare zi.
+### Completarea orelor 
+Pentru a completa orele, trebuie să selectați o zi în care sunt ore de învățare, si să apăsați pe Afișează Întrebările, iar după ce ați terminat testul, pe Completează Ora.
+### Punerea întrebărilor
+Pentru a pune o întrebare, trebuie să selectați o zi în care sunt ore de învățare, și să apăsați pe Pune o întrebare. Întrebarea va fi afișată la secțiunea Întrebari.
+### Răspunderea la întrebări
+Pentru a răspunde la întrebari, trebuie să accesați secțiunea Întrebări și să adăugați răspunsul la întrebarea dorită.
 
 ## Tehnologii
-
-Aplicația noastră a fost dezvoltată în `ReactJS` pentru framework, `Bootstrap` pentru interfață și `GitHub` pentru sincronizare și colaborare.
+EduVision este realiat în `ReactJS` si `TypeScript` pentru interfață, `Mantine` pentru design, `Redux` pentru stocarea locală a datelor, `FireBase` pentru baza de date si `Google API` pentru autentificare.
+Dupa logare, utilizatorul va ramane logat pana la delogarea manuala, chiar si daca browserul este restartat, datorira utilizarii hook-ului `getAuth` din FirebaseSDK.
+Site-ul are un timp de raspuns scazut, si server-ul pe care este hostat nu este solicitat deoarece request-urile si response-urile sunt optimizate astel incat acestea sa fie cat mai rare.
 
 ## Descarcare
 
@@ -40,9 +41,7 @@ Sursa poate fi descarcata cu `Git`:
 git clone https://github.com/NuapteBuna/eduvision.git
 ```
 
-Versiunea compilata poate fi descarcata de la sectiunea [Release](https://github.com/NuapteBuna/eduvision/releases)
-
-Site-ul poate si vizitat la adresa [EduVision](https://nuaptebuna.github.io/)
+Site-ul poate si vizitat la adresa [EduVision](https://eduvision2022.github.io/#/)
 
 ### Cerințe sistem
 
