@@ -48,3 +48,28 @@ Site-ul poate si vizitat la adresa [EduVision](https://eduvision2022.github.io/#
 Sistem de operare: Windows 7, Windows 8, Windows 8.1, Windows 10 sau mai recent.
 Procesor: Intel Pentium 4 sau mai recent.
 RAM: 4 GB (recomandat)
+
+
+### Bibliografie
+<ul>
+<li>https://reactjs.org/
+<li>https://redux.js.org/
+<li>https://www.typescriptlang.org/
+<li>https://firebase.google.com/
+<li>https://examende10.ro/
+<li>https://mantine.dev/
+<li>https://ui.mantine.dev/
+<li>https://console.cloud.google.com/
+<li>https://upb.ro/
+<li>https://www.ubbcluj.ro/ro/
+<li>https://www.tuiasi.ro/
+<li>https://www.svgator.com/create-svg
+<li>https://github.com/
+<li>https://code.visualstudio.com/
+<li>https://www.w3schools.com/
+<li>https://freefrontend.com/
+<li>https://stackoverflow.com/
+<li>https://nodejs.org/en/
+<li>https://www.npmjs.com/
+<li>https://www.heroku.com/
+</ul>
