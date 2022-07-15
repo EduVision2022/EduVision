@@ -1,70 +1,51 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+                  
+#   &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![logo](https://user-images.githubusercontent.com/84127665/179267593-eeed3b2a-79ab-4d41-8be4-b1466f825af2.png)
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
+## Ce este <img style="margin-right: 30px; top:50%; transform:translate(50%, 50%); vertical-align:middle; margin-left: 30px" src=https://user-images.githubusercontent.com/84127665/179272073-9451c1bf-f4b6-4107-8017-6f9b69a16b36.svg height=45>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+EduVision este o aplicație web destinată elevilor de clasa a 12-a care au nevoie de ajutor în a-și planifica sesiunile de învățare înainte de cel mai dificil examen din viața lor de până atunci, **Bacalaureatul.**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Pași de generare
 
-### `npm test`
+### Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+În partea de setup, sunt cerute câteva informații esențiale pentru a genera calendarul de învățare, cum ar fi:
 
-### `npm run build`
+- Timpul pentru care o să se genereze calendarul
+- Materiile pentru care o să se genereze calendarul
+- Nivelul de dedicație dorit
+- Programul zilnic la liceu
+- Opțiunea de a învăța în weekend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Testarea
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Pentru a determina stadiul de pregătire, noi vom testa elevii din materiile alese de aceștia. Astfel, vom afla nivelul lor actual de pregătire, pentru a determina numărul de ore necesare pentru o pregătire optimă.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Generarea
 
-### `npm run eject`
+Pentru a genera orarul, folosim un algoritm foarte complex, ce aranjează niște sesiuni de învățare săptămânale pentru a acoperi fiecare materie, respectiv fiecare capitol la care se greșesc întrebările.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Tehnologii
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Aplicația noastră a fost dezvoltată în `ReactJS` pentru framework, `Bootstrap` pentru interfață și `GitHub` pentru sincronizare și colaborare.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Descarcare
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Sursa poate fi descarcata cu `Git`:
 
-## Learn More
+```
+git clone https://github.com/NuapteBuna/eduvision.git
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Versiunea compilata poate fi descarcata de la sectiunea [Release](https://github.com/NuapteBuna/eduvision/releases)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Site-ul poate si vizitat la adresa [EduVision](https://nuaptebuna.github.io/)
 
-### Code Splitting
+### Cerințe sistem
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Sistem de operare: Windows 7, Windows 8, Windows 8.1, Windows 10 sau mai recent.
+Procesor: Intel Pentium 4 sau mai recent.
+RAM: 4 GB (recomandat)
