@@ -1796,7 +1796,10 @@ const Home = () => {
                       setMountDouble(true);
                       scrollIntoView({ alignment: "center" });
                     } else {
-                      navigate("https://github.com/", true);
+                      navigate(
+                        "https://github.com/EduVision2022/EduVision",
+                        true
+                      );
                     }
                   }}
                 >
