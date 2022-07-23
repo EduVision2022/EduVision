@@ -40,10 +40,23 @@ Site-ul are un timp de raspuns scazut, si server-ul pe care este hostat nu este 
 Sursa poate fi descarcata cu `Git`:
 
 ```
-git clone https://github.com/NuapteBuna/eduvision.git
+git clone https://github.com/EduVision2022/EduVision.git
 ```
 
-Site-ul poate si vizitat la adresa [EduVision](https://eduvision2022.github.io/#/)
+Pentru a îl putea instala și rula pe localhost sunt necesare :
+<ul>
+<li>NodeJS versiunea 18 sau mai nou
+<li>NPMJS versiunea 8 sau mai nou
+</ul>
+După descărcare puteți rula comenzile:
+
+```
+cd ./EduVision
+npm install --force
+npm start
+```
+
+Site-ul poate fi vizitat la adresa [EduVision](https://eduvision2022.github.io/#/)
 
 ## Sursa
 Pentru o lizibilitate crescută a codului sursă și respectarea standardelor de programare, EduVision folosește convenții de formatare pentru întreaga bază de cod.
