@@ -10,9 +10,11 @@
 EduVision este un proiect care poate fi folosit de orice elev pentru a genera orare de învățare personalizate, cu rolul de a se îmbunătăți la materiile alese. EduVision nu numai că generează orarele elevilor, ci le permite să pună întrebări celorlalți membri înregistrați acolo unde nu se descurcă. Elevii sunt testați pentru a putea completa orele de învățare, iar dacă rezultatul este favorabil, aceștia vor fi recompensați cu puncte. Punctele pot fi folosite pentru a cumpăra diferite produse vizuale. De asemenea, există un sistem de recompense pe ranguri, care le atribuie elevilor un nivel în funcție de maximul de puncte pe care l-au dobândit.
 
 ## Design
-
+EduVision este complet compatibil cu modul Luminos, dar și cu cel Întunecat. Modurile de afișare pot fi schimbate apăsând butonul din dreapta sus. Interfața se adaptează în timp real la dispozitivul folosit, facând astfel posibilă folosirea de pe un calculator, dar si de pe telefon.
+Modul Luminos:
 ![Web capture_15-7-2022_2083_localhost](https://user-images.githubusercontent.com/84127665/179273720-092a35c3-1f93-482a-b53c-cb8564a79f60.jpeg)
-
+Modul Întunecat:
+![Web capture_23-7-2022_224545_localhost](https://user-images.githubusercontent.com/84127665/180620657-b3e66dba-5028-4046-ad94-861104fc6663.jpeg)
 
 ## Pași de utilizare
 ### Primul pas
@@ -43,6 +45,13 @@ git clone https://github.com/NuapteBuna/eduvision.git
 
 Site-ul poate si vizitat la adresa [EduVision](https://eduvision2022.github.io/#/)
 
+## Sursa
+Pentru o lizibilitate crescută a codului sursă și respectarea standardelor de programare, EduVision folosește convenții de formatare pentru întreaga bază de cod.
+Deoarece EduVision este dezvoltat cu viitorul în față, arhitectura codului este modularizată, putând fi introduse sisteme complet unice fară dificultăți, iar schimbarea codului deja existent este facilă.
+
+## Securitate
+Deoarece EduVision foloșeste API-uri (interfețe de programare a aplicațiilor) foarte cunoscute și dezvoltate de cele mai mari companii din lume, asigurăm o securitate deosebită asupra bazei de date și asupra portalului de conectare. Baza de date și conectarea sunt realizate cu ajutorul tehnologiilor distribuite de Google.
+
 ### Cerințe sistem
 
 Sistem de operare: Windows 7, Windows 8, Windows 8.1, Windows 10 sau mai recent.
@@ -72,4 +81,5 @@ RAM: 4 GB (recomandat)
 <li>https://nodejs.org/en/
 <li>https://www.npmjs.com/
 <li>https://www.heroku.com/
+<li>https://prettier.io/
 </ul>
